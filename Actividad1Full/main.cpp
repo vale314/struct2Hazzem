@@ -21,6 +21,7 @@ struct estrPlatillo{
     string descripcion;
     string precio;
     string id;
+    string bandera;
 };
 
 bool vacioFunc(){
@@ -42,42 +43,54 @@ int numerosId(){
             getline(leer,oldPlatillo.nombre,'#');
             getline(leer,oldPlatillo.descripcion,'#');
             getline(leer,oldPlatillo.precio,'#');
-            getline(leer,oldPlatillo.id,';');
+            getline(leer,oldPlatillo.id,'#');
+            getline(leer,oldPlatillo.bandera,'#');
             if(leer.eof())
                 break;
 
         }
+        cout<<oldPlatillo.bandera<<endl;
+        system("pause");
         return stoi(oldPlatillo.id);
 }
 
 void escribirFunc(estrPlatillo newPlatillo){
     if(vacioFunc()){
         ofstream escribir("Platillos.txt",ios::app);
-        escribir <<newPlatillo.nombre <<"#"<<newPlatillo.descripcion<<"#"<<newPlatillo.precio<<"#"<<"0"<<";";
+        escribir <<newPlatillo.nombre <<"#"<<newPlatillo.descripcion<<"#"<<newPlatillo.precio<<"#"<<"0"<<"#"<<newPlatillo.bandera<<";";
     }else{
         ofstream escribir("Platillos.txt",ios::app);
-        escribir <<newPlatillo.nombre <<"#"<<newPlatillo.descripcion<<"#"<<newPlatillo.precio<<"#"<<numerosId()+1<<";";
+        escribir <<newPlatillo.nombre <<"#"<<newPlatillo.descripcion<<"#"<<newPlatillo.precio<<"#"<<numerosId()+1<<"#"<<newPlatillo.bandera<<";";
     }
 }
 
 void imprimirFunc(){
     estrPlatillo oldPlatillo;
     ifstream leer("Platillos.txt");
+    bool vacio;
+    vacio=true;
     if(vacioFunc()){
         cout<<"No Se Encuentra Archivo"<<endl;
         return;
     }else{
         system("cls");
-        cout<<setw(20)<<"NOMBRE"<<setw(20)<<"DESCRIPCION"<<setw(20)<<"PRECIO"<<setw(29)<<"ID"<<endl<<endl<<endl;
-        while(!leer.eof()){
-            getline(leer,oldPlatillo.nombre,'#');
-            getline(leer,oldPlatillo.descripcion,'#');
-            getline(leer,oldPlatillo.precio,'#');
-            getline(leer,oldPlatillo.id,';');
-            if(leer.eof())
-                break;
-            cout<<setw(20)<<oldPlatillo.nombre<<setw(20)<<oldPlatillo.descripcion<<setw(20)<<oldPlatillo.precio<<setw(29)<<oldPlatillo.id<<endl;
-        }
+            cout<<setw(20)<<"NOMBRE"<<setw(20)<<"DESCRIPCION"<<setw(20)<<"PRECIO"<<setw(29)<<"ID"<<endl<<endl<<endl;
+            while(!leer.eof()){
+                getline(leer,oldPlatillo.nombre,'#');
+                getline(leer,oldPlatillo.descripcion,'#');
+                getline(leer,oldPlatillo.precio,'#');
+                getline(leer,oldPlatillo.id,'#');
+                getline(leer,oldPlatillo.bandera,';');
+                if(leer.eof())
+                    break;
+                if(stoi(oldPlatillo.bandera)){
+                    cout<<setw(20)<<oldPlatillo.nombre<<setw(20)<<oldPlatillo.descripcion<<setw(20)<<oldPlatillo.precio<<setw(29)<<oldPlatillo.id<<endl;
+                    vacio=false;
+                }
+            }
+            if(vacio)
+                cout<<"No Se Encuentarn Platillos"<<endl;
+
         cout<<endl<<endl;
     }
 }
@@ -90,7 +103,8 @@ bool buscarFunc(estrPlatillo *oldPlatillo){
     ifstream leer("Platillos.txt");
 
     cout<<"Ingrese El Nombre Ha Buscar"<<endl;
-    cin>>nombre;
+    cin.ignore();
+    getline(cin,nombre);
 
     if(vacioFunc()){
         cout<<"No Se Encuentra Archivo"<<endl;
@@ -102,16 +116,18 @@ bool buscarFunc(estrPlatillo *oldPlatillo){
             getline(leer,oldPlatillo->nombre,'#');
             getline(leer,oldPlatillo->descripcion,'#');
             getline(leer,oldPlatillo->precio,'#');
-            getline(leer,oldPlatillo->id,';');
+            getline(leer,oldPlatillo->id,'#');
+            getline(leer,oldPlatillo->bandera,';');
             if(leer.eof())
                 break;
-            if(!nombre.compare(oldPlatillo->nombre)){
+            if(!nombre.compare(oldPlatillo->nombre) && stoi(oldPlatillo->bandera)){
                 encontrado=true;
                 return true;
             }
         }
         cout<<endl<<endl;
     }
+    return false;
 }
 
 
@@ -119,17 +135,25 @@ estrPlatillo registrarFunc(){
     estrPlatillo newPlatillo;
 
     cout<<"Ingrese el nombre"<<endl;
-    cin>>newPlatillo.nombre;
+    cin.ignore();
+    getline(cin,newPlatillo.nombre);
+
     cout<<"Ingrse la descripcion"<<endl;
-    cin>>newPlatillo.descripcion;
+    getline(cin,newPlatillo.descripcion);
+    cout<<newPlatillo.descripcion<<endl;
+
     cout<<"Ingrese Precio"<<endl;
-    cin>>newPlatillo.precio;
+    getline(cin,newPlatillo.precio);
+    cout<<newPlatillo.precio<<endl;
+
+    newPlatillo.bandera="1";
 
     return newPlatillo;
 }
 
-void imprimirPlatillo(estrPlatillo platillo){
-    cout<<setw(20)<<platillo.nombre<<setw(20)<<platillo.descripcion<<setw(20)<<platillo.precio<<setw(29)<<platillo.id<<endl;
+void imprimirPlatillo(estrPlatillo platillo){     
+
+    cout<<setw(20)<<platillo.nombre<<setw(20)<<platillo.descripcion<<setw(20)<<platillo.precio<<setw(29)<<platillo.id<<endl<<endl;
 }
 
 bool eliminarPlatillo(){
@@ -140,7 +164,8 @@ bool eliminarPlatillo(){
     ofstream escribir("PlatillosNew.txt");
 
     cout<<"Ingrese El Nombre Ha Buscar"<<endl;
-    cin>>nombre;
+    cin.ignore();
+    getline(cin,nombre);
 
     if(vacioFunc()){
         cout<<"No Se Encuentra Archivo"<<endl;
@@ -164,6 +189,7 @@ bool eliminarPlatillo(){
             remove("Platillos.txt");
             escribir.close();
             rename("PlatillosNew.txt","Platillos.txt");
+            remove("PlatillosnNew.txt");
         }
         return encontrado;
     }
@@ -180,7 +206,7 @@ int main()
         cout<<menuPlatillo<<"- Crear Platillo"<<endl
             <<menuVer<<"- Ver Todos Los Platillos"<<endl
             <<menuBuscar<<"- Buscar"<<endl
-            <<menuEliminar<<"- Eliminar"<<endl
+            <<menuEliminar<<"- Eliminar Fisicamente"<<endl
             <<menuSalir<<"- Salir"<<endl;
             cin>>opc;
         switch (opc) {
@@ -191,6 +217,8 @@ int main()
             case menuBuscar:
                 if(buscarFunc(&newPlatillo))
                     imprimirPlatillo(newPlatillo);
+                else
+                    cout<<"El Platillo No Se Encontro"<<endl<<endl;
                 break;
             case menuEliminar:
                 if(eliminarPlatillo())
