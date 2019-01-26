@@ -7,13 +7,14 @@
 
 using namespace std;
 
-
 enum{
     menuPlatillo=1,
     menuVer,
+    menuVerBorrados,
     menuBuscar,
     menuEliminar,
     menuEliminarLogica,
+    menuActivarLogica,
     menuSalir
 };
 
@@ -45,27 +46,25 @@ int numerosId(){
             getline(leer,oldPlatillo.descripcion,'#');
             getline(leer,oldPlatillo.precio,'#');
             getline(leer,oldPlatillo.id,'#');
-            getline(leer,oldPlatillo.bandera,'#');
+            getline(leer,oldPlatillo.bandera,';');
             if(leer.eof())
                 break;
-
         }
-        cout<<oldPlatillo.bandera<<endl;
-        system("pause");
+
         return stoi(oldPlatillo.id);
 }
 
 void escribirFunc(estrPlatillo newPlatillo,ofstream &escribir,ifstream &leer){
     if(vacioFunc()|| leer.peek()==EOF){
-        escribir.seekp(ios::beg);
+        escribir.seekp(0,ios::end);
         escribir <<newPlatillo.nombre <<"#"<<newPlatillo.descripcion<<"#"<<newPlatillo.precio<<"#"<<"0"<<"#"<<newPlatillo.bandera<<";";
     }else{
-        escribir.seekp(ios::beg);
+        escribir.seekp(0,ios::end);
         escribir <<newPlatillo.nombre <<"#"<<newPlatillo.descripcion<<"#"<<newPlatillo.precio<<"#"<<numerosId()+1<<"#"<<newPlatillo.bandera<<";";
     }
 }
 
-void imprimirFunc(ifstream &leer){
+void imprimirFunc(ifstream &leer,bool activos){
     estrPlatillo oldPlatillo;
     bool vacio;
     leer.seekg(ios::beg);
@@ -84,7 +83,7 @@ void imprimirFunc(ifstream &leer){
                 getline(leer,oldPlatillo.bandera,';');
                 if(leer.eof())
                     break;
-                if(stoi(oldPlatillo.bandera)){
+                if((stoi(oldPlatillo.bandera)&& activos)||(!stoi(oldPlatillo.bandera)&&!activos)){
                     cout<<setw(20)<<oldPlatillo.nombre<<setw(20)<<oldPlatillo.descripcion<<setw(20)<<oldPlatillo.precio<<setw(29)<<oldPlatillo.id<<endl;
                     vacio=false;
                 }
@@ -105,12 +104,10 @@ bool buscarFunc(estrPlatillo *oldPlatillo,ifstream &leer){
     cout<<"Ingrese El Nombre Ha Buscar"<<endl;
     cin.ignore();
     getline(cin,nombre);
-
     if(vacioFunc()){
         cout<<"No Se Encuentra Archivo"<<endl;
         return false;
     }else{
-        system("cls");
         encontrado=false;
         while(!leer.eof()){
             getline(leer,oldPlatillo->nombre,'#');
@@ -121,11 +118,13 @@ bool buscarFunc(estrPlatillo *oldPlatillo,ifstream &leer){
             if(leer.eof())
                 break;
             if(!nombre.compare(oldPlatillo->nombre) && stoi(oldPlatillo->bandera)){
+                system("cls");
+                cout<<setw(20)<<"NOMBRE"<<setw(20)<<"DESCRIPCION"<<setw(20)<<"PRECIO"<<setw(29)<<"ID"<<endl<<endl<<endl;
                 encontrado=true;
                 return true;
             }
         }
-        cout<<endl<<endl;
+        system("cls");
     }
     return false;
 }
@@ -137,15 +136,10 @@ estrPlatillo registrarFunc(){
     cout<<"Ingrese el nombre"<<endl;
     cin.ignore();
     getline(cin,newPlatillo.nombre);
-
     cout<<"Ingrse la descripcion"<<endl;
     getline(cin,newPlatillo.descripcion);
-    cout<<newPlatillo.descripcion<<endl;
-
     cout<<"Ingrese Precio"<<endl;
     getline(cin,newPlatillo.precio);
-    cout<<newPlatillo.precio<<endl;
-
     newPlatillo.bandera="1";
 
     return newPlatillo;
@@ -177,13 +171,14 @@ bool eliminarPlatillo(ifstream &leer,ofstream &escribir){
             getline(leer,searchPlatillo.nombre,'#');
             getline(leer,searchPlatillo.descripcion,'#');
             getline(leer,searchPlatillo.precio,'#');
-            getline(leer,searchPlatillo.id,';');
+            getline(leer,searchPlatillo.id,'#');
+            getline(leer,searchPlatillo.bandera,';');
             if(leer.eof())
                 break;
-            if(!nombre.compare(searchPlatillo.nombre))
+            if(!nombre.compare(searchPlatillo.nombre) && stoi(searchPlatillo.bandera))
                 encontrado=true;
             else
-                escribirAux <<searchPlatillo.nombre <<"#"<<searchPlatillo.descripcion<<"#"<<searchPlatillo.precio<<"#"<<searchPlatillo.id<<";";
+                escribirAux <<searchPlatillo.nombre <<"#"<<searchPlatillo.descripcion<<"#"<<searchPlatillo.precio<<"#"<<searchPlatillo.id<<"#"<<searchPlatillo.bandera<<";";
         }
         if(encontrado){
             leer.close();
@@ -191,56 +186,70 @@ bool eliminarPlatillo(ifstream &leer,ofstream &escribir){
             remove("Platillos.txt");
             escribirAux.close();
             rename("PlatillosNew.txt","Platillos.txt");
-            remove("PlatillosnNew.txt");
+            remove("PlatillosNew.txt");
+        }else{
+            escribirAux.close();
+            remove("PlatillosNew.txt");
         }
+
+        system("cls");
         return encontrado;
     }
 
 }
 
-void elimniarLogicamente(ifstream &leer,ofstream &escribir) {
-    estrPlatillo platillo;
+void cambiarLogicamente(ifstream &leer, ofstream &escribir,bool borrar){
+        estrPlatillo platillo;
 
-    leer.seekg(ios::beg);
-    escribir.seekp(ios::beg);
+        leer.seekg(ios::beg);
+        escribir.seekp(ios::beg);
 
-    string nombre;
-    bool encontrado;
+        string nombre;
 
-    cout<<"Ingrese El Nombre Ha Buscar"<<endl;
-    cin.ignore();
-    getline(cin,nombre);
+        cout<<"Ingrese El Nombre Ha Buscar"<<endl;
+        cin.ignore();
+        getline(cin,nombre);
 
-    if(vacioFunc()){
-        cout<<"No Se Encuentra Archivo"<<endl;
-        return;
-    }else{
-        system("cls");
-        encontrado=false;
-        while(!leer.eof()){
-            getline(leer,platillo.nombre,'#');
-            getline(leer,platillo.descripcion,'#');
-            getline(leer,platillo.precio,'#');
-            getline(leer,platillo.id,'#');
-            getline(leer,platillo.bandera,';');
-            if(leer.eof())
-                break;
-            if(!nombre.compare(platillo.nombre) && stoi(platillo.bandera)){
-                encontrado=true;
-                long long pos=leer.tellg();
-                pos=pos-2;
-                cout<<pos<<endl;
-                escribir.clear();
-                escribir.seekp(pos,ios::beg);
-                escribir<<"0";
-                return;
+        if(vacioFunc()){
+            cout<<"No Se Encuentra Archivo"<<endl;
+            return;
+        }else{
+            system("cls");
+            while(!leer.eof()){
+                getline(leer,platillo.nombre,'#');
+                getline(leer,platillo.descripcion,'#');
+                getline(leer,platillo.precio,'#');
+                getline(leer,platillo.id,'#');
+                getline(leer,platillo.bandera,';');
+                if(leer.eof())
+                    break;
+                if(!nombre.compare(platillo.nombre)){
+                    if((stoi(platillo.bandera)&&borrar) || (!stoi(platillo.bandera)&&!borrar)){
+                        long long pos=leer.tellg();
+                        pos=pos-2;
+                        //escribir.clear();
+                        escribir.seekp(pos,ios::cur);
+                        if(!platillo.bandera.compare("0")){
+                            escribir<<"1";
+                            system("cls");
+                            cout<<"Archivo Activado"<<endl<<endl;
+                        }else{
+                            escribir<<"0";
+                            system("cls");
+                            cout<<"Archivo Borrado"<<endl<<endl;
+                        }
+                        return;
+                    }else
+                        system("cls");
+                        cout<<"No Se Encuentra"<<endl<<endl;
+                        return;
+                }
             }
+            system("cls");
+            cout<<"No Se Encuentra"<<endl<<endl;
         }
-        cout<<endl<<endl;
-    }
-    return;
+        return;
 }
-
 
 
 
@@ -255,23 +264,29 @@ int main()
         //app no permite mover el puntero con seekp pero los otros modos de apertura dañan el archivo
         //posible solucion crear un metodo que cargue los archivos guardados con app a archivos
         //out e in
-        ofstream escribir("Platillos.txt",ios::app);
-        ifstream leer("Platillos.txt",ios::app);
+        ofstream escribir1("Platillos.txt",ios::app);
+        ifstream leer;leer.open("Platillos.txt",ios::app);
+        ofstream escribir;escribir.open("Platillos.txt",ios::in| ios::out);
 
         cout<<menuPlatillo<<"- Crear Platillo"<<endl
             <<menuVer<<"- Ver Todos Los Platillos"<<endl
+            <<menuVerBorrados<<"- Ver Todos Los Borrados"<<endl
             <<menuBuscar<<"- Buscar"<<endl
             <<menuEliminar<<"- Eliminar Fisicamente"<<endl
             <<menuEliminarLogica<<"- Eliminar Logicamente"<<endl
+            <<menuActivarLogica<<"- Activar Logica"<<endl
             <<menuSalir<<"- Salir"<<endl;
             cin>>opc;
         switch (opc) {
 
             case menuPlatillo:
-                escribirFunc(registrarFunc(),escribir,leer);
+                escribirFunc(registrarFunc(),escribir1,leer);
             break;
             case menuVer:
-                imprimirFunc(leer);
+                imprimirFunc(leer,true);
+            break;
+            case menuVerBorrados:
+                imprimirFunc(leer,false);
             break;
             case menuBuscar:
                 if(buscarFunc(&newPlatillo,leer))
@@ -280,13 +295,16 @@ int main()
                     cout<<"El Platillo No Se Encontro"<<endl<<endl;
                 break;
             case menuEliminar:
-                if(eliminarPlatillo(leer,escribir))
-                    cout<<"Eliminado"<<endl;
+                if(eliminarPlatillo(leer,escribir1))
+                    cout<<"Eliminado"<<endl<<endl;
                 else
-                    cout<<"No Se Encuentra"<<endl;
+                    cout<<"No Se Encuentra"<<endl<<endl;
             break;
             case menuEliminarLogica:
-                elimniarLogicamente(leer,escribir);
+                cambiarLogicamente(leer,escribir,true);
+            break;
+            case menuActivarLogica:
+                cambiarLogicamente(leer,escribir,false);
             break;
             case menuSalir:
             break;
