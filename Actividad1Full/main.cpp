@@ -13,6 +13,7 @@ enum{
     menuVerBorrados,
     menuBuscar,
     menuEliminar,
+    menuModificar,
     menuEliminarLogica,
     menuActivarLogica,
     menuSalir
@@ -156,7 +157,7 @@ bool eliminarPlatillo(ifstream &leer,ofstream &escribir){
     leer.seekg(ios::beg);
     escribir.seekp(ios::beg);
 
-    ofstream escribirAux("PlatillosNew.txt",ios::out);
+    ofstream escribirAux("PlatillosNew.txt",ios::app);
 
     cout<<"Ingrese El Nombre Ha Buscar"<<endl;
     cin.ignore();
@@ -167,6 +168,7 @@ bool eliminarPlatillo(ifstream &leer,ofstream &escribir){
         return false;
     }else{
         bool encontrado=false;
+        escribirAux.flush();
         while(!leer.eof()){
             getline(leer,searchPlatillo.nombre,'#');
             getline(leer,searchPlatillo.descripcion,'#');
@@ -175,16 +177,21 @@ bool eliminarPlatillo(ifstream &leer,ofstream &escribir){
             getline(leer,searchPlatillo.bandera,';');
             if(leer.eof())
                 break;
-            if(!nombre.compare(searchPlatillo.nombre) && stoi(searchPlatillo.bandera))
+            if(!nombre.compare(searchPlatillo.nombre) && stoi(searchPlatillo.bandera)){
                 encontrado=true;
-            else
+
+            }else{
+               escribirAux.clear();
                 escribirAux <<searchPlatillo.nombre <<"#"<<searchPlatillo.descripcion<<"#"<<searchPlatillo.precio<<"#"<<searchPlatillo.id<<"#"<<searchPlatillo.bandera<<";";
+            }
+
         }
         if(encontrado){
             leer.close();
             escribir.close();
-            remove("Platillos.txt");
             escribirAux.close();
+            remove("Platillos.txt");
+            system("pause");
             rename("PlatillosNew.txt","Platillos.txt");
             remove("PlatillosNew.txt");
         }else{
@@ -251,6 +258,73 @@ void cambiarLogicamente(ifstream &leer, ofstream &escribir,bool borrar){
         return;
 }
 
+estrPlatillo cambiarFunc(string id){
+    estrPlatillo newPlatillo;
+
+    cout<<"Ingrese el nombre"<<endl;
+    getline(cin,newPlatillo.nombre);
+    cout<<"Ingrse la descripcion"<<endl;
+    getline(cin,newPlatillo.descripcion);
+    cout<<"Ingrese Precio"<<endl;
+    getline(cin,newPlatillo.precio);
+    newPlatillo.bandera="1";
+    newPlatillo.id=id;
+
+    return newPlatillo;
+}
+
+int modificar(ifstream &leer,ofstream &escribir){
+    estrPlatillo searchPlatillo;
+    string nombre;
+
+    ofstream escribirAux("PlatillosNew.txt",ios::app);
+
+    cout<<"Ingrese El Nombre Ha Buscar"<<endl;
+    cin.ignore();
+    getline(cin,nombre);
+
+    if(vacioFunc()){
+        cout<<"No Se Encuentra Archivo"<<endl;
+        return false;
+    }else{
+        bool encontrado=false;
+        escribirAux.flush();
+        while(!leer.eof()){
+            getline(leer,searchPlatillo.nombre,'#');
+            getline(leer,searchPlatillo.descripcion,'#');
+            getline(leer,searchPlatillo.precio,'#');
+            getline(leer,searchPlatillo.id,'#');
+            getline(leer,searchPlatillo.bandera,';');
+            if(leer.eof())
+                break;
+            if(!nombre.compare(searchPlatillo.nombre) && stoi(searchPlatillo.bandera)){
+                estrPlatillo newPlatillo=cambiarFunc(searchPlatillo.id);
+                escribirAux <<newPlatillo.nombre <<"#"<<newPlatillo.descripcion<<"#"<<newPlatillo.precio<<"#"<<newPlatillo.id<<"#"<<newPlatillo.bandera<<";";
+                encontrado=true;
+
+            }else{
+               escribirAux.clear();
+                escribirAux <<searchPlatillo.nombre <<"#"<<searchPlatillo.descripcion<<"#"<<searchPlatillo.precio<<"#"<<searchPlatillo.id<<"#"<<searchPlatillo.bandera<<";";
+            }
+
+        }
+        if(encontrado){
+            leer.close();
+            escribir.close();
+            escribirAux.close();
+            remove("Platillos.txt");
+            system("pause");
+            rename("PlatillosNew.txt","Platillos.txt");
+            remove("PlatillosNew.txt");
+        }else{
+            escribirAux.close();
+            remove("PlatillosNew.txt");
+        }
+
+        system("cls");
+        return encontrado;
+    }
+}
 
 
 int main()
@@ -273,6 +347,7 @@ int main()
             <<menuVerBorrados<<"- Ver Todos Los Borrados"<<endl
             <<menuBuscar<<"- Buscar"<<endl
             <<menuEliminar<<"- Eliminar Fisicamente"<<endl
+            <<menuModificar<<"- Modificar"<<endl
             <<menuEliminarLogica<<"- Eliminar Logicamente"<<endl
             <<menuActivarLogica<<"- Activar Logica"<<endl
             <<menuSalir<<"- Salir"<<endl;
@@ -295,10 +370,19 @@ int main()
                     cout<<"El Platillo No Se Encontro"<<endl<<endl;
                 break;
             case menuEliminar:
-                if(eliminarPlatillo(leer,escribir1))
+                escribir1.close();
+                if(eliminarPlatillo(leer,escribir))
                     cout<<"Eliminado"<<endl<<endl;
                 else
                     cout<<"No Se Encuentra"<<endl<<endl;
+            break;
+            case menuModificar:
+                escribir1.close();
+                if(modificar(leer,escribir))
+                    cout<<"Modificado"<<endl<<endl;
+                else
+                    cout<<"No Se Encuentra"<<endl<<endl;
+
             break;
             case menuEliminarLogica:
                 cambiarLogicamente(leer,escribir,true);
