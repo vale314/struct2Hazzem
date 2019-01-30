@@ -156,7 +156,7 @@ int change(char* nombreBits){
     number=appendDigit(nombreBits[0]-'0',nombreBits[1]-'0');
     number=appendDigit(number,nombreBits[2]-'0');
     number=appendDigit(number,nombreBits[3]-'0');
-
+    return number;
 }
 
 
