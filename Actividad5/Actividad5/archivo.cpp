@@ -25,6 +25,7 @@ void Archivo::menu()
             <<menuModificar<<"-. Modificar"<<endl
             <<menuEliminarLogico<<".- Eliminar Logico"<<endl
             <<menuActivarLogica<<".- Activar Logica"<<endl
+            <<menuOrdenarBurbuja<<".- Ordenar Burbuja"<<endl
             <<menuSalir<<"-. Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -42,6 +43,9 @@ void Archivo::menu()
             break;
             case menuActivarLogica:
                 cambioLogica(0);
+            break;
+            case menuOrdenarBurbuja:
+                ordenar(1);
             break;
             case menuSalir:
 
@@ -275,6 +279,36 @@ int Archivo::validateContador(int x)
     }
 }
 
+void Archivo::ordenar(int bubbleSort)
+{
+    system("cls");
+    leer.open("datos.txt",ios::binary|ios::in|ios::app);
+
+    if(emptyFile()||!leer.good()){
+        cout<<"Archivo Vacio"<<endl;
+        system("pause");
+        return;
+    }
+
+    resetFileLeer();
+    imprimirCabecera();
+    while(!leer.eof()){
+        leer.read(reinterpret_cast<char*>(&caldera),sizeof(Caldera));
+        if(leer.eof())
+            break;
+        calderas.push_front(caldera);
+    }
+    if(bubbleSort)
+        calderas.bubbleSort();
+
+    for(size_t i = 0; i< calderas.size(); i++)
+        imprimir(calderas[i]);
+    calderas.clear();
+    getch();
+    leer.close();
+    return;
+}
+
 void Archivo::contadorIn()
 {
     leer.open("datos.txt",ios::binary|ios::in|ios::app);
@@ -285,7 +319,7 @@ void Archivo::contadorIn()
         caldera.setContador(1);
     else{
         endFileLeer();
-        long long pos=leer.tellg();        
+        long long pos=leer.tellg();
         pos=pos-sizeof(Caldera);
         leer.clear();
         leer.seekg(0,ios::beg);
