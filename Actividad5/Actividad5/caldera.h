@@ -1,5 +1,8 @@
 #ifndef CALDERA_H
 #define CALDERA_H
+#include <iostream>
+
+using namespace std;
 
 
 class Caldera
@@ -27,6 +30,16 @@ public:
              return false;
           }
 
+    bool operator <=(const Caldera& d) {
+             if(codigo <= d.codigo)
+                return true;
+             return false;
+          }
+
+    friend ostream& operator<<(ostream& os, const Caldera& dt){
+        os <<"Codigo: "<< dt.codigo <<" Temperatura: "<< dt.temperatura <<" NumEm: "<<dt.numEmpleado<< " Contador: " << dt.contador;
+           return os;
+    }
 private:
     int codigo;
     double temperatura;

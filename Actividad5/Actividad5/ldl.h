@@ -3,18 +3,24 @@
 #define LDL_H
 #include <iostream>
 #include <stdexcept>
+#include <conio.h>
 
 using namespace std;
 
 template <typename T>
+
+
 class LDL
 {
+
 private:
-    #include "nodoldl.h"
+        #include <nodoldl.h>
         size_t listSize;
         NodoLDL* listFront;
         NodoLDL* listBack;
+
 public:
+
         LDL()
         {
             listSize=0;
@@ -32,6 +38,8 @@ public:
             for(size_t i=0;i<other.size();i++)
                 push_back(other[i]);
         }
+        void partition(NodoLDL*,NodoLDL*);
+        void _quickSort(NodoLDL*,NodoLDL*);
         bool empty() const;
         size_t  size()const;
         void push_front(const T &elem);
@@ -49,6 +57,11 @@ public:
 
         void cambio(T&a,T&b);
         void bubbleSort();
+
+        void quickSort();
+
+        void radixSort();
+
 };
 
 
@@ -283,6 +296,56 @@ void LDL<T>::bubbleSort()
     }
     while (swapped);
 }
+
+template <typename T>
+void LDL<T>::partition(NodoLDL *l, NodoLDL *h)
+{
+    // set pivot as h element
+       T x  = h->dato;
+       // similar to i = l-1 for array implementation
+       NodoLDL *i = l->anterior;
+
+       // Similar to "for (int j = l; j <= h- 1; j++)"
+       for (NodoLDL *j = l; j != h; j = j->siguiente)
+       {
+           if (j->dato <= x)
+           {
+               // Similar to i++ for array
+               i = (i == NULL)? l : i->siguiente;
+
+               cambio((i->dato), (j->dato));
+           }
+       }
+
+       i = (i == NULL)? l : i->siguiente; // Similar to i++
+       cambio((i->dato), (h->dato));
+
+       i=i;
+}
+
+template<typename T>
+void LDL<T>::_quickSort(NodoLDL *l, NodoLDL *h)
+{
+    if (h != NULL && l != h && l != h->siguiente)
+        {
+            partition(l,h);
+            _quickSort(l, h->anterior);
+            _quickSort(h->siguiente, h);
+    }
+}
+
+template<typename T>
+void LDL<T>::quickSort()
+{
+    NodoLDL *head=listFront;
+    NodoLDL *h=listBack;
+
+    // Call the recursive QuickSort
+    _quickSort(head, h);
+}
+
+
+
 
 
 

@@ -29,6 +29,7 @@ private:
         menuEliminarLogico,
         menuActivarLogica,
         menuOrdenarBurbuja,
+        menuQuickSort,
         menuSalir
     };
     struct CalderaStruct{

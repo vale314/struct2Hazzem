@@ -26,6 +26,7 @@ void Archivo::menu()
             <<menuEliminarLogico<<".- Eliminar Logico"<<endl
             <<menuActivarLogica<<".- Activar Logica"<<endl
             <<menuOrdenarBurbuja<<".- Ordenar Burbuja"<<endl
+            <<menuQuickSort<<".- Ordenar QuickSort"<<endl
             <<menuSalir<<"-. Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -46,6 +47,9 @@ void Archivo::menu()
             break;
             case menuOrdenarBurbuja:
                 ordenar(1);
+            break;
+            case menuQuickSort:
+                ordenar(0);
             break;
             case menuSalir:
 
@@ -298,9 +302,14 @@ void Archivo::ordenar(int bubbleSort)
             break;
         calderas.push_front(caldera);
     }
-    if(bubbleSort)
+    if(bubbleSort){
+        cout<<"Burbuja"<<endl;
         calderas.bubbleSort();
-
+    }
+    else{
+        cout<<"QuickSort"<<endl;
+        calderas.quickSort();
+    }
     for(size_t i = 0; i< calderas.size(); i++)
         imprimir(calderas[i]);
     calderas.clear();
