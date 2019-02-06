@@ -308,7 +308,7 @@ void LDL<T>::partition(NodoLDL *l, NodoLDL *h)
        // Similar to "for (int j = l; j <= h- 1; j++)"
        for (NodoLDL *j = l; j != h; j = j->siguiente)
        {
-           if (j->dato <= x)
+           if (j->dato >= x)
            {
                // Similar to i++ for array
                i = (i == NULL)? l : i->siguiente;
