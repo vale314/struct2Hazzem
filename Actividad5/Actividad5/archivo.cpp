@@ -310,8 +310,10 @@ void Archivo::ordenar(int bubbleSort)
         cout<<"QuickSort"<<endl;
         calderas.quickSort();
     }
-    for(size_t i = 0; i< calderas.size(); i++)
-        imprimir(calderas[i]);
+    for(size_t i = 0; i< calderas.size(); i++){
+        if(calderas[i].getBandera())
+            imprimir(calderas[i]);
+    }
     calderas.clear();
     getch();
     leer.close();
