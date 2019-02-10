@@ -1,22 +1,22 @@
 #ifndef ASPIRANTES_H
 #define ASPIRANTES_H
 #include <string>
+#include <iostream>
 
 using namespace std;
 
 class Aspirantes
 {
 private:
-    string curp;
+    char curp[4];
     string nombre;
     string edad;
     string puesto;
     int bandera;
 public:
     Aspirantes();
-
-    string getCurp() const;
-    void setCurp(const string &value);
+    const char* getCurp()const;
+    void setCurp(const char value[4]);
     string getNombre() const;
     void setNombre(const string &value);
     string getEdad() const;

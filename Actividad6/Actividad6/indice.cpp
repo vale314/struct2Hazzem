@@ -17,12 +17,13 @@ void Indice::setPos(long long value)
     pos=value;
 }
 
-string Indice::getId() const
+const char* Indice::getId() const
 {
     return id;
 }
 
-void Indice::setId(const string &value)
+void Indice::setId(const char value[4])
 {
-    id=value;
+    memcpy(id,value,4);
+    cout<<value<<endl;
 }

@@ -1,14 +1,6 @@
 #include "aspirantes.h"
 
-string Aspirantes::getCurp() const
-{
-    return curp;
-}
 
-void Aspirantes::setCurp(const string &value)
-{
-    curp = value;
-}
 
 string Aspirantes::getNombre() const
 {
@@ -53,4 +45,14 @@ void Aspirantes::setBandera(int value)
 Aspirantes::Aspirantes()
 {
 
+}
+
+const char* Aspirantes::getCurp() const
+{
+   return curp;
+}
+
+void Aspirantes::setCurp(const char value[4])
+{
+    memcpy(curp,value,4);
 }

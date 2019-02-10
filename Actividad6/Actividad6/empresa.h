@@ -24,7 +24,7 @@ private:
     ifstream leerIndice;
 
     struct{
-      string curp;
+      char curp[4];
       string nombre;
       string edad;
       string puesto;

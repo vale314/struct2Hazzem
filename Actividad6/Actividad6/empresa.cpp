@@ -43,7 +43,7 @@ void Empresa::pedirDatos()
     cout<<"Ingrese El Nombre"<<endl;
     getline(cin,aspiranteStruct.nombre);
     cout<<"Ingrese El Curp"<<endl;
-    getline(cin,aspiranteStruct.curp);
+    cin.getline(aspiranteStruct.curp,4);
     cout<<"Ingrese La Edad"<<endl;
     getline(cin,aspiranteStruct.edad);
     cout<<"Ingrese El Puesto"<<endl;
@@ -66,8 +66,8 @@ void Empresa::escribirDatos()
 {
     Indice indice;
     fstream escrAspirante("aspirantes.txt",ios::out|ios::app);
-    escrAspirante<<aspirante.getNombre()<<"#"<<aspirante.getCurp()<<"#"<<aspirante.getEdad()<<"#"<<aspirante.getPuesto()<<"#"<<aspirante.getBandera()<<";";
 
+    escrAspirante<<aspirante.getNombre()<<"#"<<aspirante.getCurp()<<"#"<<aspirante.getEdad()<<"#"<<aspirante.getPuesto()<<"#"<<aspirante.getBandera()<<";";
     if(indicesVector.empty()){
         indice.setId(aspirante.getCurp());
         indice.setPos(0);
@@ -104,8 +104,8 @@ void Empresa::cargarVector()
         leerIndice.read(reinterpret_cast<char*>(&indiceAux),sizeof(indiceAux));
         if(leerIndice.eof())
             break;
-        cout<<indiceAux.getPos()<<endl;
-//        indicesVector.push_back(indiceAux);
+        cout<<indiceAux.getPos()<<endl<<indiceAux.getId()<<endl;
+        indicesVector.push_back(indiceAux);
     }
    leerIndice.close();
    getch();
@@ -113,6 +113,7 @@ void Empresa::cargarVector()
 
 void Empresa::guardarVector()
 {
+    remove("indices.txt");
     escrIndice.open("indices.txt",ios::binary|ios::out|ios::app);
     for(size_t i=0;i<indicesVector.size();i++){
         escrIndice.write(reinterpret_cast<const char*>(&indicesVector[i]), sizeof (indicesVector[i]));
