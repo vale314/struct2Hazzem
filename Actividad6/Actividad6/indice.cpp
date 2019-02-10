@@ -22,8 +22,8 @@ const char* Indice::getId() const
     return id;
 }
 
-void Indice::setId(const char value[4])
+void Indice::setId(const char value[5])
 {
-    memcpy(id,value,4);
+    memcpy(id,value,5);
     cout<<value<<endl;
 }

@@ -52,7 +52,7 @@ const char* Aspirantes::getCurp() const
    return curp;
 }
 
-void Aspirantes::setCurp(const char value[4])
+void Aspirantes::setCurp(const char value[5])
 {
-    memcpy(curp,value,4);
+    memcpy(curp,value,5);
 }

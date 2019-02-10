@@ -25,7 +25,7 @@ private:
     ifstream leerIndice;
 
     struct{
-      char curp[4];
+      char curp[5];
       string curpS;
       string nombre;
       string edad;
@@ -59,7 +59,7 @@ public:
     void imprimir(size_t);
     void imprimirAll();
 
-    int validateCurp(const char[4]);
+    int validateCurp(const char[5]);
 };
 
 #endif // EMPRESA_H

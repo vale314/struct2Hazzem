@@ -284,7 +284,7 @@ void LDL<T>::bubbleSort()
 
         while (ptr1->siguiente != lptr)
         {
-            if (ptr1->dato > ptr1->siguiente->dato)
+            if (ptr1->dato < ptr1->siguiente->dato)
             {
                 cambio(ptr1->dato, ptr1->siguiente->dato);
                 swapped = 1;
@@ -307,7 +307,7 @@ void LDL<T>::partition(NodoLDL *l, NodoLDL *h)
            if (j->dato >= x)
            {
                i = (i == NULL)? l : i->siguiente;
-
+//               cout<<i->dato<<" "<<j->dato<<end;
                cambio((i->dato), (j->dato));
            }
        }

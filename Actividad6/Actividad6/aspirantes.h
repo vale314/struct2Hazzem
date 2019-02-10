@@ -8,7 +8,7 @@ using namespace std;
 class Aspirantes
 {
 private:
-    char curp[4];
+    char curp[5];
     string nombre;
     string edad;
     string puesto;
@@ -16,7 +16,7 @@ private:
 public:
     Aspirantes();
     const char* getCurp()const;
-    void setCurp(const char value[4]);
+    void setCurp(const char value[5]);
     string getNombre() const;
     void setNombre(const string &value);
     string getEdad() const;
@@ -25,6 +25,7 @@ public:
     void setPuesto(const string &value);
     int getBandera() const;
     void setBandera(int value);
+
 };
 
 #endif // ASPIRANTES_H

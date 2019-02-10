@@ -44,9 +44,12 @@ void Empresa::pedirDatos()
     cout<<"Ingrese El Nombre"<<endl;
     getline(cin,aspiranteStruct.nombre);
     cout<<"Ingrese El Curp"<<endl;
-    cin.getline(aspiranteStruct.curp,4);
-    if(validateCurp(aspiranteStruct.curp)){
-        cout<<"Error Curp DUPLICADO"<<endl;
+    cin.getline(aspiranteStruct.curp,10,'\n');
+    if(int i= validateCurp(aspiranteStruct.curp)){
+        if(i==1)
+            cout<<"Error Curp DUPLICADO"<<endl;
+        else
+            cout<<"Error Curp Incorrecto"<<endl;
         getch();
         return;
     }
@@ -111,8 +114,10 @@ void Empresa::cargarVector()
         if(leerIndice.eof())
             break;
         indicesVector.push_back(indiceAux);
+        cout<<indicesVector.back()<<endl;
     }
    leerIndice.close();
+   getch();
 }
 
 void Empresa::guardarVector()
@@ -135,15 +140,16 @@ void Empresa::consultar()
         return;
     }
 
-    char curp[4];
+    char curp[5];
     size_t i;
     int encontrado=0;
     cout<<"Ingrese el id a buscar"<<endl;
     cin.ignore();
-    cin.getline(curp,4);
+    cin.getline(curp,5);
 
     for(i=0;i<indicesVector.size()-1;i++){
-        if(!strncmp(curp,indicesVector[i].getId(),4)){
+        cout<<indicesVector[i].getId()<<endl;
+        if(!strncmp(curp,indicesVector[i].getId(),5)){
             encontrado=1;
             break;
         }
@@ -208,16 +214,21 @@ void Empresa::imprimirAll()
         getch();
         return;
     }
+    indicesVector.bubbleSort();
     for(size_t i=0;i<indicesVector.size()-1;i++)
         imprimir(i);
     getch();
 }
 
-int Empresa::validateCurp(const char curp[4])
+int Empresa::validateCurp(const char curp[5])
 {
+    if(strlen(curp)<4 || strlen(curp)>=5)
+        return 2;
+    if(indicesVector.empty())
+        return 0;
     int encontrado=0;
     for(size_t i=0;i<indicesVector.size()-1;i++){
-        if(!strncmp(curp,indicesVector[i].getId(),4)){
+        if(!strncmp(curp,indicesVector[i].getId(),5)){
             encontrado=1;
             break;
         }
