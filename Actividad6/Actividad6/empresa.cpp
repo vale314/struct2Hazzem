@@ -29,6 +29,7 @@ void Empresa::menu()
                 consultar();
             break;
             case menuImprimir:
+                imprimirAll();
             break;
             case menuSalir:
             break;
@@ -44,6 +45,11 @@ void Empresa::pedirDatos()
     getline(cin,aspiranteStruct.nombre);
     cout<<"Ingrese El Curp"<<endl;
     cin.getline(aspiranteStruct.curp,4);
+    if(validateCurp(aspiranteStruct.curp)){
+        cout<<"Error Curp DUPLICADO"<<endl;
+        getch();
+        return;
+    }
     cout<<"Ingrese La Edad"<<endl;
     getline(cin,aspiranteStruct.edad);
     cout<<"Ingrese El Puesto"<<endl;
@@ -104,11 +110,9 @@ void Empresa::cargarVector()
         leerIndice.read(reinterpret_cast<char*>(&indiceAux),sizeof(indiceAux));
         if(leerIndice.eof())
             break;
-        cout<<indiceAux.getPos()<<endl<<indiceAux.getId()<<endl;
         indicesVector.push_back(indiceAux);
     }
    leerIndice.close();
-   getch();
 }
 
 void Empresa::guardarVector()
@@ -123,27 +127,101 @@ void Empresa::guardarVector()
     getch();
 }
 
-
-
-//void Empresa::cargarVector()
-//{
-//    leer.open("aspirantes.txt",ios::in|ios::app);
-//    if(!leer.good())
-//        return;
-//    while(!leer.eof()){
-//        getline(leer,aspiranteStruct.nombre,'#');
-//        getline(leer,aspiranteStruct.curp,'#');
-//        getline(leer,aspiranteStruct.edad,'#');
-//        getline(leer,aspiranteStruct.puesto,'#');
-//        getline(leer,aspiranteStruct.bandera,';');
-//        if(leer.eof())
-//            break;
-//        }
-//    leer.close();
-//}
-
 void Empresa::consultar()
 {
+    if(indicesVector.empty()){
+        cout<<"Se Encuentra Vacio"<<endl;
+        getch();
+        return;
+    }
 
+    char curp[4];
+    size_t i;
+    int encontrado=0;
+    cout<<"Ingrese el id a buscar"<<endl;
+    cin.ignore();
+    cin.getline(curp,4);
+
+    for(i=0;i<indicesVector.size()-1;i++){
+        if(!strncmp(curp,indicesVector[i].getId(),4)){
+            encontrado=1;
+            break;
+        }
+    }
+
+    Aspirantes aspirante;
+    leerAspirante.open("aspirantes.txt",ios::binary);
+    if(encontrado){
+        long long pos= indicesVector[i].getPos();
+        leerAspirante.clear();
+        leerAspirante.seekg(pos);
+        getline(leerAspirante,aspiranteStruct.nombre,'#');
+        getline(leerAspirante,aspiranteStruct.curpS,'#');
+        getline(leerAspirante,aspiranteStruct.edad,'#');
+        getline(leerAspirante,aspiranteStruct.puesto,'#');
+        getline(leerAspirante,aspiranteStruct.bandera,';');
+        if(aspiranteStruct.bandera=="1")
+            imprimirStruct();
+        else
+            cout<<"No Se Encuentra"<<endl;
+    }else{
+        cout<<"No Se Encuentra"<<endl;
+    }
+    leerAspirante.seekg(0);
+    leerIndice.close();
+    getch();
+}
+
+void Empresa::imprimirStruct()
+{
+    cout<<setw(15)<<aspiranteStruct.nombre
+        <<setw(15)<<aspiranteStruct.curpS
+        <<setw(15)<<aspiranteStruct.edad
+        <<setw(15)<<aspiranteStruct.puesto
+       <<setw(15)<<aspiranteStruct.bandera<<endl;
+}
+
+void Empresa::imprimir(size_t i)
+{
+    Aspirantes aspirante;
+    leerAspirante.open("aspirantes.txt",ios::binary);
+
+        long long pos= indicesVector[i].getPos();
+        leerAspirante.clear();
+        leerAspirante.seekg(pos);
+        getline(leerAspirante,aspiranteStruct.nombre,'#');
+        getline(leerAspirante,aspiranteStruct.curpS,'#');
+        getline(leerAspirante,aspiranteStruct.edad,'#');
+        getline(leerAspirante,aspiranteStruct.puesto,'#');
+        getline(leerAspirante,aspiranteStruct.bandera,';');
+        if(aspiranteStruct.bandera=="1")
+            imprimirStruct();
+
+    leerAspirante.seekg(0);
+    leerIndice.close();
+}
+
+void Empresa::imprimirAll()
+{
+    if(indicesVector.empty()){
+        cout<<"El Index Se Encuentra Solo"<<endl;
+        getch();
+        return;
+    }
+    for(size_t i=0;i<indicesVector.size()-1;i++)
+        imprimir(i);
+    getch();
+}
+
+int Empresa::validateCurp(const char curp[4])
+{
+    int encontrado=0;
+    for(size_t i=0;i<indicesVector.size()-1;i++){
+        if(!strncmp(curp,indicesVector[i].getId(),4)){
+            encontrado=1;
+            break;
+        }
+    }
+    return encontrado;
 }
 

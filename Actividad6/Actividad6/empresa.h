@@ -8,6 +8,7 @@
 #include <conio.h>
 #include "ldl.h"
 #include "indice.h"
+#include <iomanip>
 
 using namespace std;
 
@@ -25,6 +26,7 @@ private:
 
     struct{
       char curp[4];
+      string curpS;
       string nombre;
       string edad;
       string puesto;
@@ -51,6 +53,13 @@ public:
     void cargarVector();
     void guardarVector();
     void consultar();
+
+    void imprimirStruct();
+
+    void imprimir(size_t);
+    void imprimirAll();
+
+    int validateCurp(const char[4]);
 };
 
 #endif // EMPRESA_H
