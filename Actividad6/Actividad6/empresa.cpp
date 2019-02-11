@@ -209,7 +209,7 @@ void Empresa::imprimir(size_t i,int bandera)
     Aspirantes aspirante;
     leerAspirante.open("aspirantes.txt",ios::binary);
 
-        long long pos= indicesVector[i].getPos();
+        long long pos= indicesVectorAux[i].getPos();
         leerAspirante.clear();
         leerAspirante.seekg(pos);
         getline(leerAspirante,aspiranteStruct.nombre,'#');
@@ -231,9 +231,16 @@ void Empresa::imprimirAll(int bandera)
         getch();
         return;
     }
-    //indicesVector.bubbleSort();
-    for(size_t i=0;i<indicesVector.size()-1;i++)
+    for(size_t i=0;i<=indicesVector.size()-1;i++)
+           indicesVectorAux.push_back(indicesVector[i]);
+
+    indicesVectorAux.bubbleSort();
+
+    for(size_t i=0;i<=indicesVectorAux.size()-2;i++)
         imprimir(i,bandera);
+
+    indicesVectorAux.clear();
+
     getch();
 }
 
@@ -340,7 +347,6 @@ void Empresa::eliminarFisico()
     }
     size_t i;
     int encontrado = 0;
-    int valido=0;
     for(i=0;i<indicesVector.size()-1;i++){
         if(!strncmp(curp,indicesVector[i].getId(),5)){
             encontrado=1;
@@ -349,60 +355,55 @@ void Empresa::eliminarFisico()
     }
 
     Aspirantes aspirante;
-    long long posR=0;
-    leerAspirante.open("aspirantes.txt",ios::binary);
+
     if(encontrado){
-        long long pos= indicesVector[i].getPos();
-        leerAspirante.clear();
-        leerAspirante.seekg(pos);
-        getline(leerAspirante,aspiranteStruct.nombre,'#');
-        getline(leerAspirante,aspiranteStruct.curpS,'#');
-        getline(leerAspirante,aspiranteStruct.edad,'#');
-        getline(leerAspirante,aspiranteStruct.puesto,'#');
-        getline(leerAspirante,aspiranteStruct.bandera,';');
-        if(aspiranteStruct.bandera=="1"){
-            posR=leerAspirante.tellg();
-            posR=posR-2;
-            valido=1;
-        }else
-            cout<<"No Se Encuentra"<<endl;
-    }else{
-        cout<<"No Se Encuentra"<<endl;
-    }
-    leerAspirante.seekg(0);
-    leerAspirante.close();
-    escrAspirante.close();
-    if(encontrado&&valido){
         char varA;
         char varB;
         long long posInicio=0,posFin=0;
 
         fstream escrAspirantes("aspirantes.txt",ios::in|ios::out|ios::binary);
-        escrAspirantes.read((char*)&varA,indicesVector[i].getPos());
+        escrAspirantes.read(reinterpret_cast<char*>(&varA),indicesVector[i].getPos());
         getline(escrAspirantes,aspiranteStruct.nombre,'#');
         getline(escrAspirantes,aspiranteStruct.curpS,'#');
         getline(escrAspirantes,aspiranteStruct.edad,'#');
         getline(escrAspirantes,aspiranteStruct.puesto,'#');
         getline(escrAspirantes,aspiranteStruct.bandera,';');
-
+        if(aspiranteStruct.bandera=="0"){
+            cout<<"No Se Encuentra"<<endl;
+            escrAspirantes.close();
+            return;
+        }
         posInicio=escrAspirantes.tellg();
         escrAspirantes.seekg(0,escrAspirantes.end);
         posFin=escrAspirantes.tellg();
-
         escrAspirantes.close();
 
         ofstream escrAspirantesAux("aspirantesAux.txt",ios::app);
-            escrAspirantesAux.write((char*)&varA,indicesVector[i].getPos());
+            escrAspirantesAux.write(reinterpret_cast<char*>(&varA),indicesVector[i].getPos());
         escrAspirantesAux.close();
 
         fstream escrAspirantes1("aspirantes.txt",ios::in|ios::out|ios::binary);
                 escrAspirantes1.seekg(posInicio);
-                escrAspirantes1.read((char*)&varB,posFin-posInicio);
+                escrAspirantes1.read(reinterpret_cast<char*>(&varB),posFin-posInicio);
         escrAspirantes1.close();
 
         ofstream escrAspirantesAux1("aspirantesAux.txt",ios::app);
-            escrAspirantesAux1.write((char*)&varB,posFin-posInicio);
+            escrAspirantesAux1.write(reinterpret_cast<char*>(&varB),posFin-posInicio);
         escrAspirantesAux1.close();
+
+        reOrganizarPunteros();
+//        remove("aspirantes.txt");
+//        rename("aspirantesAux.txt","aspirantes.txt");
+    }
+    getch();
+}
+
+void Empresa::reOrganizarPunteros()
+{
+    for(int i=0;i<=indicesVector.size()-2;i++){
+        //ELIMINAR TODOS LOS NODOS QUE TENGAN > MAYOR A POSINICIO Y A PARTIR DE POSINICIO
+        // COMENZAR A CREAR LOS NUEVOS NODOS CON EL TAMAÑO Y EL ID
+        cout<<indicesVector[i]<<endl;
 
     }
     getch();

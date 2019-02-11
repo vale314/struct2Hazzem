@@ -17,6 +17,7 @@ class Empresa
 private:
     Aspirantes aspirante;
     LDL<Indice> indicesVector;
+    LDL<Indice> indicesVectorAux;
 
     ofstream escrAspirante;
     ifstream leerAspirante;
@@ -69,6 +70,8 @@ public:
     void activar(int);
 
     void eliminarFisico();
+
+    void reOrganizarPunteros();
 
 };
 

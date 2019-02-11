@@ -20,12 +20,12 @@ public:
 
 
     bool operator <(const Indice& d) {
-             if(strcmp(id,d.id)==-1)
+             if(strcmp(id,d.id)==-1&&strcmp(d.id,"-1")!=0)
                 return true;
              return false;
           }
-    bool operator >=(const Indice& d) {
-             if(strcmp(id,d.id)==-1||strcmp(id,d.id)==0)
+    bool operator >(const Indice& d) {
+             if((strcmp(id,d.id)==1))
                 return true;
              return false;
           }

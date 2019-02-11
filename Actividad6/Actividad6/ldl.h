@@ -30,11 +30,11 @@ public:
         ~LDL(){
             clear();
         }
-        LDL(const LDL& other){
+        LDL(const T other){
             listFront=nullptr;
             listBack=nullptr;
             listSize=0;
-
+            cout<<"other"<<endl;
             for(size_t i=0;i<other.size();i++)
                 push_back(other[i]);
         }
@@ -284,7 +284,7 @@ void LDL<T>::bubbleSort()
 
         while (ptr1->siguiente != lptr)
         {
-            if (ptr1->dato < ptr1->siguiente->dato)
+            if (ptr1->dato > ptr1->siguiente->dato && ptr1->siguiente->siguiente!=NULL)
             {
                 cambio(ptr1->dato, ptr1->siguiente->dato);
                 swapped = 1;
@@ -304,7 +304,7 @@ void LDL<T>::partition(NodoLDL *l, NodoLDL *h)
 
        for (NodoLDL *j = l; j != h; j = j->siguiente)
        {
-           if (j->dato >= x)
+           if (j->dato < x)
            {
                i = (i == NULL)? l : i->siguiente;
 //               cout<<i->dato<<" "<<j->dato<<end;
