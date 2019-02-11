@@ -38,6 +38,9 @@ private:
         menuAgregar=1,
         menuConsultar,
         menuImprimir,
+        menuEliminarLogico,
+        menuActivar,
+        menuEliminar,
         menuSalir
     };
 public:
@@ -55,11 +58,18 @@ public:
     void consultar();
 
     void imprimirStruct();
+    void imprimirCabeceras();
 
-    void imprimir(size_t);
-    void imprimirAll();
+    void imprimir(size_t,int);
+    void imprimirAll(int);
 
     int validateCurp(const char[5]);
+
+    void eliminarLogico();
+    void activar(int);
+
+    void eliminarFisico();
+
 };
 
 #endif // EMPRESA_H

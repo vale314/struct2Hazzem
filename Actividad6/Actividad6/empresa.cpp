@@ -19,6 +19,9 @@ void Empresa::menu()
         cout<<menuAgregar<<".- Agregar"<<endl
             <<menuConsultar<<".- Consultar"<<endl
             <<menuImprimir<<".- Imprimir"<<endl
+            <<menuEliminarLogico<<".- Eliminar Logico"<<endl
+            <<menuActivar<<".- Activar"<<endl
+            <<menuEliminar<<".- Eliminar Fisico"<<endl
             <<menuSalir<<".- Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -29,7 +32,16 @@ void Empresa::menu()
                 consultar();
             break;
             case menuImprimir:
-                imprimirAll();
+                imprimirAll(1);
+            break;
+            case menuActivar:
+                activar(1);
+            break;
+            case menuEliminarLogico:
+                activar(0);
+            break;
+            case menuEliminar:
+                eliminarFisico();
             break;
             case menuSalir:
             break;
@@ -184,10 +196,15 @@ void Empresa::imprimirStruct()
         <<setw(15)<<aspiranteStruct.curpS
         <<setw(15)<<aspiranteStruct.edad
         <<setw(15)<<aspiranteStruct.puesto
-       <<setw(15)<<aspiranteStruct.bandera<<endl;
+        <<endl;
 }
 
-void Empresa::imprimir(size_t i)
+void Empresa::imprimirCabeceras()
+{
+    cout<<setw(15)<<"Nombre"<<setw(15)<<"Curp"<<setw(15)<<"Edad"<<setw(15)<<"Puesto"<<setw(15)<<endl<<endl<<endl;
+}
+
+void Empresa::imprimir(size_t i,int bandera)
 {
     Aspirantes aspirante;
     leerAspirante.open("aspirantes.txt",ios::binary);
@@ -200,14 +217,14 @@ void Empresa::imprimir(size_t i)
         getline(leerAspirante,aspiranteStruct.edad,'#');
         getline(leerAspirante,aspiranteStruct.puesto,'#');
         getline(leerAspirante,aspiranteStruct.bandera,';');
-        if(aspiranteStruct.bandera=="1")
+        if((aspiranteStruct.bandera=="1"&&bandera)||(aspiranteStruct.bandera=="0"&&!bandera))
             imprimirStruct();
 
     leerAspirante.seekg(0);
     leerIndice.close();
 }
 
-void Empresa::imprimirAll()
+void Empresa::imprimirAll(int bandera)
 {
     if(indicesVector.empty()){
         cout<<"El Index Se Encuentra Solo"<<endl;
@@ -216,7 +233,7 @@ void Empresa::imprimirAll()
     }
     indicesVector.bubbleSort();
     for(size_t i=0;i<indicesVector.size()-1;i++)
-        imprimir(i);
+        imprimir(i,bandera);
     getch();
 }
 
@@ -236,3 +253,144 @@ int Empresa::validateCurp(const char curp[5])
     return encontrado;
 }
 
+void Empresa::eliminarLogico()
+{
+
+}
+
+void Empresa::activar(int d)
+{
+    system("cls");
+    imprimirCabeceras();
+    imprimirAll(!d);
+    char curp[5];
+    if(d)
+        cout<<"Ingrese el curp a activar: "<<endl;
+    else
+        cout<<"Ingrese el curp a desactivar"<<endl;
+    cin.ignore();
+    cin.getline(curp,10,'\n');
+
+    if(indicesVector.empty()){
+        cout<<"Se Encuentra Vacio"<<endl;
+        getch();
+        return;
+    }
+    size_t i;
+    int encontrado = 0;
+    int valido=0;
+    for(i=0;i<indicesVector.size()-1;i++){
+        if(!strncmp(curp,indicesVector[i].getId(),5)){
+            encontrado=1;
+            break;
+        }
+    }
+
+    Aspirantes aspirante;
+    long long posR=0;
+    leerAspirante.open("aspirantes.txt",ios::binary);
+    if(encontrado){
+        long long pos= indicesVector[i].getPos();
+        leerAspirante.clear();
+        leerAspirante.seekg(pos);
+        getline(leerAspirante,aspiranteStruct.nombre,'#');
+        getline(leerAspirante,aspiranteStruct.curpS,'#');
+        getline(leerAspirante,aspiranteStruct.edad,'#');
+        getline(leerAspirante,aspiranteStruct.puesto,'#');
+        getline(leerAspirante,aspiranteStruct.bandera,';');
+        if((aspiranteStruct.bandera=="0"&&d)||(aspiranteStruct.bandera=="1"&&!d)){
+            posR=leerAspirante.tellg();
+            posR=posR-2;
+            valido=1;
+        }else
+            cout<<"No Se Encuentra"<<endl;
+    }else{
+        cout<<"No Se Encuentra"<<endl;
+    }
+    leerAspirante.seekg(0);
+    leerAspirante.close();
+    escrAspirante.close();
+    if(encontrado&&valido){
+        ofstream escrAspirantes("aspirantes.txt",ios::in|ios::out|ios::binary);
+        escrAspirantes.seekp(posR);
+        if(d)
+            escrAspirantes<<"1;";
+        else
+            escrAspirantes<<"0;";
+        escrAspirantes.close();
+    }
+    getch();
+}
+
+void Empresa::eliminarFisico()
+{
+    system("cls");
+    imprimirCabeceras();
+    imprimirAll(1);
+    char curp[5];
+    cout<<"Ingrese el curp a eliminar: "<<endl;
+
+    cin.ignore();
+    cin.getline(curp,10,'\n');
+
+    if(indicesVector.empty()){
+        cout<<"Se Encuentra Vacio"<<endl;
+        getch();
+        return;
+    }
+    size_t i;
+    int encontrado = 0;
+    int valido=0;
+    for(i=0;i<indicesVector.size()-1;i++){
+        if(!strncmp(curp,indicesVector[i].getId(),5)){
+            encontrado=1;
+            break;
+        }
+    }
+
+    Aspirantes aspirante;
+    long long posR=0;
+    leerAspirante.open("aspirantes.txt",ios::binary);
+    if(encontrado){
+        long long pos= indicesVector[i].getPos();
+        leerAspirante.clear();
+        leerAspirante.seekg(pos);
+        getline(leerAspirante,aspiranteStruct.nombre,'#');
+        getline(leerAspirante,aspiranteStruct.curpS,'#');
+        getline(leerAspirante,aspiranteStruct.edad,'#');
+        getline(leerAspirante,aspiranteStruct.puesto,'#');
+        getline(leerAspirante,aspiranteStruct.bandera,';');
+        if(aspiranteStruct.bandera=="1"){
+            posR=leerAspirante.tellg();
+            posR=posR-2;
+            valido=1;
+        }else
+            cout<<"No Se Encuentra"<<endl;
+    }else{
+        cout<<"No Se Encuentra"<<endl;
+    }
+    leerAspirante.seekg(0);
+    leerAspirante.close();
+    escrAspirante.close();
+    if(encontrado&&valido){
+        char varA;
+        char varB;
+        long long posB=0;
+        fstream escrAspirantes("aspirantes.txt",ios::in|ios::out|ios::binary);
+        escrAspirantes.read((char*)&varA,indicesVector[i].getPos());
+        getline(leerAspirante,aspiranteStruct.nombre,'#');
+        getline(leerAspirante,aspiranteStruct.curpS,'#');
+        getline(leerAspirante,aspiranteStruct.edad,'#');
+        getline(leerAspirante,aspiranteStruct.puesto,'#');
+        getline(leerAspirante,aspiranteStruct.bandera,';');
+        escrAspirantes.close();
+
+
+        fstream escrAspirantesAux("aspirantesAux.txt",ios::out|ios::app);
+        escrAspirantesAux.write((char*)&varA,indicesVector[i].getPos());
+        escrAspirantesAux.close();
+
+        cout<<&varA<<endl;
+    }
+    getch();
+}
