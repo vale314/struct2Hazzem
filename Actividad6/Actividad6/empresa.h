@@ -71,7 +71,7 @@ public:
 
     void eliminarFisico();
 
-    void reOrganizarPunteros();
+    void reOrganizarPunteros(long long);
 
 };
 

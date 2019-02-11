@@ -391,18 +391,38 @@ void Empresa::eliminarFisico()
             escrAspirantesAux1.write(reinterpret_cast<char*>(&varB),posFin-posInicio);
         escrAspirantesAux1.close();
 
-        reOrganizarPunteros();
+        reOrganizarPunteros(indicesVector[i].getPos());
 //        remove("aspirantes.txt");
 //        rename("aspirantesAux.txt","aspirantes.txt");
     }
     getch();
 }
 
-void Empresa::reOrganizarPunteros()
+void Empresa::reOrganizarPunteros(long long posInicio)
 {
-    for(int i=0;i<=indicesVector.size()-2;i++){
+    for(size_t i=0;i<=indicesVector.size()-1;i++)
+        cout<<indicesVector[i]<<endl;
+
+    cout<<endl<<"posInicio"<<posInicio<<endl;
+
+    do{
+        if(indicesVector.back().getPos()>=posInicio)
+            indicesVector.pop_back();
+        else
+            break;
+    }while(!indicesVector.empty());
+
+
+    Indice indiceAux;
+    indiceAux.setId("-1");
+    indiceAux.setPos(posInicio);
+    indicesVector.push_back(indiceAux);
+    cout<<"------------------"<<endl;
+
+    for(size_t i=0;i<=indicesVector.size()-1;i++){
         //ELIMINAR TODOS LOS NODOS QUE TENGAN > MAYOR A POSINICIO Y A PARTIR DE POSINICIO
         // COMENZAR A CREAR LOS NUEVOS NODOS CON EL TAMAÑO Y EL ID
+
         cout<<indicesVector[i]<<endl;
 
     }
