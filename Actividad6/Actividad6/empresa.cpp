@@ -231,7 +231,7 @@ void Empresa::imprimirAll(int bandera)
         getch();
         return;
     }
-    indicesVector.bubbleSort();
+    //indicesVector.bubbleSort();
     for(size_t i=0;i<indicesVector.size()-1;i++)
         imprimir(i,bandera);
     getch();
@@ -375,22 +375,35 @@ void Empresa::eliminarFisico()
     if(encontrado&&valido){
         char varA;
         char varB;
-        long long posB=0;
+        long long posInicio=0,posFin=0;
+
         fstream escrAspirantes("aspirantes.txt",ios::in|ios::out|ios::binary);
         escrAspirantes.read((char*)&varA,indicesVector[i].getPos());
-        getline(leerAspirante,aspiranteStruct.nombre,'#');
-        getline(leerAspirante,aspiranteStruct.curpS,'#');
-        getline(leerAspirante,aspiranteStruct.edad,'#');
-        getline(leerAspirante,aspiranteStruct.puesto,'#');
-        getline(leerAspirante,aspiranteStruct.bandera,';');
+        getline(escrAspirantes,aspiranteStruct.nombre,'#');
+        getline(escrAspirantes,aspiranteStruct.curpS,'#');
+        getline(escrAspirantes,aspiranteStruct.edad,'#');
+        getline(escrAspirantes,aspiranteStruct.puesto,'#');
+        getline(escrAspirantes,aspiranteStruct.bandera,';');
+
+        posInicio=escrAspirantes.tellg();
+        escrAspirantes.seekg(0,escrAspirantes.end);
+        posFin=escrAspirantes.tellg();
+
         escrAspirantes.close();
 
-
-        fstream escrAspirantesAux("aspirantesAux.txt",ios::out|ios::app);
-        escrAspirantesAux.write((char*)&varA,indicesVector[i].getPos());
+        ofstream escrAspirantesAux("aspirantesAux.txt",ios::app);
+            escrAspirantesAux.write((char*)&varA,indicesVector[i].getPos());
         escrAspirantesAux.close();
 
-        cout<<&varA<<endl;
+        fstream escrAspirantes1("aspirantes.txt",ios::in|ios::out|ios::binary);
+                escrAspirantes1.seekg(posInicio);
+                escrAspirantes1.read((char*)&varB,posFin-posInicio);
+        escrAspirantes1.close();
+
+        ofstream escrAspirantesAux1("aspirantesAux.txt",ios::app);
+            escrAspirantesAux1.write((char*)&varB,posFin-posInicio);
+        escrAspirantesAux1.close();
+
     }
     getch();
 }
