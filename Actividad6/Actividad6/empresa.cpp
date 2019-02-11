@@ -419,12 +419,24 @@ void Empresa::reOrganizarPunteros(long long posInicio)
     indicesVector.push_back(indiceAux);
     cout<<"------------------"<<endl;
 
-    for(size_t i=0;i<=indicesVector.size()-1;i++){
-        //ELIMINAR TODOS LOS NODOS QUE TENGAN > MAYOR A POSINICIO Y A PARTIR DE POSINICIO
-        // COMENZAR A CREAR LOS NUEVOS NODOS CON EL TAMAÑO Y EL ID
-
+    for(size_t i=0;i<=indicesVector.size()-1;i++)
         cout<<indicesVector[i]<<endl;
 
-    }
+    /*
+     * IFSTREAM ARCHIVOAUX
+     * MIENTRAS ALLA ALGO
+     *
+     * INDICEAUX.SETID(OBJECTORECUPERADO.ID)
+     * //YA ESTA EL POS ANTERIOIR GUARDADO
+     * INDICESVECTOR.PUSH_BACK(INDICEAUX)
+     *
+     * INDICEAUX.SETID("-1")
+     * INDICEAUX.SETPOS(TELLG)
+     * INDICEVECTOS.PUSH_BACK(INDICEAUX)
+     *
+     * FIN
+     * CERRAR ARCHIVO
+     *
+    */
     getch();
 }
