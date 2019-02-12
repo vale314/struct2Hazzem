@@ -1,7 +1,5 @@
 #include "aspirantes.h"
 
-
-
 string Aspirantes::getNombre() const
 {
     return nombre;

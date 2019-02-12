@@ -126,10 +126,8 @@ void Empresa::cargarVector()
         if(leerIndice.eof())
             break;
         indicesVector.push_back(indiceAux);
-        cout<<indicesVector.back()<<endl;
     }
    leerIndice.close();
-   getch();
 }
 
 void Empresa::guardarVector()
@@ -138,7 +136,6 @@ void Empresa::guardarVector()
     escrIndice.open("indices.txt",ios::binary|ios::out|ios::app);
     for(size_t i=0;i<indicesVector.size();i++){
         escrIndice.write(reinterpret_cast<const char*>(&indicesVector[i]), sizeof (indicesVector[i]));
-        cout<<indicesVector[i].getId()<<endl<<indicesVector[i].getPos()<<endl;
     }
     escrIndice.close();
     getch();
@@ -157,10 +154,9 @@ void Empresa::consultar()
     int encontrado=0;
     cout<<"Ingrese el id a buscar"<<endl;
     cin.ignore();
-    cin.getline(curp,5);
+    cin.getline(curp,10,'\n');
 
     for(i=0;i<indicesVector.size()-1;i++){
-        cout<<indicesVector[i].getId()<<endl;
         if(!strncmp(curp,indicesVector[i].getId(),5)){
             encontrado=1;
             break;
@@ -234,10 +230,16 @@ void Empresa::imprimirAll(int bandera)
     for(size_t i=0;i<=indicesVector.size()-1;i++)
            indicesVectorAux.push_back(indicesVector[i]);
 
+    for(size_t i=0;i<=indicesVectorAux.size()-1;i++)
+        cout<<indicesVectorAux[i]<<endl;
+
+    cout<<"--------------LDL--------------------"<<endl<<endl;
+
     indicesVectorAux.bubbleSort();
 
     for(size_t i=0;i<=indicesVectorAux.size()-2;i++)
         imprimir(i,bandera);
+
 
     indicesVectorAux.clear();
 
@@ -354,11 +356,15 @@ void Empresa::eliminarFisico()
         }
     }
 
-    Aspirantes aspirante;
+    if(!encontrado){
+        cout<<"No Se encuentra"<<endl;
+        getch();
+        return ;
+    }
 
-    if(encontrado){
-        char varA;
-        char varB;
+        Aspirantes aspirante;
+        char varA[512];
+        char varB[512];
         long long posInicio=0,posFin=0;
 
         fstream escrAspirantes("aspirantes.txt",ios::in|ios::out|ios::binary);
@@ -368,9 +374,10 @@ void Empresa::eliminarFisico()
         getline(escrAspirantes,aspiranteStruct.edad,'#');
         getline(escrAspirantes,aspiranteStruct.puesto,'#');
         getline(escrAspirantes,aspiranteStruct.bandera,';');
-        if(aspiranteStruct.bandera=="0"){
+        if(!aspiranteStruct.bandera.compare("0")){
             cout<<"No Se Encuentra"<<endl;
             escrAspirantes.close();
+            getch();
             return;
         }
         posInicio=escrAspirantes.tellg();
@@ -378,8 +385,8 @@ void Empresa::eliminarFisico()
         posFin=escrAspirantes.tellg();
         escrAspirantes.close();
 
-        ofstream escrAspirantesAux("aspirantesAux.txt",ios::app);
-            escrAspirantesAux.write(reinterpret_cast<char*>(&varA),indicesVector[i].getPos());
+        ofstream escrAspirantesAux("aspirantesAux.txt",ios::out|ios::app);
+            escrAspirantesAux.write(reinterpret_cast<char*>(&varA),(int)indicesVector[i].getPos());
         escrAspirantesAux.close();
 
         fstream escrAspirantes1("aspirantes.txt",ios::in|ios::out|ios::binary);
@@ -392,18 +399,12 @@ void Empresa::eliminarFisico()
         escrAspirantesAux1.close();
 
         reOrganizarPunteros(indicesVector[i].getPos());
-//        remove("aspirantes.txt");
-//        rename("aspirantesAux.txt","aspirantes.txt");
-    }
+
     getch();
 }
 
 void Empresa::reOrganizarPunteros(long long posInicio)
 {
-    for(size_t i=0;i<=indicesVector.size()-1;i++)
-        cout<<indicesVector[i]<<endl;
-
-    cout<<endl<<"posInicio"<<posInicio<<endl;
 
     do{
         if(indicesVector.back().getPos()>=posInicio)
@@ -417,26 +418,29 @@ void Empresa::reOrganizarPunteros(long long posInicio)
     indiceAux.setId("-1");
     indiceAux.setPos(posInicio);
     indicesVector.push_back(indiceAux);
-    cout<<"------------------"<<endl;
 
-    for(size_t i=0;i<=indicesVector.size()-1;i++)
-        cout<<indicesVector[i]<<endl;
+    ifstream leerAspirantesAux("aspirantesAux.txt",ios::in|ios::binary);
+    leerAspirantesAux.seekg(posInicio);
+    while(!leerAspirantesAux.eof()){
+        getline(leerAspirantesAux,aspiranteStruct.nombre,'#');
+        getline(leerAspirantesAux,aspiranteStruct.curpS,'#');
+        getline(leerAspirantesAux,aspiranteStruct.edad,'#');
+        getline(leerAspirantesAux,aspiranteStruct.puesto,'#');
+        getline(leerAspirantesAux,aspiranteStruct.bandera,';');
+        if(leerAspirantesAux.eof())
+             break;
+        indiceAux.setId(aspiranteStruct.curpS.c_str());
+        indiceAux.setPos(indicesVector.back().getPos());
+        indicesVector.pop_back();
+        indicesVector.push_back(indiceAux);
+        indiceAux.setId("-1");
+        indiceAux.setPos(leerAspirantesAux.tellg());
+        indicesVector.push_back(indiceAux);
+    }
+    leerAspirantesAux.close();
 
-    /*
-     * IFSTREAM ARCHIVOAUX
-     * MIENTRAS ALLA ALGO
-     *
-     * INDICEAUX.SETID(OBJECTORECUPERADO.ID)
-     * //YA ESTA EL POS ANTERIOIR GUARDADO
-     * INDICESVECTOR.PUSH_BACK(INDICEAUX)
-     *
-     * INDICEAUX.SETID("-1")
-     * INDICEAUX.SETPOS(TELLG)
-     * INDICEVECTOS.PUSH_BACK(INDICEAUX)
-     *
-     * FIN
-     * CERRAR ARCHIVO
-     *
-    */
-    getch();
+    leerAspirante.close();
+    escrAspirante.close();
+    remove("aspirantes.txt");
+    rename("aspirantesAux.txt","aspirantes.txt");
 }
