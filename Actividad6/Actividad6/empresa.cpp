@@ -22,11 +22,12 @@ void Empresa::menu()
             <<menuEliminarLogico<<".- Eliminar Logico"<<endl
             <<menuActivar<<".- Activar"<<endl
             <<menuEliminar<<".- Eliminar Fisico"<<endl
+            <<menuModificar<<".- Modificar"<<endl
             <<menuSalir<<".- Salir"<<endl;
         cin>>opc;
         switch (opc) {
             case menuAgregar:
-                pedirDatos();
+                pedirDatos(1);
             break;
             case menuConsultar:
                 consultar();
@@ -43,6 +44,9 @@ void Empresa::menu()
             case menuEliminar:
                 eliminarFisico();
             break;
+            case menuModificar:
+                modificar();
+            break;
             case menuSalir:
             break;
 
@@ -50,36 +54,39 @@ void Empresa::menu()
     }while(opc!=menuSalir);
 }
 
-void Empresa::pedirDatos()
+void Empresa::pedirDatos(int a)
 {
     cin.ignore();
     cout<<"Ingrese El Nombre"<<endl;
     getline(cin,aspiranteStruct.nombre);
-    cout<<"Ingrese El Curp"<<endl;
-    cin.getline(aspiranteStruct.curp,10,'\n');
-    if(int i= validateCurp(aspiranteStruct.curp)){
-        if(i==1)
-            cout<<"Error Curp DUPLICADO"<<endl;
-        else
-            cout<<"Error Curp Incorrecto"<<endl;
-        getch();
-        return;
+    if(a){
+        cout<<"Ingrese El Curp"<<endl;
+        cin.getline(aspiranteStruct.curp,10,'\n');
+        if(int i= validateCurp(aspiranteStruct.curp)){
+            if(i==1)
+                cout<<"Error Curp DUPLICADO"<<endl;
+            else
+                cout<<"Error Curp Incorrecto"<<endl;
+            getch();
+            return;
+        }
     }
     cout<<"Ingrese La Edad"<<endl;
     getline(cin,aspiranteStruct.edad);
     cout<<"Ingrese El Puesto"<<endl;
     getline(cin,aspiranteStruct.puesto);
-    llenarDatos();
+    llenarDatos(a);
 }
 
-void Empresa::llenarDatos()
+void Empresa::llenarDatos(int i)
 {
     aspirante.setNombre(aspiranteStruct.nombre);
     aspirante.setCurp(aspiranteStruct.curp);
     aspirante.setEdad(aspiranteStruct.edad);
     aspirante.setPuesto(aspiranteStruct.puesto);
     aspirante.setBandera(1);
-    escribirDatos();
+    if(i)
+        escribirDatos();
 }
 
 
@@ -398,6 +405,78 @@ void Empresa::eliminarFisico()
             escrAspirantesAux1.write(reinterpret_cast<char*>(&varB),posFin-posInicio);
         escrAspirantesAux1.close();
 
+        reOrganizarPunteros(indicesVector[i].getPos());
+
+        getch();
+}
+
+void Empresa::modificar()
+{
+    system("cls");
+    imprimirCabeceras();
+    imprimirAll(1);
+    char curp[5];
+    cout<<"Ingrese el curp a Modificar: "<<endl;
+
+    cin.ignore();
+    cin.getline(curp,10,'\n');
+
+    if(indicesVector.empty()){
+        cout<<"Se Encuentra Vacio"<<endl;
+        getch();
+        return;
+    }
+    size_t i;
+    int encontrado = 0;
+    for(i=0;i<indicesVector.size()-1;i++){
+        if(!strncmp(curp,indicesVector[i].getId(),5)){
+            encontrado=1;
+            break;
+        }
+    }
+
+    if(!encontrado){
+        cout<<"No Se encuentra"<<endl;
+        getch();
+        return ;
+    }
+        char varA[512];
+        char varB[512];
+        long long posInicio=0,posFin=0;
+
+        fstream escrAspirantes("aspirantes.txt",ios::in|ios::out|ios::binary);
+        escrAspirantes.read(reinterpret_cast<char*>(&varA),indicesVector[i].getPos());
+        getline(escrAspirantes,aspiranteStruct.nombre,'#');
+        getline(escrAspirantes,aspiranteStruct.curpS,'#');
+        getline(escrAspirantes,aspiranteStruct.edad,'#');
+        getline(escrAspirantes,aspiranteStruct.puesto,'#');
+        getline(escrAspirantes,aspiranteStruct.bandera,';');
+        if(!aspiranteStruct.bandera.compare("0")){
+            cout<<"No Se Encuentra"<<endl;
+            escrAspirantes.close();
+            getch();
+            return;
+        }
+        posInicio=escrAspirantes.tellg();
+        escrAspirantes.seekg(0,escrAspirantes.end);
+        posFin=escrAspirantes.tellg();
+        escrAspirantes.close();
+
+        pedirDatos(0);
+        ofstream escrAspirantesAux("aspirantesAux.txt",ios::out|ios::app);
+            escrAspirantesAux.write(reinterpret_cast<char*>(&varA),(int)indicesVector[i].getPos());
+            escrAspirantesAux<<aspirante.getNombre()<<"#"<<aspiranteStruct.curpS<<"#"<<aspirante.getEdad()<<"#"<<aspirante.getPuesto()<<"#"<<aspirante.getBandera()<<";";
+        escrAspirantesAux.close();
+
+        fstream escrAspirantes1("aspirantes.txt",ios::in|ios::out|ios::binary);
+                escrAspirantes1.seekg(posInicio);
+                escrAspirantes1.read(reinterpret_cast<char*>(&varB),posFin-posInicio);
+        escrAspirantes1.close();
+
+        ofstream escrAspirantesAux1("aspirantesAux.txt",ios::app);
+            escrAspirantesAux1.write(reinterpret_cast<char*>(&varB),posFin-posInicio);
+        escrAspirantesAux1.close();
+        //MANDARLE LA SIGUIENTE POSICION
         reOrganizarPunteros(indicesVector[i].getPos());
 
     getch();

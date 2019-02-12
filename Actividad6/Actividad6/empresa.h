@@ -42,6 +42,7 @@ private:
         menuEliminarLogico,
         menuActivar,
         menuEliminar,
+        menuModificar,
         menuSalir
     };
 public:
@@ -50,8 +51,8 @@ public:
 
     void menu();
 
-    void pedirDatos();
-    void llenarDatos();
+    void pedirDatos(int);
+    void llenarDatos(int);
     void escribirDatos();
 
     void cargarVector();
@@ -71,6 +72,8 @@ public:
 
     void eliminarFisico();
 
+
+    void modificar();
     void reOrganizarPunteros(long long);
 
 };
