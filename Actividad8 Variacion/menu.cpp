@@ -4,9 +4,9 @@ Menu::Menu()
 {
     V=10;
     reset();
-    ofstream fileOut("vectoresNombres.txt",ios::out);
+    ofstream fileOut("vectoresNombres.txt",ios::app);
     fileOut.close();
-    ofstream fileOut2("vectores.txt",ios::out);
+    ofstream fileOut2("vectores.txt",ios::app);
     fileOut2.close();
 }
 
@@ -55,6 +55,8 @@ int Menu::searchNombre(string nombresBuscar){
            fileOut<<nombresBuscar<<"|";
         fileOut.close();
         return i;
+//        nombres.push_back(nombresBuscar);
+//        return i+nombres.size()-1;
     }
     return -1;
 }
@@ -139,6 +141,20 @@ void Menu::guardar()
         for (int it2 = 0; it2<10; it2++)
             fileOut.write(reinterpret_cast<const char*>(&adj[u][it2]),sizeof(int));
     }
+    fileOut.close();
+//    guardarNombres();
+}
+
+void Menu::guardarNombres()
+{
+    ofstream fileOut("vectoresNombres.txt",ios::app);
+    while(!nombres.empty()){
+        cout<<nombres.back()<<endl;
+            fileOut<<nombres.back()<<"|";
+            nombres.pop_back();
+        }
+    nombres.clear();
+    getch();
     fileOut.close();
 }
 
