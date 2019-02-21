@@ -112,6 +112,53 @@ void Menu::agregar()
 
 }
 
+void Menu::guardar()
+{
+    ofstream fileOut("vectores.txt",ios::out);
+    for (int u = 0; u < 10; u++)
+    {
+        for (int it2 = 0; it2<10; it2++)
+            fileOut.write(reinterpret_cast<const char*>(&adj[u][it2]),sizeof(int));
+    }
+    fileOut.close();
+    guardarNombres();
+}
+
+void Menu::guardarNombres()
+{
+    ofstream fileOut("vectoresNombres.txt",ios::out);
+    for (size_t u = 0; u < nombres.size(); u++)
+    {
+        fileOut<<nombres[u]<<"|";
+    }
+    fileOut.close();
+}
+
+void Menu::cargar()
+{
+    ifstream fileIn("vectores.txt",ios::in);
+    for (int u = 0; u < 10; u++)
+    {
+        for (int it2 = 0; it2<10; it2++)
+            fileIn.read(reinterpret_cast<char*>(&adj[u][it2]),sizeof(int));
+    }
+    fileIn.close();
+    cargarNombres();
+}
+
+void Menu::cargarNombres()
+{
+    string nombre;
+    ifstream fileIn("vectoresNombres.txt",ios::in);
+    while(!fileIn.eof()){
+        getline(fileIn,nombre,'|');
+        nombres.push_back(nombre);
+        if(fileIn.eof())
+            break;
+    }
+    fileIn.close();
+}
+
 void Menu::menu()
 {
     int opc;
@@ -119,6 +166,8 @@ void Menu::menu()
         system("cls");
         cout<<menuAgregar<<".- Agregar"<<endl
             <<menuMostrar<<".- Mostrar"<<endl
+            <<menuGuardar<<".- Guardar"<<endl
+            <<menuCargar<<".- Cargar"<<endl
             <<menuSalir<<".- Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -127,6 +176,12 @@ void Menu::menu()
             break;
             case menuMostrar:
                 printGraph();
+            break;
+            case menuGuardar:
+                guardar();
+            break;
+            case menuCargar:
+                cargar();
             break;
         }
     }while(opc!=menuSalir);
