@@ -12,8 +12,11 @@ Menu::Menu()
 void Menu::menu(){
     int opc;
     do{
+        system("cls");
         cout<<menuInsertar<<"Ingresar Grafo"<<endl
             <<menuMostrar<<"Mostrar Grafo"<<endl
+            <<menuGuardar<<"Menu Guardar"<<endl
+            <<menuCargar<<"Menu Cargar"<<endl
             <<menuSalir<<"Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -22,6 +25,12 @@ void Menu::menu(){
             break;
             case menuMostrar:
                 mostrar();
+            break;
+            case menuGuardar:
+                guardar();
+            break;
+            case menuCargar:
+                cargar();
             break;
             case menuSalir:
             break;
@@ -41,8 +50,7 @@ void Menu::insertar()
     cin.getline(nombreOrigen,10);
 
     cout<<"Ingrese el nombre De Destino"<<endl;
-    cin.ignore();
-    cin.getline(nombreDestino,10);
+        cin.getline(nombreDestino,10);
 
     cout<<"El Vertice es Dirigido 1-Si 0-No"<<endl;
     cin>>dirigido;
@@ -59,6 +67,21 @@ void Menu::insertar()
 
 void Menu::mostrar()
 {
-    grafo.mostrar();
+    int opc;
+    cout<<"1-Logico 0 Fisico"<<endl;
+    cin>>opc;
+    if(opc)
+        grafo.mostrarLogico();
+    if(!opc)
+        grafo.mostrarFisico();
     getch();
+}
+
+
+void Menu::guardar(){
+    grafo.guardar("vectoresNombres.txt","vectores.txt");
+}
+
+void Menu::cargar(){
+    grafo.cargar("vectoresNombres.txt","vectores.txt");
 }

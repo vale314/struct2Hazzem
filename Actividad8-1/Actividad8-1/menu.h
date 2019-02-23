@@ -13,6 +13,8 @@ private:
     enum {
         menuInsertar=1,
         menuMostrar,
+        menuGuardar,
+        menuCargar,
         menuSalir
     };
     Grafo grafo;
@@ -23,6 +25,8 @@ public:
 
     void insertar();
     void mostrar();
+    void guardar();
+    void cargar();
 };
 
 #endif // MENU_H

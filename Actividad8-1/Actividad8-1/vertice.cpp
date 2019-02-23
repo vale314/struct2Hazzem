@@ -16,6 +16,11 @@ const char *Vertice::getNombre() const
     return nombre;
 }
 
+void Vertice::setNombre(const char nombre [10])
+{
+    strcpy(this->nombre,nombre);
+}
+
 Vertice::Vertice()
 {
     

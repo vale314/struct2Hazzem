@@ -22,6 +22,7 @@ public:
     bool compareNumVertice() const;
 
     const char *getNombre()const;
+    void setNombre(const char[10]);
 };
 
 #endif // VERTICE_H
