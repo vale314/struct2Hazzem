@@ -50,10 +50,7 @@ int Grafo::name_to_int(const char nombresBuscar[10])
     if(!vectoresNombres.empty()&&!encontrado){
         for(size_t j=0;j<vectoresNombres.size();j++){
             if(!strcmp(vectoresNombres[j].getNombre(),nombresBuscar)){
-                if(i)
-                    i=i+j+1;
-                else
-                    i=i+j;
+                i=j;
                 encontrado=1;
                 break;
             }
@@ -62,8 +59,9 @@ int Grafo::name_to_int(const char nombresBuscar[10])
     cout<<"Despues IF"<<endl<<"i: "<<i<<endl;
     getch();
     if(!encontrado&&i<9){
-        if(!fileRead)
-            i=i+vectoresNombres.size();
+
+            i=vectoresNombres.size()-1;
+        cout<<"Size: "<<vectoresNombres.size()<<endl;
         cout<<"Ultimo"<<endl<<"i: "<<i<<endl;
         getch();
         Vertice verticeNew(nombresBuscar,counter);
