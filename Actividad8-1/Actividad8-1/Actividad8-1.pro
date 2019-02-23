@@ -7,11 +7,13 @@ SOURCES += \
         main.cpp \
     grafo.cpp \
     vertice.cpp \
-    arista.cpp
+    arista.cpp \
+    menu.cpp
 
 HEADERS += \
     grafo.h \
     vertice.h \
     arista.h \
     ldl.h \
-    nodoldl.h
+    nodoldl.h \
+    menu.h

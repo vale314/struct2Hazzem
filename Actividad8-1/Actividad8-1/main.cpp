@@ -1,5 +1,6 @@
 #include <iostream>
 #include <ldl.h>
+#include <menu.h>
 
 using namespace std;
 
@@ -86,6 +87,9 @@ using namespace std;
 
 int main()
 {
+    Menu menu;
+    menu.menu();
+
     return 0;
 }
 
