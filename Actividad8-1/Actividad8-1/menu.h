@@ -15,6 +15,7 @@ private:
         menuMostrar,
         menuGuardar,
         menuCargar,
+        menuDescargar,
         menuSalir
     };
     Grafo grafo;
@@ -27,6 +28,7 @@ public:
     void mostrar();
     void guardar();
     void cargar();
+    void descargar();
 };
 
 #endif // MENU_H

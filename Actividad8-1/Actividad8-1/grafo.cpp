@@ -44,6 +44,9 @@ int Grafo::name_to_int(const char nombresBuscar[10])
     }
     fileIn.close();
 
+    cout<<"Antes IF"<<endl<<"i: "<<i<<endl;
+    getch();
+
     if(!vectoresNombres.empty()&&!encontrado){
         for(size_t j=0;j<vectoresNombres.size();j++){
             if(!strcmp(vectoresNombres[j].getNombre(),nombresBuscar)){
@@ -56,10 +59,13 @@ int Grafo::name_to_int(const char nombresBuscar[10])
             }
         }
     }
-
+    cout<<"Despues IF"<<endl<<"i: "<<i<<endl;
+    getch();
     if(!encontrado&&i<9){
         if(!fileRead)
             i=i+vectoresNombres.size();
+        cout<<"Ultimo"<<endl<<"i: "<<i<<endl;
+        getch();
         Vertice verticeNew(nombresBuscar,counter);
         counter++;
         vectoresNombres.push_back(verticeNew);
@@ -93,17 +99,33 @@ void Grafo::insertarArista(const char nombreOrigen[10],const char nombreDestino[
 
 void Grafo::mostrarLogico()
 {
+    mostrarLogicoCabeceras();
     for(int i=0;i<10;i++){
         for(int j=0;j<10;j++){
-            cout<<aristas[i][j].getPeso();
+            cout<<setw(10)<<aristas[i][j].getPeso();
             if(j==9)
                 cout<<endl;
         }
     }
 }
 
+void Grafo::mostrarLogicoCabeceras()
+{
+    for(size_t i=0;i<10;i++)
+        cout<<setw(10)<<i<<"|";
+    cout<<endl;
+    if(!vectoresNombres.size()){
+        cout<<"Vector Vacio"<<endl;
+        return;
+    }
+    for(size_t i=0;i<vectoresNombres.size();i++)
+        cout<<setw(10)<<vectoresNombres[i].getNombre();
+    cout<<endl;
+}
+
 void Grafo::mostrarFisico()
 {
+    mostrarFiscoCabeceras();
     Arista aristasAux;
     ifstream fileInAristas(nameArchivoAristas,ios::in|ios::binary);
     if(!fileInAristas.good()){
@@ -117,13 +139,38 @@ void Grafo::mostrarFisico()
                 fileInAristas.read(reinterpret_cast<char *>(&aristasAux),sizeof (Arista));
                 if(fileInAristas.eof())
                     break;
-                cout<<aristasAux.getPeso();
+                cout<<setw(10)<<aristasAux.getPeso();
                 if(j==9)
                     cout<<endl;
             }
         }
     }
     fileInAristas.close();
+}
+
+void Grafo::mostrarFiscoCabeceras()
+{
+    Vertice vectorAux;
+
+
+    for(size_t i=0;i<10;i++)
+        cout<<setw(10)<<i<<"|";
+    cout<<endl;
+
+    ifstream fileInVertices(nameArchivoVertices,ios::in|ios::binary);
+    if(!fileInVertices.good()){
+        cout<<"Error File Not Find"<<endl;
+        fileInVertices.close();
+        return;
+    }
+    while(!fileInVertices.eof()){
+        fileInVertices.read(reinterpret_cast<char *>(&vectorAux),sizeof (Vertice));
+        if(fileInVertices.eof())
+            break;
+        cout<<setw(10)<<vectorAux.getNombre();
+    }
+    fileInVertices.close();
+    cout<<endl;
 }
 
 void Grafo::guardar(string nameFileVertices,string nameFileAristas)
@@ -149,7 +196,6 @@ void Grafo::guardar(string nameFileVertices,string nameFileAristas)
 void Grafo::cargar(string nameFileVertices, string nameFileAristas)
 {
     resetGrafo();
-
     nameArchivoVertices=nameFileVertices;
     nameArchivoAristas=nameFileAristas;
 
@@ -159,6 +205,7 @@ void Grafo::cargar(string nameFileVertices, string nameFileAristas)
     if(!fileInVertices.good()){
         cout<<"Error File Not Find"<<endl;
         fileInVertices.close();
+        getch();
         return;
     }
     while(!fileInVertices.eof()){
@@ -174,6 +221,7 @@ void Grafo::cargar(string nameFileVertices, string nameFileAristas)
     if(!fileInAristas.good()){
         cout<<"Error File Not Find"<<endl;
         fileInAristas.close();
+        getch();
         return;
     }
     while(!fileInAristas.eof()){

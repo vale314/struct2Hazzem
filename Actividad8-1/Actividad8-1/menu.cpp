@@ -17,6 +17,7 @@ void Menu::menu(){
             <<menuMostrar<<"Mostrar Grafo"<<endl
             <<menuGuardar<<"Menu Guardar"<<endl
             <<menuCargar<<"Menu Cargar"<<endl
+            <<menuDescargar<<"Menu Descargar"<<endl
             <<menuSalir<<"Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -31,6 +32,9 @@ void Menu::menu(){
             break;
             case menuCargar:
                 cargar();
+            break;
+            case menuDescargar:
+                descargar();
             break;
             case menuSalir:
             break;
@@ -79,9 +83,24 @@ void Menu::mostrar()
 
 
 void Menu::guardar(){
-    grafo.guardar("vectoresNombres.txt","vectores.txt");
+    string nameFileAristas;
+
+    cout<<"Ingrese El Nombre Del Archivo"<<endl;
+    cin>>nameFileAristas;
+
+    grafo.guardar(nameFileAristas+"Name.txt",nameFileAristas+".txt");
 }
 
 void Menu::cargar(){
-    grafo.cargar("vectoresNombres.txt","vectores.txt");
+    string nameFileAristas;
+
+    cout<<"Ingrese El Nombre Del Archivo"<<endl;
+    cin>>nameFileAristas;
+
+    grafo.cargar(nameFileAristas+"Name.txt",nameFileAristas+".txt");
+}
+
+void Menu::descargar()
+{
+    grafo.resetGrafo();
 }
