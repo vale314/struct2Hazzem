@@ -37,6 +37,9 @@ public:
     void guardar(string,string);
     void cargar(string,string);
 
+    bool editarVertice(const char[10],const char[10]);
+    bool editarArista(const char[10],const char[10],int,bool);
+
 };
 
 #endif // GRAFO_H

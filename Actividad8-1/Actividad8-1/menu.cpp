@@ -18,6 +18,7 @@ void Menu::menu(){
             <<menuGuardar<<"Menu Guardar"<<endl
             <<menuCargar<<"Menu Cargar"<<endl
             <<menuDescargar<<"Menu Descargar"<<endl
+            <<menuEditar<<"Menu Editar"<<endl
             <<menuSalir<<"Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -35,6 +36,9 @@ void Menu::menu(){
             break;
             case menuDescargar:
                 descargar();
+            break;
+            case menuEditar:
+                editar();
             break;
             case menuSalir:
             break;
@@ -103,4 +107,73 @@ void Menu::cargar(){
 void Menu::descargar()
 {
     grafo.resetGrafo();
+}
+
+
+void Menu::editar()
+{
+    int opc=0;
+    do{
+        system("cls");
+        cout<<menuEVertice<<"Editar Vertice"<<endl
+            <<menuEArista<<"Editar Arista"<<endl
+            <<menuESalir<<"Salir"<<endl;
+        cin>>opc;
+        switch (opc) {
+            case menuEVertice:
+                editarVertice();
+            break;
+            case menuEArista:
+                editarArista();
+            break;
+            case menuESalir:
+            break;
+        }
+    }while(opc!=menuESalir);
+}
+
+void Menu::editarVertice()
+{
+    char nombre[10];
+    char nombreNew[10];
+    cin.ignore();
+    cout<<"Ingrese el nombre de su vertice:"<<endl;
+    cin.getline(nombre,10);
+
+    cout<<"Ingrese el nombre nuevo"<<endl;
+    cin.getline(nombreNew,10);
+
+    if(grafo.editarVertice(nombre,nombreNew))
+        cout<<"Cambio Hecho Con Exito"<<endl;
+    else
+        cout<<"No Se Encontro El Vertice"<<endl;
+
+    getch();
+}
+
+void Menu::editarArista()
+{
+    char nombreOrigen[10];
+    char nombreDestino[10];
+    int ponderacion;
+    bool dirigido;
+
+    cin.ignore();
+    cout<<"Ingrese El Origen"<<endl;
+    cin>>nombreOrigen;
+
+    cout<<"Ingrese El Destino"<<endl;
+    cin>>nombreDestino;
+
+    cout<<"Ingrese Su Ponderacion"<<endl;
+    cin>>ponderacion;
+
+    cout<<"Es Dirigido-1 No Dirigido-0"<<endl;
+    cin>>dirigido;
+
+    if(grafo.editarArista(nombreOrigen,nombreDestino,ponderacion,dirigido))
+        cout<<"Se Cambio Con Exito"<<endl;
+    else
+        cout<<"Error Al Realizar Cambio"<<endl;
+    getch();
 }

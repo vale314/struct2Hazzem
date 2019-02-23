@@ -60,13 +60,13 @@ int Grafo::name_to_int(const char nombresBuscar[10])
     getch();
     if(!encontrado&&i<9){
             i=vectoresNombres.size();
-        cout<<"Size: "<<vectoresNombres.size()<<endl;
-        cout<<"Ultimo"<<endl<<"i: "<<i<<endl;
-        getch();
         Vertice verticeNew(nombresBuscar,counter);
         counter++;
         vectoresNombres.push_back(verticeNew);
     }
+    cout<<"Size: "<<vectoresNombres.size()<<endl;
+    cout<<"Ultimo"<<endl<<"i: "<<i<<endl;
+    getch();
     return i;
 
 }
@@ -228,5 +228,42 @@ void Grafo::cargar(string nameFileVertices, string nameFileAristas)
         }
     }
     fileInAristas.close();
+}
+
+bool Grafo::editarVertice(const char nombre[10],const char nombreNew[10])
+{
+    for(size_t i=0;i<vectoresNombres.size();i++){
+        if(!strcmp(vectoresNombres[i].getNombre(),nombre)){
+            vectoresNombres[i].setNombre(nombreNew);
+            return true;
+        }
+    }
+    return false;
+
+}
+
+bool Grafo::editarArista(const char nombreOrigen[10], const char nombreDestino[10],int ponderacion,bool dirigido)
+{
+    int  origen=0;
+    int destino=0;
+    for(size_t i=0;i<vectoresNombres.size();i++){
+        if(!strcmp(vectoresNombres[i].getNombre(),nombreOrigen))
+            origen=vectoresNombres[i].getNumVertice();
+        if(!strcmp(vectoresNombres[i].getNombre(),nombreDestino))
+            destino=vectoresNombres[i].getNumVertice();
+    }
+
+    if(aristas[origen][destino].getPeso()==0)
+        return false;
+
+    aristas[origen][destino].setPeso(ponderacion);
+    aristas[destino][origen].setPeso(0);
+    if(!dirigido)
+        aristas[destino][origen].setPeso(ponderacion);
+
+    if(aristas[origen][destino].getPeso()==ponderacion)
+        return true;
+
+    return false;
 }
 
