@@ -20,8 +20,10 @@ private:
 public:
     Grafo();
 
+    void resetGrafo();
     int name_to_int(const char[10]);
     void insertarArista(const char[10],const char[10],bool,bool,int);
+    void mostrar();
 };
 
 #endif // GRAFO_H

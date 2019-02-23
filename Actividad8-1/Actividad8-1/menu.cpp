@@ -21,6 +21,7 @@ void Menu::menu(){
                 insertar();
             break;
             case menuMostrar:
+                mostrar();
             break;
             case menuSalir:
             break;
@@ -58,5 +59,6 @@ void Menu::insertar()
 
 void Menu::mostrar()
 {
-
+    grafo.mostrar();
+    getch();
 }

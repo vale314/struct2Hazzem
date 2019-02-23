@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <grafo.h>
+#include <conio.h>
 
 using namespace std;
 
