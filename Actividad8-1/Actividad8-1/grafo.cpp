@@ -59,8 +59,7 @@ int Grafo::name_to_int(const char nombresBuscar[10])
     cout<<"Despues IF"<<endl<<"i: "<<i<<endl;
     getch();
     if(!encontrado&&i<9){
-
-            i=vectoresNombres.size()-1;
+            i=vectoresNombres.size();
         cout<<"Size: "<<vectoresNombres.size()<<endl;
         cout<<"Ultimo"<<endl<<"i: "<<i<<endl;
         getch();
