@@ -32,5 +32,8 @@ void Arista::setDestino(int value)
 
 Arista::Arista()
 {
-    
+    origen=0;
+    destino=0;
+    peso=0;
+
 }

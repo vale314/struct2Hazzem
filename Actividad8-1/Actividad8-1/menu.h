@@ -17,6 +17,7 @@ private:
         menuCargar,
         menuDescargar,
         menuEditar,
+        menuEliminar,
         menuSalir
     };
 
@@ -24,6 +25,12 @@ private:
         menuEVertice=1,
         menuEArista,
         menuESalir
+    };
+
+    enum{
+        menuElVertice=1,
+        menuElArista,
+        menuElSalir
     };
     Grafo grafo;
 public:
@@ -39,6 +46,10 @@ public:
     void editar();
     void editarVertice();
     void editarArista();
+
+    void eliminar();
+    void eliminarVertice();
+    void eliminarArista();
 };
 
 #endif // MENU_H

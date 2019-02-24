@@ -2,10 +2,7 @@
 
 Menu::Menu()
 {
-    ofstream fileOut("vectoresNombres.txt",ios::app);
-    fileOut.close();
-    ofstream fileOut2("vectores.txt",ios::app);
-    fileOut2.close();
+
 }
 
 
@@ -19,6 +16,7 @@ void Menu::menu(){
             <<menuCargar<<"Menu Cargar"<<endl
             <<menuDescargar<<"Menu Descargar"<<endl
             <<menuEditar<<"Menu Editar"<<endl
+            <<menuEliminar<<"Menu Eliminar"<<endl
             <<menuSalir<<"Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -39,6 +37,9 @@ void Menu::menu(){
             break;
             case menuEditar:
                 editar();
+            break;
+            case menuEliminar:
+                eliminar();
             break;
             case menuSalir:
             break;
@@ -175,5 +176,59 @@ void Menu::editarArista()
         cout<<"Se Cambio Con Exito"<<endl;
     else
         cout<<"Error Al Realizar Cambio"<<endl;
+    getch();
+}
+
+void Menu::eliminar()
+{
+    int opc=0;
+    do{
+        system("cls");
+        cout<<menuElVertice<<"Eliminar Vertice"<<endl
+            <<menuElArista<<"Eliminar Arista"<<endl
+            <<menuElSalir<<"Salir"<<endl;
+        cin>>opc;
+        switch (opc) {
+            case menuElVertice:
+                eliminarVertice();
+            break;
+            case menuElArista:
+                eliminarArista();
+            break;
+            case menuElSalir:
+            break;
+        }
+    }while(opc!=menuElSalir);
+}
+
+void Menu::eliminarVertice()
+{
+    char nombre[10];
+    cin.ignore();
+    cout<<"Ingrese El Vertice"<<endl;
+    cin.getline(nombre,10);
+    if(grafo.eliminarVertice(nombre))
+        cout<<"Eliminado Con Exito"<<endl;
+    else
+        cout<<"No Se Elimino"<<endl;
+    getch();
+}
+
+void Menu::eliminarArista()
+{
+    char nombreOrigen[10];
+    char nombreDestino[10];
+
+    cin.ignore();
+    cout<<"Ingrese El Vertice De Origen"<<endl;
+    cin>>nombreOrigen;
+
+    cout<<"Ingrese El Vertice De Destino"<<endl;
+    cin>>nombreDestino;
+
+    if(grafo.eliminarArista(nombreOrigen,nombreDestino))
+        cout<<"Eliminado Con Exito"<<endl;
+    else
+        cout<<"No Se Pudo Eliminar"<<endl;
     getch();
 }

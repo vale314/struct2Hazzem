@@ -60,7 +60,7 @@ int Grafo::name_to_int(const char nombresBuscar[10])
     getch();
     if(!encontrado&&i<9){
             i=vectoresNombres.size();
-        Vertice verticeNew(nombresBuscar,counter);
+        Vertice verticeNew(nombresBuscar,i);
         counter++;
         vectoresNombres.push_back(verticeNew);
     }
@@ -90,12 +90,19 @@ void Grafo::insertarArista(const char nombreOrigen[10],const char nombreDestino[
         arista.setPeso(pondNum);
 
     aristas[origen][destino]=arista;
-    if(!dirigido)
+    if(!dirigido){
+        arista.setDestino(origen);
+        arista.setOrigen(destino);
         aristas[destino][origen]=arista;
+    }
 }
 
 void Grafo::mostrarLogico()
 {
+    if(!vectoresNombres.size()){
+        cout<<"Vector Vacio"<<endl;
+        return;
+    }
     mostrarLogicoCabeceras();
     for(int i=0;i<10;i++){
         for(int j=0;j<10;j++){
@@ -104,17 +111,22 @@ void Grafo::mostrarLogico()
                 cout<<endl;
         }
     }
+
+    for(size_t j=0;j<vectoresNombres.size();j++){
+        for(size_t i=0;i<vectoresNombres.size();i++){
+            cout<<"  Origen: "<<aristas[j][i].getOrigen();
+            cout<<"  Destino: "<<aristas[j][i].getDestino();
+            cout<<"  Peso: "<<aristas[j][i].getPeso();
+        }
+        cout<<endl;
+    }
 }
 
 void Grafo::mostrarLogicoCabeceras()
 {
-    for(size_t i=0;i<10;i++)
-        cout<<setw(10)<<i<<"|";
+    for(size_t i=0;i<vectoresNombres.size();i++)
+        cout<<setw(10)<<vectoresNombres[i].getNumVertice()<<"|";
     cout<<endl;
-    if(!vectoresNombres.size()){
-        cout<<"Vector Vacio"<<endl;
-        return;
-    }
     for(size_t i=0;i<vectoresNombres.size();i++)
         cout<<setw(10)<<vectoresNombres[i].getNombre();
     cout<<endl;
@@ -145,14 +157,11 @@ void Grafo::mostrarFisico()
     fileInAristas.close();
 }
 
-void Grafo::mostrarFiscoCabeceras()
+void Grafo::
+mostrarFiscoCabeceras()
 {
     Vertice vectorAux;
 
-
-    for(size_t i=0;i<10;i++)
-        cout<<setw(10)<<i<<"|";
-    cout<<endl;
 
     ifstream fileInVertices(nameArchivoVertices,ios::in|ios::binary);
     if(!fileInVertices.good()){
@@ -160,6 +169,10 @@ void Grafo::mostrarFiscoCabeceras()
         fileInVertices.close();
         return;
     }
+
+    for(size_t i=0;i<10;i++)
+        cout<<setw(10)<<i<<"|";
+    cout<<endl;
     while(!fileInVertices.eof()){
         fileInVertices.read(reinterpret_cast<char *>(&vectorAux),sizeof (Vertice));
         if(fileInVertices.eof())
@@ -265,5 +278,66 @@ bool Grafo::editarArista(const char nombreOrigen[10], const char nombreDestino[1
         return true;
 
     return false;
+}
+
+bool Grafo::eliminarArista(const char nombreOrigen [10], const char nombreDestino [10])
+{
+    int  origen=0;
+    int destino=0;
+    bool encontrado1=false;
+    bool encontrado2=false;
+    for(size_t i=0;i<vectoresNombres.size();i++){
+        if(!strcmp(vectoresNombres[i].getNombre(),nombreOrigen)){
+            origen=vectoresNombres[i].getNumVertice();
+            encontrado1=true;
+        }
+        if(!strcmp(vectoresNombres[i].getNombre(),nombreDestino)){
+            destino=vectoresNombres[i].getNumVertice();
+            encontrado2=true;
+        }
+    }
+
+    if(aristas[origen][destino].getPeso()==0||!encontrado1|!encontrado2)
+        return false;
+
+    aristas[origen][destino].setPeso(0);
+    aristas[destino][origen].setPeso(0);
+
+    if(aristas[origen][destino].getPeso()==0)
+        return true;
+
+    return false;
+}
+
+bool Grafo::eliminarVertice(const char nombreOrigen[10])
+{
+    Arista arista;
+    int  origen=0;
+    bool encontrado1=false;
+    for(size_t i=0;i<vectoresNombres.size();i++){
+        if(!strcmp(vectoresNombres[i].getNombre(),nombreOrigen)){
+            origen=vectoresNombres[i].getNumVertice();
+            encontrado1=true;
+        }
+    }
+    if(!encontrado1)
+        return false;
+
+
+    for(size_t i=0;i<vectoresNombres.size();i++){
+        aristas[i][origen]=arista;
+        aristas[origen][i]=arista;
+    }
+
+    for(size_t j=origen;j<vectoresNombres.size();j++){
+        for(size_t i=0;i<vectoresNombres.size();i++){
+             aristas[i][j]=aristas[i][j+1];
+             aristas[j][i]=aristas[j+1][i];
+        }
+    }
+
+    vectoresNombres.erease(origen);
+
+    return true;
 }
 

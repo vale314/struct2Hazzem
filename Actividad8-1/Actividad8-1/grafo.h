@@ -40,6 +40,9 @@ public:
     bool editarVertice(const char[10],const char[10]);
     bool editarArista(const char[10],const char[10],int,bool);
 
+    bool eliminarArista(const char[10],const char[10]);
+    bool eliminarVertice(const char[10]);
+
 };
 
 #endif // GRAFO_H
