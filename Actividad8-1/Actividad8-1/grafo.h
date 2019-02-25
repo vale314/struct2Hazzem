@@ -29,6 +29,8 @@ public:
 
     void resetGrafo();
     int name_to_int(const char[10]);
+    int validarIdExistenteVector(int);
+    int generateId(int,bool);
     void insertarArista(const char[10],const char[10],bool,bool,int);
     void mostrarLogico();
     void mostrarLogicoCabeceras();

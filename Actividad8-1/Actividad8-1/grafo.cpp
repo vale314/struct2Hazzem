@@ -24,6 +24,7 @@ void Grafo::resetGrafo()
 
 int Grafo::name_to_int(const char nombresBuscar[10])
 {
+    ///Tiene Que Retronar Dos Cosas Origen:Id:Int PosicionDeInsercion:int
     Vertice vectorAux;
     int encontrado=0;
     int i=0;
@@ -45,6 +46,15 @@ int Grafo::name_to_int(const char nombresBuscar[10])
     fileIn.close();
 
     cout<<"Antes IF"<<endl<<"i: "<<i<<endl;
+    if((encontrado&&!validarIdExistenteVector(i))){
+        cout<<"Encontrado :"<<vectoresNombres.size()<<endl;
+        Vertice verticeNew(nombresBuscar,i);
+        counter++;
+        vectoresNombres.push_back(verticeNew);
+        ///Retornar Origen:int y poscionInsercion direfentes return(i,posicionInsercion)
+        return (i);
+    }
+
     getch();
 
     if(!vectoresNombres.empty()&&!encontrado){
@@ -60,15 +70,40 @@ int Grafo::name_to_int(const char nombresBuscar[10])
     getch();
     if(!encontrado&&i<9){
             i=vectoresNombres.size();
-        Vertice verticeNew(nombresBuscar,i);
+//      Vertice verticeNew(nombresBuscar,(i==counter)?counter+1:counter);
+
+        Vertice verticeNew(nombresBuscar,generateId(i,false));
         counter++;
         vectoresNombres.push_back(verticeNew);
     }
     cout<<"Size: "<<vectoresNombres.size()<<endl;
     cout<<"Ultimo"<<endl<<"i: "<<i<<endl;
     getch();
+    //retornan Origen:int y PosicionInserion:int iguales return(i,i)
     return i;
 
+}
+
+int Grafo::validarIdExistenteVector(int num)
+{
+    for(size_t i=0;i<vectoresNombres.size();i++){
+        if(vectoresNombres[i].getNumVertice()==num){
+            return(true);
+        }
+    }
+    return (false);
+}
+
+int Grafo::generateId(int num,bool valido)
+{
+    if(valido)
+        return num;
+    for(size_t i=0;i<vectoresNombres.size();i++){
+        if(vectoresNombres[i].getNumVertice()==num){
+            return(generateId(num+1,false));
+        }
+    }
+    return (generateId(num,true));
 }
 
 void Grafo::insertarArista(const char nombreOrigen[10],const char nombreDestino[10], bool dirigido,bool pond,int pondNum)
@@ -120,6 +155,7 @@ void Grafo::mostrarLogico()
         }
         cout<<endl;
     }
+    cout<<setw(10)<<"Tamaño: "<<counter<<endl;
 }
 
 void Grafo::mostrarLogicoCabeceras()
@@ -223,6 +259,7 @@ void Grafo::cargar(string nameFileVertices, string nameFileAristas)
         if(fileInVertices.eof())
             break;
         vectoresNombres.push_back(vectorAux);
+        counter++;
     }
     fileInVertices.close();
 
@@ -297,15 +334,22 @@ bool Grafo::eliminarArista(const char nombreOrigen [10], const char nombreDestin
         }
     }
 
-    if(aristas[origen][destino].getPeso()==0||!encontrado1|!encontrado2)
+    if(!encontrado1|!encontrado2)
         return false;
 
-    aristas[origen][destino].setPeso(0);
-    aristas[destino][origen].setPeso(0);
-
-    if(aristas[origen][destino].getPeso()==0)
+    Arista arista;
+    for(size_t i=0;i<vectoresNombres.size();i++){
+        for(size_t j=0;j<vectoresNombres.size();j++){
+            if(aristas[i][j].getOrigen()==origen&&aristas[i][j].getDestino()==destino&&aristas[i][j].getPeso()!=0){
+                aristas[i][j]=arista;
+                aristas[j][i]=arista;
+                encontrado1=true;
+                break;
+            }
+        }
+    }
+    if(encontrado1)
         return true;
-
     return false;
 }
 
@@ -320,9 +364,19 @@ bool Grafo::eliminarVertice(const char nombreOrigen[10])
             encontrado1=true;
         }
     }
+    cout<<"Delete: "<<origen<<endl;
+    getch();
     if(!encontrado1)
         return false;
 
+    for(size_t i=0;i<vectoresNombres.size();i++){
+        for(size_t j=0;j<vectoresNombres.size();j++){
+            if(aristas[i][j].getOrigen()==origen){
+                origen=i;
+                break;
+            }
+        }
+    }
 
     for(size_t i=0;i<vectoresNombres.size();i++){
         aristas[i][origen]=arista;
@@ -335,9 +389,10 @@ bool Grafo::eliminarVertice(const char nombreOrigen[10])
              aristas[j][i]=aristas[j+1][i];
         }
     }
-
+    cout<<"Delete: "<<origen<<endl;
+    getch();
     vectoresNombres.erease(origen);
-
+    counter--;
     return true;
 }
 
