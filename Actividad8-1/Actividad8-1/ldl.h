@@ -43,6 +43,7 @@ public:
         size_t  size()const;
         void push_front(const T &elem);
         void push_back(const T &elem);
+//        void push_back_seleccion(const T &elem);
         const T& front()const;
         const T& back()const;
         void pop_front();
@@ -106,6 +107,27 @@ void LDL<T>::push_back(const T &elem)
     }
     listSize++;
 }
+
+//template<typename T>
+//void LDL<T>::push_back_seleccion(const T &elem)
+//{
+//    if(empty())
+//    {
+//        listFront = new NodoLDL(elem);
+//        listBack = listFront;
+//    }
+//    else
+//    {
+//        NodoLDL* temp= listFront;
+//        NodoLDL* nuevo =new NodoLDL(elem,listBack);
+//        while((nuevo->dato > temp->siguiente->dato))
+//            temp=temp->siguiente;
+
+//        temp->siguiente = nuevo;
+//        listBack=nuevo;
+//    }
+//    listSize++;
+//}
 
 template<typename T>
 const T &LDL<T>::front() const

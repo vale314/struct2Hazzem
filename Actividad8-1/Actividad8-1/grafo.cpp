@@ -45,9 +45,9 @@ int Grafo::name_to_int(const char nombresBuscar[10])
     }
     fileIn.close();
 
-    cout<<"Antes IF"<<endl<<"i: "<<i<<endl;
+//    cout<<"Antes IF"<<endl<<"i: "<<i<<endl;
     if((encontrado&&!validarIdExistenteVector(i))){
-        cout<<"Encontrado :"<<vectoresNombres.size()<<endl;
+//        cout<<"Encontrado :"<<vectoresNombres.size()<<endl;
         Vertice verticeNew(nombresBuscar,i);
         counter++;
         vectoresNombres.push_back(verticeNew);
@@ -55,7 +55,7 @@ int Grafo::name_to_int(const char nombresBuscar[10])
         return (i);
     }
 
-    getch();
+//    getch();
 
     if(!vectoresNombres.empty()&&!encontrado){
         for(size_t j=0;j<vectoresNombres.size();j++){
@@ -66,8 +66,8 @@ int Grafo::name_to_int(const char nombresBuscar[10])
             }
         }
     }
-    cout<<"Despues IF"<<endl<<"i: "<<i<<endl;
-    getch();
+//    cout<<"Despues IF"<<endl<<"i: "<<i<<endl;
+//    getch();
     if(!encontrado&&i<9){
             i=vectoresNombres.size();
 //      Vertice verticeNew(nombresBuscar,(i==counter)?counter+1:counter);
@@ -76,9 +76,9 @@ int Grafo::name_to_int(const char nombresBuscar[10])
         counter++;
         vectoresNombres.push_back(verticeNew);
     }
-    cout<<"Size: "<<vectoresNombres.size()<<endl;
-    cout<<"Ultimo"<<endl<<"i: "<<i<<endl;
-    getch();
+//    cout<<"Size: "<<vectoresNombres.size()<<endl;
+//    cout<<"Ultimo"<<endl<<"i: "<<i<<endl;
+//    getch();
     //retornan Origen:int y PosicionInserion:int iguales return(i,i)
     return i;
 
@@ -364,10 +364,14 @@ bool Grafo::eliminarVertice(const char nombreOrigen[10])
             encontrado1=true;
         }
     }
-    cout<<"Delete: "<<origen<<endl;
+
     getch();
     if(!encontrado1)
         return false;
+
+    if(origen){
+
+
 
     for(size_t i=0;i<vectoresNombres.size();i++){
         for(size_t j=0;j<vectoresNombres.size();j++){
@@ -376,6 +380,8 @@ bool Grafo::eliminarVertice(const char nombreOrigen[10])
                 break;
             }
         }
+    }
+
     }
 
     for(size_t i=0;i<vectoresNombres.size();i++){
@@ -395,4 +401,112 @@ bool Grafo::eliminarVertice(const char nombreOrigen[10])
     counter--;
     return true;
 }
+
+void Grafo::impresionVertice(int auxNumber)
+{
+    for(size_t i=0;i<vectoresNombres.size();i++){
+        if(aux[i]==auxNumber)
+            cout<<aux[i];
+    }
+
+}
+
+void Grafo::swap(int *xp, int *yp)
+{
+    int temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+
+
+void Grafo::ordenar()
+{
+    size_t i, j;
+    for (i = 0; i < aux1.size(); i++){
+
+        for (j = 0; j < aux1.size()-i-1; j++){
+            if (strcmp(vectoresNombres[aux1[j]].getNombre(), vectoresNombres[aux1[j+1]].getNombre())>0){
+               int temp;
+               temp=aux1[j];
+               aux1[j] = aux1[j+1];
+               aux1[j+1] = temp;
+            }
+        }
+    }
+
+}
+
+void Grafo::int_to_posName(int pos)
+{
+    cout<<vectoresNombres[pos].getNombre();
+}
+
+void Grafo::impresionAnchura(int origen)
+{
+    aux.clear();
+    for(int i=0;i<10;i++)
+        visitado[i]=false;
+
+    aux.push_back(origen);
+    while(!aux.empty()){
+        origen=aux.front();
+        aux.pop_front();
+        if(!visitado[origen]){
+            int_to_posName(origen);
+            visitado[origen]=true;
+            for(int i=0;i<10;i++){
+                if(aristas[origen][i].getPeso()&&!visitado[aristas[origen][i].getDestino()]){
+                    aux1.push_back(aristas[origen][i].getDestino());
+                }
+            }
+            ordenar();
+            while(!aux1.empty()){
+                aux.push_back(aux1.front());
+                aux1.pop_front();
+            }
+        }
+    }
+    getch();
+
+}
+
+void Grafo::impresionProfundidad(int origen)
+{
+    aux.clear();
+    aux1.clear();
+    for(int i=0;i<10;i++)
+        visitado[i]=false;
+
+    aux.push_front(origen);
+    while(!aux.empty()){
+        origen=aux.front();
+        aux.pop_front();
+        if(!visitado[origen]){
+            int_to_posName(origen);
+            visitado[origen]=true;
+
+            for(int i=0;i<10;i++){
+                if(aristas[origen][i].getPeso()&&!visitado[aristas[origen][i].getDestino()]){
+                    aux1.push_front(aristas[origen][i].getDestino());
+                }
+            }
+            ordenar();
+            while(!aux1.empty()){
+                aux.push_front(aux1.back());
+                aux1.pop_back();
+            }
+            aux1.clear();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
 

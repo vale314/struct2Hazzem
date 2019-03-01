@@ -23,6 +23,12 @@ public:
 
     const char *getNombre()const;
     void setNombre(const char[10]);
+
+    bool operator <=(const Vertice& d) {
+              if(strcmp(nombre, d.nombre))
+                 return true;
+              return false;
+           }
 };
 
 #endif // VERTICE_H

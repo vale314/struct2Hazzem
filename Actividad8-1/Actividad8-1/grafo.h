@@ -24,6 +24,9 @@ private:
     int counter;
     string nameArchivoVertices;
     string nameArchivoAristas;
+    bool visitado [10];
+    LDL<int> aux;
+    LDL<int> aux1;
 public:
     Grafo();
 
@@ -45,6 +48,15 @@ public:
     bool eliminarArista(const char[10],const char[10]);
     bool eliminarVertice(const char[10]);
 
+    void impresionVertice(int);
+    void int_to_posName(int);
+    void swap(int *xp, int *yp);
+    const char* getNombre();
+    void ordenar();
+    bool buscarEnVisitado(int);
+
+    void impresionAnchura(int origen);
+    void impresionProfundidad(int origen);
 };
 
 #endif // GRAFO_H

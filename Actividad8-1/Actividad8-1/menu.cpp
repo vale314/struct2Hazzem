@@ -17,6 +17,8 @@ void Menu::menu(){
             <<menuDescargar<<"Menu Descargar"<<endl
             <<menuEditar<<"Menu Editar"<<endl
             <<menuEliminar<<"Menu Eliminar"<<endl
+            <<menuImpresionAnchura<<"Impresion Anchura"<<endl
+            <<menuImpresionProfundidad<<"Impresion Profundidad"<<endl
             <<menuSalir<<"Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -40,6 +42,12 @@ void Menu::menu(){
             break;
             case menuEliminar:
                 eliminar();
+            break;
+            case menuImpresionAnchura:
+                impresionAnchura();
+            break;
+            case menuImpresionProfundidad:
+                impresionProfundidad();
             break;
             case menuSalir:
             break;
@@ -230,5 +238,23 @@ void Menu::eliminarArista()
         cout<<"Eliminado Con Exito"<<endl;
     else
         cout<<"No Se Pudo Eliminar"<<endl;
+    getch();
+}
+
+void Menu::impresionAnchura()
+{
+    int origen;
+    cout<<"Ingrese el origen"<<endl;
+    cin>>origen;
+    grafo.impresionAnchura(origen);
+    getch();
+}
+
+void Menu::impresionProfundidad()
+{
+    int origen;
+    cout<<"Ingrese el origen"<<endl;
+    cin>>origen;
+    grafo.impresionProfundidad(origen);
     getch();
 }

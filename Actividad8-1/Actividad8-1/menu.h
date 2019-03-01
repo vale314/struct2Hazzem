@@ -18,6 +18,8 @@ private:
         menuDescargar,
         menuEditar,
         menuEliminar,
+        menuImpresionAnchura,
+        menuImpresionProfundidad,
         menuSalir
     };
 
@@ -50,6 +52,9 @@ public:
     void eliminar();
     void eliminarVertice();
     void eliminarArista();
+
+    void impresionAnchura();
+    void impresionProfundidad();
 };
 
 #endif // MENU_H
