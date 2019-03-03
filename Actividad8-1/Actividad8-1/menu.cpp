@@ -52,6 +52,9 @@ void Menu::menu(){
             case menuRutaAnchura:
                 rutaAnchura();
             break;
+            case menuRutaProfundidad:
+                rutaProfundidad();
+            break;
             case menuSalir:
             break;
         }
@@ -272,4 +275,17 @@ void Menu::rutaAnchura()
     cin>>destino;
     grafo.rutaAnchura(origen,destino);
     getch();
+}
+
+void Menu::rutaProfundidad()
+{
+    int origen;
+    int destino;
+    cout<<"Ingrese el origen"<<endl;
+    cin>>origen;
+    cout<<"Ingrese el destino"<<endl;
+    cin>>destino;
+    grafo.rutaProfundidad(origen,destino);
+    getch();
+
 }

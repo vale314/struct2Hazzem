@@ -63,6 +63,7 @@ public:
     void impresionProfundidad(int origen);
 
     void rutaAnchura(int origen,int destino);
+    void rutaProfundidad(int origen,int destino);
 
     void imprimirRuta(int destino);
 };

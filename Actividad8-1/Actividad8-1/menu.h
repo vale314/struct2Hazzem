@@ -21,6 +21,7 @@ private:
         menuImpresionAnchura,
         menuImpresionProfundidad,
         menuRutaAnchura,
+        menuRutaProfundidad,
         menuSalir
     };
 
