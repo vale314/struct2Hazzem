@@ -49,6 +49,9 @@ void Menu::menu(){
             case menuImpresionProfundidad:
                 impresionProfundidad();
             break;
+            case menuRutaAnchura:
+                rutaAnchura();
+            break;
             case menuSalir:
             break;
         }
@@ -256,5 +259,17 @@ void Menu::impresionProfundidad()
     cout<<"Ingrese el origen"<<endl;
     cin>>origen;
     grafo.impresionProfundidad(origen);
+    getch();
+}
+
+void Menu::rutaAnchura()
+{
+    int origen;
+    int destino;
+    cout<<"Ingrese el origen"<<endl;
+    cin>>origen;
+    cout<<"Ingrese el destino"<<endl;
+    cin>>destino;
+    grafo.rutaAnchura(origen,destino);
     getch();
 }

@@ -20,6 +20,7 @@ private:
         menuEliminar,
         menuImpresionAnchura,
         menuImpresionProfundidad,
+        menuRutaAnchura,
         menuSalir
     };
 
@@ -55,6 +56,10 @@ public:
 
     void impresionAnchura();
     void impresionProfundidad();
+
+    void rutaAnchura();
+    void rutaProfundidad();
+
 };
 
 #endif // MENU_H

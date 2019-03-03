@@ -27,6 +27,10 @@ private:
     bool visitado [10];
     LDL<int> aux;
     LDL<int> aux1;
+
+    LDL<int> pilaO;
+    LDL<int> pilaD;
+
 public:
     Grafo();
 
@@ -57,6 +61,10 @@ public:
 
     void impresionAnchura(int origen);
     void impresionProfundidad(int origen);
+
+    void rutaAnchura(int origen,int destino);
+
+    void imprimirRuta(int destino);
 };
 
 #endif // GRAFO_H

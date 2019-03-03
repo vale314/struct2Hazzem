@@ -500,6 +500,69 @@ void Grafo::impresionProfundidad(int origen)
     }
 }
 
+void Grafo::rutaAnchura(int origen, int destino)
+{
+    pilaO.clear();
+    pilaD.clear();
+
+    //Cola
+    aux.clear();
+
+    //Lista
+    for(int i=0;i<10;i++)
+        visitado[i]=false;
+
+    //ingresar a la cola nodos a visitar
+    aux.push_back(origen);
+
+    int nuevo=0;
+
+    while(!aux.empty()){
+        nuevo=aux.front();
+        aux.pop_front();
+
+        if(!visitado[nuevo]){
+            if(nuevo==destino){
+                cout<<"Encontarda"<<endl;
+                imprimirRuta(nuevo);
+                return;
+            }
+            visitado[nuevo]=true;
+
+            for(int i=0;i<10;i++){
+                if(aristas[nuevo][i].getPeso()&&!visitado[aristas[nuevo][i].getDestino()]){
+                    aux.push_back(aristas[nuevo][i].getDestino());
+                    pilaO.push_front(aristas[nuevo][i].getOrigen());
+                    pilaD.push_front(aristas[nuevo][i].getDestino());
+                }
+            }
+
+        }
+
+    }
+    if(aux.empty()){
+        cout<<"No existe ruta"<<endl;
+        getch();
+        return;
+    }
+}
+
+void Grafo::imprimirRuta(int destino)
+{
+    int actual;
+    actual=destino;
+
+    while(!pilaD.empty()&&!pilaO.empty()){
+        int_to_posName(actual);cout<<" "<<endl;
+        while ((!pilaD.empty()&&!pilaO.empty())&&pilaD.front()!=actual) {
+            pilaD.pop_front();
+            pilaO.pop_front();
+        }
+        if(!pilaD.empty()&&!pilaO.empty())
+            actual=pilaO.front();
+    }
+}
+
 
 
 
