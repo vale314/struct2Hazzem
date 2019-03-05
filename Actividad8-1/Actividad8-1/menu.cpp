@@ -19,6 +19,8 @@ void Menu::menu(){
             <<menuEliminar<<"Menu Eliminar"<<endl
             <<menuImpresionAnchura<<"Impresion Anchura"<<endl
             <<menuImpresionProfundidad<<"Impresion Profundidad"<<endl
+            <<menuRutaAnchura<<"Ruta Anchura"<<endl
+            <<menuRutaProfundidad<<"Rota Profundidad"<<endl
             <<menuSalir<<"Salir"<<endl;
         cin>>opc;
         switch (opc) {
