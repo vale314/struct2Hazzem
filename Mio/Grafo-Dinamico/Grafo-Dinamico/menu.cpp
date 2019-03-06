@@ -89,6 +89,35 @@ void Menu::cargar()
     getch();
 }
 
+void Menu::eliminarArista()
+{
+    char nombreO[10];
+    char nombreD[10];
+
+    cin.ignore();
+    cout<<"Ingrese el Nombre Origen"<<endl;
+    cin.getline(nombreO,10,'\n');
+
+    cout<<"Ingrese el Nombre Destino"<<endl;
+    cin.getline(nombreD,10,'\n');
+
+    grafo.eliminarArista(grafo.getVertice(nombreO),grafo.getVertice(nombreD));
+    grafo.eliminarArista(grafo.getVertice(nombreD),grafo.getVertice(nombreO));
+
+    getch();
+}
+
+void Menu::eliminarVertice()
+{
+    char nombreO[10];
+    cin.ignore();
+    cout<<"Ingrese el Nombre"<<endl;
+    cin.getline(nombreO,10,'\n');
+    grafo.eliminarVertice(grafo.getVertice(nombreO));
+
+    getch();
+}
+
 void Menu::menu()
 {
     int opc;
@@ -99,6 +128,8 @@ void Menu::menu()
             <<menuMostrar<<" Mostar"<<endl
             <<menuGuardar<<" Guardar"<<endl
             <<menuCargar<<" Cargar"<<endl
+            <<menuEliminarArista<<" Eliminar Arista"<<endl
+            <<menuEliminarVertice<<" Eliminar Vertice"<<endl
             <<menuSalir<<" Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -116,6 +147,12 @@ void Menu::menu()
             break;
             case menuCargar:
                 cargar();
+            break;
+            case menuEliminarArista:
+                eliminarArista();
+            break;
+            case menuEliminarVertice:
+                eliminarVertice();
             break;
             case menuSalir:
             break;

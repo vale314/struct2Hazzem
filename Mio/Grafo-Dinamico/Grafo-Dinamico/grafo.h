@@ -32,6 +32,9 @@ public:
     int posVertice(char nombre[10]);
     void matrizAdyacencias();
 
+    void eliminarArista(Vertice *origen,Vertice *destino);
+
+    void eliminarVertice(Vertice *eliminar);
 };
 
 #endif // GRAFO_H

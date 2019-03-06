@@ -216,6 +216,71 @@ void Grafo::matrizAdyacencias()
     }
 }
 
+void Grafo::eliminarArista(Vertice *origen, Vertice *destino)
+{
+    Arista *actual;
+    Arista *anterior;
+    bool encontrado=false;
+    actual= origen->adyacencia;
+
+    if(actual ==NULL)
+        cout<<"No Se Encontraron Aristas"<<endl;
+    else if(actual->adyacencia==destino){
+
+        origen->adyacencia=actual->siguiente;
+        delete (actual);
+    }else{
+        while(actual != NULL){
+            if(actual->adyacencia==destino){
+                encontrado=true;
+                anterior->siguiente=actual->siguiente;
+                delete (actual);
+                break;
+            }
+            anterior=actual;
+            actual=actual->siguiente;
+        }
+    }
+}
+
+void Grafo::eliminarVertice(Vertice *eliminar)
+{
+    if(eliminar==NULL){
+        cout<<"No Se encuentra ese vertice"<<endl;
+        return;
+    }
+    Vertice *actual;
+    Vertice *anterior;
+
+    Arista *aux;
+
+    actual=vertice;
+    while(actual!=NULL){
+        aux=actual->adyacencia;
+        while (aux != NULL) {
+            if(aux->adyacencia==eliminar){
+                eliminarArista(actual,aux->adyacencia);
+                break;
+            }
+            aux=aux->siguiente;
+        }
+        actual = actual->siguiente;
+    }
+    actual = vertice;
+    if(vertice==eliminar){
+        vertice=vertice->siguiente;
+        delete actual;
+    }else{
+        cout<<"Here"<<endl;
+        while(actual != eliminar&&actual != NULL){
+            anterior=actual;
+            actual=actual->siguiente;
+        }
+        anterior->siguiente=actual->siguiente;
+        delete (actual);
+    }
+}
+
 void Grafo::insertarVertice(char nombre[10])
 {
     Vertice *nuevo=new Vertice;
