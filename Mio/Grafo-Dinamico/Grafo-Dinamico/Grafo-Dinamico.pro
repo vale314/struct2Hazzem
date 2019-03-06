@@ -14,4 +14,8 @@ HEADERS += \
     vertice.h \
     arista.h \
     grafo.h \
-    menu.h
+    menu.h \
+    ../../../Actividad8-1/Actividad8-1/ldl.h \
+    ../../../Actividad8-1/Actividad8-1/nodoldl.h \
+    ldl.h \
+    nodoldl.h

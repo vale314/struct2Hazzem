@@ -5,6 +5,7 @@
 #include <fstream>
 #include <new.h>
 #include <iomanip>
+#include "ldl.h"
 #include<new>
 
 class Vertice;
@@ -38,6 +39,8 @@ public:
 
     void modificarArista(Vertice *origen,Vertice *destino,int ponderacion);
     void modificarVertice(Vertice *origen);
+
+    void recorridoAnchura(Vertice *origen);
 };
 
 #endif // GRAFO_H

@@ -336,6 +336,46 @@ void Grafo::modificarVertice(Vertice *origen)
     }
 }
 
+void Grafo::recorridoAnchura(Vertice *origen)
+{
+    bool band=0;
+    bool band2=0;
+    Vertice *actual;
+    LDL<Vertice*> cola;
+    LDL<Vertice*> lista;
+
+    cola.push_back(origen);
+
+    while(!cola.empty()){
+        actual=cola.front();
+        cola.pop_front();
+
+        for(size_t i=0;i<lista.size();i++){
+            if(lista[i]==actual)
+                band=true;
+        }
+        if(!band){
+            cout<<actual->getNombre()<<" ";
+            lista.push_back(actual);
+
+            Arista *aux;
+            aux=actual->adyacencia;
+            while(aux!=NULL){
+                band2=0;
+                for(size_t i=0;i<lista.size();i++){
+                    if(aux->adyacencia==lista[i]){
+                        band2=true;
+                    }
+
+                }
+                if(!band2)
+                    cola.push_back(aux->adyacencia);
+                aux=aux->siguiente;
+            }
+        }
+    }
+}
+
 void Grafo::insertarVertice(char nombre[10])
 {
     Vertice *nuevo=new Vertice;

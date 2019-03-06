@@ -154,6 +154,16 @@ void Menu::modificarVertice()
     getch();
 }
 
+void Menu::recorridoAnchura()
+{
+    char nombreO[10];
+    cin.ignore();
+    cout<<"Ingrese El Origen"<<endl;
+    cin.getline(nombreO,10,'\n');
+    grafo.recorridoAnchura(grafo.getVertice(nombreO));
+    getch();
+}
+
 void Menu::menu()
 {
     int opc;
@@ -168,6 +178,7 @@ void Menu::menu()
             <<menuEliminarVertice<<" Eliminar Vertice"<<endl
             <<menuModificarArista<<" Modificar Arista"<<endl
             <<menuModificarVertice<<" Modificar Vertice"<<endl
+            <<menuRecorridoAnchura<<" Recorrido En Anchura"<<endl
             <<menuSalir<<" Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -197,6 +208,9 @@ void Menu::menu()
             break;
             case menuModificarVertice:
                 modificarVertice();
+            break;
+            case menuRecorridoAnchura:
+                recorridoAnchura();
             break;
             case menuSalir:
             break;
