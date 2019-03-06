@@ -164,6 +164,16 @@ void Menu::recorridoAnchura()
     getch();
 }
 
+void Menu::recorridoProfundidad()
+{
+    char nombreO[10];
+    cin.ignore();
+    cout<<"Ingrese El Origen"<<endl;
+    cin.getline(nombreO,10,'\n');
+    grafo.recorridoProfundidad(grafo.getVertice(nombreO));
+    getch();
+}
+
 void Menu::menu()
 {
     int opc;
@@ -179,6 +189,7 @@ void Menu::menu()
             <<menuModificarArista<<" Modificar Arista"<<endl
             <<menuModificarVertice<<" Modificar Vertice"<<endl
             <<menuRecorridoAnchura<<" Recorrido En Anchura"<<endl
+            <<menuRecorridoProfundidad<<" Recorrido En Profundidad"<<endl
             <<menuSalir<<" Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -211,6 +222,9 @@ void Menu::menu()
             break;
             case menuRecorridoAnchura:
                 recorridoAnchura();
+            break;
+            case menuRecorridoProfundidad:
+                recorridoProfundidad();
             break;
             case menuSalir:
             break;

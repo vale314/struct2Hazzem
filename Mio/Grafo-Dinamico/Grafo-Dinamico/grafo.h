@@ -41,6 +41,7 @@ public:
     void modificarVertice(Vertice *origen);
 
     void recorridoAnchura(Vertice *origen);
+    void recorridoProfundidad(Vertice *origen);
 };
 
 #endif // GRAFO_H

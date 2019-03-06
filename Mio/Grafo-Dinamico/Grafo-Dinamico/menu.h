@@ -20,6 +20,7 @@ private:
         menuModificarArista,
         menuModificarVertice,
         menuRecorridoAnchura,
+        menuRecorridoProfundidad,
         menuSalir
     };
     enum{
@@ -39,6 +40,7 @@ public:
     void modificarArista();
     void modificarVertice();
     void recorridoAnchura();
+    void recorridoProfundidad();
     void menu();
 };
 
