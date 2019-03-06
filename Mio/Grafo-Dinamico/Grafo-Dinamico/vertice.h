@@ -21,6 +21,12 @@ public:
     void setNombre(char nombreNuevo[10]);
     Vertice();
 
+    bool operator <=(const Vertice& d) {
+              if(strcmp(nombre, d.nombre))
+                 return true;
+              return false;
+           }
+
 };
 
 #endif // VERTICE_H

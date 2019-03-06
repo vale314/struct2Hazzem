@@ -43,7 +43,7 @@ void Menu::insertarArista()
     if(grafo.getVertice(origen)==NULL||grafo.getVertice(destino)==NULL)
         cout<<"Vertices No Encontrados"<<endl;
     else{
-        if(!dirigido){
+        if(!dirigido&&grafo.getVertice(origen)!=grafo.getVertice(destino)){
             grafo.insertarArista(grafo.getVertice(destino),grafo.getVertice(origen),peso);
             grafo.insertarArista(grafo.getVertice(origen),grafo.getVertice(destino),peso);
         }else

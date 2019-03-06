@@ -305,7 +305,7 @@ void LDL<T>::bubbleSort()
 
         while (ptr1->siguiente != lptr)
         {
-            if (ptr1->dato > ptr1->siguiente->dato && ptr1->siguiente->siguiente!=NULL)
+            if (ptr1->dato <= ptr1->siguiente->dato && ptr1->siguiente->siguiente!=NULL)
             {
                 cambio(ptr1->dato, ptr1->siguiente->dato);
                 swapped = 1;

@@ -423,6 +423,7 @@ void Grafo::rutaAnchura(Vertice *origen, Vertice *destino)
     LDL<Vertice*> cola;
     LDL<Vertice*> lista;
     Vertice* actual;
+    LDL<Vertice> ordenarAux;
     Arista* aux;
 
 
@@ -450,13 +451,27 @@ void Grafo::rutaAnchura(Vertice *origen, Vertice *destino)
         while(aux!=NULL){
             band2=false;
             for(size_t i=0;i<lista.size();i++){
-                if(aux->adyacencia==lista[i])
+                if(aux->adyacencia==lista[i]){
+                    ordenarAux.push_back(*lista[i]);
                     band2=true;
+                }
             }
             if(!band2){
+//                ordenarAux.bubbleSort();
+//                Vertice auxO;
+//                Vertice *aux1;
+//                for(int i=0;i<ordenarAux.size();i++)
+//                    cout<<ordenarAux[i].getNombre()<<endl;
+//                getch();
+//                auxO=ordenarAux.front();
+//                aux1=getVertice(auxO.getNombre());
+
                 cola.push_back(aux->adyacencia);
                 pilaO.push_front(actual);
                 pilaD.push_front(aux->adyacencia);
+
+//                if(!ordenarAux.empty())
+//                    ordenarAux.clear();
             }
             aux=aux->siguiente;
         }
