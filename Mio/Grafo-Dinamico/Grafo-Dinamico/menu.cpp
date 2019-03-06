@@ -174,6 +174,41 @@ void Menu::recorridoProfundidad()
     getch();
 }
 
+void Menu::rutaAnchura()
+{
+
+    char nombreO[10];
+    char nombreD[10];
+
+    cin.ignore();
+    cout<<"Ingrese el Nombre Origen"<<endl;
+    cin.getline(nombreO,10,'\n');
+
+    cout<<"Ingrese el Nombre Destino"<<endl;
+    cin.getline(nombreD,10,'\n');
+
+    grafo.rutaAnchura(grafo.getVertice(nombreO),grafo.getVertice(nombreD));
+
+    getch();
+}
+
+void Menu::rutaProfundidad()
+{
+    char nombreO[10];
+    char nombreD[10];
+
+    cin.ignore();
+    cout<<"Ingrese el Nombre Origen"<<endl;
+    cin.getline(nombreO,10,'\n');
+
+    cout<<"Ingrese el Nombre Destino"<<endl;
+    cin.getline(nombreD,10,'\n');
+
+    grafo.rutaProfundidad(grafo.getVertice(nombreO),grafo.getVertice(nombreD));
+
+    getch();
+}
+
 void Menu::menu()
 {
     int opc;
@@ -190,6 +225,8 @@ void Menu::menu()
             <<menuModificarVertice<<" Modificar Vertice"<<endl
             <<menuRecorridoAnchura<<" Recorrido En Anchura"<<endl
             <<menuRecorridoProfundidad<<" Recorrido En Profundidad"<<endl
+            <<menuRutaAnchura<<" Ruta En Anchura"<<endl
+            <<menuRutaProfundidad<<" Ruta En Profundidad"<<endl
             <<menuSalir<<" Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -225,6 +262,12 @@ void Menu::menu()
             break;
             case menuRecorridoProfundidad:
                 recorridoProfundidad();
+            break;
+            case menuRutaAnchura:
+                rutaAnchura();
+            break;
+            case menuRutaProfundidad:
+                rutaProfundidad();
             break;
             case menuSalir:
             break;

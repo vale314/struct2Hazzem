@@ -21,6 +21,8 @@ private:
         menuModificarVertice,
         menuRecorridoAnchura,
         menuRecorridoProfundidad,
+        menuRutaAnchura,
+        menuRutaProfundidad,
         menuSalir
     };
     enum{
@@ -41,6 +43,8 @@ public:
     void modificarVertice();
     void recorridoAnchura();
     void recorridoProfundidad();
+    void rutaAnchura();
+    void rutaProfundidad();
     void menu();
 };
 

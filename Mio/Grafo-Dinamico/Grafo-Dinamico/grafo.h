@@ -17,6 +17,9 @@ class Grafo
 private:
 
     Vertice *vertice;
+    LDL<Vertice*> pilaO;
+    LDL<Vertice*> pilaD;
+
 public:
     Grafo();
     int tamano();
@@ -42,6 +45,11 @@ public:
 
     void recorridoAnchura(Vertice *origen);
     void recorridoProfundidad(Vertice *origen);
+
+    void rutaAnchura(Vertice *origen,Vertice *destino);
+    void rutaProfundidad(Vertice *origen,Vertice *destino);
+
+    void impresionRuta(Vertice *origen);
 };
 
 #endif // GRAFO_H

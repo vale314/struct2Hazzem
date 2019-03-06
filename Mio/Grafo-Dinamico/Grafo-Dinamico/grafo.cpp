@@ -416,6 +416,122 @@ void Grafo::recorridoProfundidad(Vertice *origen)
     }
 }
 
+void Grafo::rutaAnchura(Vertice *origen, Vertice *destino)
+{
+
+    bool band,band2, band3;
+    LDL<Vertice*> cola;
+    LDL<Vertice*> lista;
+    Vertice* actual;
+    Arista* aux;
+
+
+    if(!pilaO.empty()&&!pilaD.empty()){
+        pilaO.clear();
+        pilaD.clear();
+    }
+
+    cola.push_back(origen);
+
+    while (!cola.empty()) {
+        band=false;
+        actual=cola.front();
+        cola.pop_front();
+        for(size_t i=0;i<lista.size();i++){
+            if(actual == lista[i])
+                band=true;
+        }
+        if(!band){
+            if(actual==destino)
+                return(impresionRuta(destino));
+        }
+        lista.push_back(actual);
+        aux=actual->adyacencia;
+        while(aux!=NULL){
+            band2=false;
+            for(size_t i=0;i<lista.size();i++){
+                if(aux->adyacencia==lista[i])
+                    band2=true;
+            }
+            if(!band2){
+                cola.push_back(aux->adyacencia);
+                pilaO.push_front(actual);
+                pilaD.push_front(aux->adyacencia);
+            }
+            aux=aux->siguiente;
+        }
+    }
+
+        cout<<"No Existe Ruta"<<endl;
+}
+
+void Grafo::rutaProfundidad(Vertice *origen, Vertice *destino)
+{
+    bool band,band2;
+    LDL<Vertice*> pila;
+    LDL<Vertice*> lista;
+    Vertice* actual;
+    Arista* aux;
+
+    if(!pilaO.empty()&&!pilaD.empty()){
+        pilaO.clear();
+        pilaD.clear();
+    }
+
+    pila.push_front(origen);
+
+    while (!pila.empty()) {
+        band=false;
+        actual=pila.front();
+        pila.pop_front();
+        for(size_t i=0;i<lista.size();i++){
+            if(actual == lista[i])
+                band=true;
+        }
+        if(!band){
+            if(actual==destino)
+                return(impresionRuta(destino));
+
+        }
+        lista.push_back(actual);
+        aux=actual->adyacencia;
+        while(aux!=NULL){
+            band2=false;
+            for(size_t i=0;i<lista.size();i++){
+                if(aux->adyacencia==lista[i])
+                    band2=true;
+            }
+            if(!band2){
+                pila.push_front(aux->adyacencia);
+                pilaO.push_front(actual);
+                pilaD.push_front(aux->adyacencia);
+            }
+            aux=aux->siguiente;
+        }
+    }
+    cout<<"No Existe Ruta"<<endl;
+}
+
+void Grafo::impresionRuta(Vertice *destino)
+{
+
+        Vertice *destinoActual;
+
+                destinoActual=destino;
+
+                while (!pilaD.empty()&&!pilaO.empty()) {
+                    cout<<destinoActual->getNombre()<<" ";
+                    while (!pilaO.empty() && pilaD.front() != destinoActual) {
+                            pilaO.pop_front();
+                            pilaD.pop_front();
+                    }
+                    if(!pilaO.empty()&&!pilaD.empty()){
+                        destinoActual=pilaO.front();
+                    }
+                }
+
+}
+
 void Grafo::insertarVertice(char nombre[10])
 {
     Vertice *nuevo=new Vertice;
