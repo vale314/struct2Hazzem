@@ -4,7 +4,7 @@
 
 
 
-const char *Vertice::getNombre()
+char *Vertice::getNombre()
 {
     return nombre;
 }

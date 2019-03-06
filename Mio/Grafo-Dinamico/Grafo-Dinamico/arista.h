@@ -12,7 +12,7 @@ public:
     Arista *siguiente;
     Arista();
 
-    int getPeso() const;
+    int getPeso();
     void setPeso(int value);
 };
 

@@ -55,7 +55,37 @@ void Menu::insertarArista()
 
 void Menu::mostar()
 {
-    grafo.listaAdyacencia();
+    int opc;
+    do{
+        system("cls");
+        cout<<menuMostrarLista<<" Lista De Adyacencia"<<endl
+             <<menuMostrarMatriz<<" Matriz De Adyacencia"<<endl
+             <<menuMostarSalir<<" Salir"<<endl;
+        cin>>opc;
+        switch(opc){
+            case menuMostrarLista:
+                grafo.listaAdyacencia();
+                getch();
+            break;
+            case menuMostrarMatriz:
+                grafo.matrizAdyacencias();
+                getch();
+            break;
+            case menuMostarSalir:
+            break;
+        }
+    }while(opc!=menuMostarSalir);
+}
+
+void Menu::guardar()
+{
+    grafo.guardar();
+    getch();
+}
+
+void Menu::cargar()
+{
+    grafo.cargar();
     getch();
 }
 
@@ -66,7 +96,9 @@ void Menu::menu()
         system("cls");
         cout<<menuInsertarVertice<<" Ingresar Vertice"<<endl
             <<menuInsertarArista<<" Ingresar Arista"<<endl
-            <<menuMostrar<<" Mostar Tabla Adyacencias"<<endl
+            <<menuMostrar<<" Mostar"<<endl
+            <<menuGuardar<<" Guardar"<<endl
+            <<menuCargar<<" Cargar"<<endl
             <<menuSalir<<" Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -78,6 +110,12 @@ void Menu::menu()
             break;
             case menuMostrar:
                 mostar();
+            break;
+            case menuGuardar:
+                guardar();
+            break;
+            case menuCargar:
+                cargar();
             break;
             case menuSalir:
             break;

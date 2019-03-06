@@ -17,7 +17,7 @@ public:
     Vertice *siguiente;
     Arista *adyacencia;
 
-    const char *getNombre();
+    char *getNombre();
     void setNombre(char nombreNuevo[10]);
     Vertice();
 

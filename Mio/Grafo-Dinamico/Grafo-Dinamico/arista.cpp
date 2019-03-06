@@ -1,7 +1,7 @@
 #include "arista.h"
 #include "vertice.h"
 
-int Arista::getPeso() const
+int Arista::getPeso()
 {
     return peso;
 }

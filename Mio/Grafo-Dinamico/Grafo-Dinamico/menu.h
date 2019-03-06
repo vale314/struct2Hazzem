@@ -13,13 +13,22 @@ private:
         menuInsertarVertice=1,
         menuInsertarArista,
         menuMostrar,
+        menuGuardar,
+        menuCargar,
         menuSalir
+    };
+    enum{
+        menuMostrarLista=1,
+        menuMostrarMatriz,
+        menuMostarSalir
     };
 public:
     Menu();
     void insertarVertice();
     void insertarArista();
     void mostar();
+    void guardar();
+    void cargar();
     void menu();
 };
 
