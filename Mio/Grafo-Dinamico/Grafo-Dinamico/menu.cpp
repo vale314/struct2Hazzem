@@ -118,6 +118,42 @@ void Menu::eliminarVertice()
     getch();
 }
 
+void Menu::modificarArista()
+{
+    char nombreO[10];
+    char nombreD[10];
+    int ponderacion;
+    int doble;
+
+    cin.ignore();
+    cout<<"Ingrese el Nombre Origen"<<endl;
+    cin.getline(nombreO,10,'\n');
+
+    cout<<"Ingrese el Nombre Destino"<<endl;
+    cin.getline(nombreD,10,'\n');
+
+    cout<<"Ingrese la Ponderacion"<<endl;
+    cin>>ponderacion;
+
+    cout<<"Sera Bidireccional 1-SI 0-NO"<<endl;
+    cin>>doble;
+        grafo.modificarArista(grafo.getVertice(nombreO),grafo.getVertice(nombreD),ponderacion);
+    if(doble)
+        grafo.modificarArista(grafo.getVertice(nombreD),grafo.getVertice(nombreO),ponderacion);
+
+    getch();
+}
+
+void Menu::modificarVertice()
+{
+    char nombreO[10];
+    cin.ignore();
+    cout<<"Ingrese El Vector"<<endl;
+    cin.getline(nombreO,10,'\n');
+    grafo.modificarVertice(grafo.getVertice(nombreO));
+    getch();
+}
+
 void Menu::menu()
 {
     int opc;
@@ -130,6 +166,8 @@ void Menu::menu()
             <<menuCargar<<" Cargar"<<endl
             <<menuEliminarArista<<" Eliminar Arista"<<endl
             <<menuEliminarVertice<<" Eliminar Vertice"<<endl
+            <<menuModificarArista<<" Modificar Arista"<<endl
+            <<menuModificarVertice<<" Modificar Vertice"<<endl
             <<menuSalir<<" Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -153,6 +191,12 @@ void Menu::menu()
             break;
             case menuEliminarVertice:
                 eliminarVertice();
+            break;
+            case menuModificarArista:
+                modificarArista();
+            break;
+            case menuModificarVertice:
+                modificarVertice();
             break;
             case menuSalir:
             break;

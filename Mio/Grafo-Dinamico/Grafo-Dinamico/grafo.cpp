@@ -218,6 +218,10 @@ void Grafo::matrizAdyacencias()
 
 void Grafo::eliminarArista(Vertice *origen, Vertice *destino)
 {
+    if(origen==NULL||destino==NULL){
+        cout<<"Origen O Destino Incorrectos"<<endl;
+        return;
+    }
     Arista *actual;
     Arista *anterior;
     bool encontrado=false;
@@ -278,6 +282,57 @@ void Grafo::eliminarVertice(Vertice *eliminar)
         }
         anterior->siguiente=actual->siguiente;
         delete (actual);
+    }
+}
+
+void Grafo::modificarArista(Vertice *origen, Vertice *destino, int ponderacion)
+{
+    if(origen==NULL||destino==NULL){
+        cout<<"Origen O Destino Incorrectos"<<endl;
+        return;
+    }
+    Arista *actual;
+    bool encontrado=false;
+
+    actual= origen->adyacencia;
+    if(actual ==NULL)
+        cout<<"No Se Encontraron Aristas"<<endl;
+    else if(actual->adyacencia==destino)
+        actual->setPeso(ponderacion);
+    else{
+        while(actual != NULL){
+            if(actual->adyacencia==destino){
+                encontrado=true;
+                actual->setPeso(ponderacion);
+                break;
+            }
+            actual=actual->siguiente;
+        }
+    }
+}
+
+void Grafo::modificarVertice(Vertice *origen)
+{
+    if(origen==NULL){
+        cout<<"No Se encuentra ese vertice"<<endl;
+        return;
+    }
+    Vertice *actual;
+    Vertice *anterior;
+    Arista *aux;
+    char nombre[10];
+
+    cin.ignore();
+    cout<<"Ingrese El Nuevo Nombre"<<endl;
+    cin.getline(nombre,10,'\n');
+
+    actual=vertice;
+    if(vertice==origen){
+        vertice->setNombre(nombre);
+    }else{
+        while(actual != origen&&actual != NULL)
+            actual=actual->siguiente;
+        actual->setNombre(nombre);
     }
 }
 

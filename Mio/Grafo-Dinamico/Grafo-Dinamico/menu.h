@@ -17,6 +17,8 @@ private:
         menuCargar,
         menuEliminarArista,
         menuEliminarVertice,
+        menuModificarArista,
+        menuModificarVertice,
         menuSalir
     };
     enum{
@@ -33,6 +35,8 @@ public:
     void cargar();
     void eliminarArista();
     void eliminarVertice();
+    void modificarArista();
+    void modificarVertice();
     void menu();
 };
 

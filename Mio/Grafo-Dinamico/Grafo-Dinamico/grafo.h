@@ -35,6 +35,9 @@ public:
     void eliminarArista(Vertice *origen,Vertice *destino);
 
     void eliminarVertice(Vertice *eliminar);
+
+    void modificarArista(Vertice *origen,Vertice *destino,int ponderacion);
+    void modificarVertice(Vertice *origen);
 };
 
 #endif // GRAFO_H
