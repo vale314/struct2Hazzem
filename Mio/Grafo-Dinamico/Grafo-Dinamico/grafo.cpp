@@ -368,8 +368,13 @@ void Grafo::recorridoAnchura(Vertice *origen)
                     }
 
                 }
-                if(!band2)
+                if(!band2){
+                    for(size_t i=0;i<lista.size();i++){
+                        if(!strcmp(lista[i]->getNombre(),aux->adyacencia->getNombre()))
+                            aux->adyacencia=lista[i];
+                    }
                     cola.push_back(aux->adyacencia);
+                }
                 aux=aux->siguiente;
             }
         }
@@ -425,6 +430,7 @@ void Grafo::rutaAnchura(Vertice *origen, Vertice *destino)
     Vertice* actual;
     LDL<Vertice> ordenarAux;
     Arista* aux;
+    Vertice *auxOr;
 
 
     if(!pilaO.empty()&&!pilaD.empty()){
@@ -450,9 +456,10 @@ void Grafo::rutaAnchura(Vertice *origen, Vertice *destino)
         aux=actual->adyacencia;
         while(aux!=NULL){
             band2=false;
+            auxOr=NULL;
             for(size_t i=0;i<lista.size();i++){
                 if(aux->adyacencia==lista[i]){
-                    ordenarAux.push_back(*lista[i]);
+//                    ordenarAux.push_back(*lista[i]);
                     band2=true;
                 }
             }
@@ -465,7 +472,13 @@ void Grafo::rutaAnchura(Vertice *origen, Vertice *destino)
 //                getch();
 //                auxO=ordenarAux.front();
 //                aux1=getVertice(auxO.getNombre());
-
+                //solo comentar esto
+                auxOr=aux->adyacencia;
+                for(size_t i=0;i<lista.size();i++){
+                    if(!strcmp(lista[i]->getNombre(),aux->adyacencia->getNombre()))
+                        aux->adyacencia=lista[i];
+                }
+                //hasta aqui
                 cola.push_back(aux->adyacencia);
                 pilaO.push_front(actual);
                 pilaD.push_front(aux->adyacencia);
@@ -517,6 +530,11 @@ void Grafo::rutaProfundidad(Vertice *origen, Vertice *destino)
                     band2=true;
             }
             if(!band2){
+                //COMENTAR DE HE
+                for(size_t i=0;i<lista.size();i++){
+                    if(!strcmp(lista[i]->getNombre(),aux->adyacencia->getNombre()))
+                        aux->adyacencia=lista[i];
+                }//AQUI
                 pila.push_front(aux->adyacencia);
                 pilaO.push_front(actual);
                 pilaD.push_front(aux->adyacencia);
