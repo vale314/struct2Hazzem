@@ -27,6 +27,11 @@ public:
 
     void mostrar();
 
+    void mostrarGenero();
+    void mostrarPorGenero(char[TAMCHAR]);
+
+    void mostrarListaInvertida();
+
     //tdaIndice
     bool validarId(int);
     long long posicionId(int);

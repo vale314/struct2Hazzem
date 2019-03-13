@@ -26,6 +26,7 @@ public:
     void crearLibro();
     void mostrar();
     void mostrarPorGenero();
+    void mostrarInvertida();
 };
 
 #endif // BIBLIOTECA_H

@@ -16,6 +16,7 @@ void Biblioteca::menu()
         cout<<menuCrear<<" Menu Crear"<<endl
             <<menuMostrar<<" Menu Mostrar"<<endl
             <<menuMostrarPorGenero<<" Menu Mostrar Por Genero"<<endl
+            <<menuMostrariInvertida<<" Menu Mostrar Invertida"<<endl
             <<menuModificar<<" Menu Modificar"<<endl
             <<menuSalir<<" Menu Salir"<<endl;
         cin>>opc;
@@ -28,6 +29,9 @@ void Biblioteca::menu()
             break;
             case menuMostrarPorGenero:
                 mostrarPorGenero();
+            break;
+            case menuMostrariInvertida:
+                mostrarInvertida();
             break;
             case menuModificar:
             break;
@@ -72,15 +76,28 @@ void Biblioteca::crearLibro()
 void Biblioteca::mostrar()
 {
     admin.mostrar();
+
+    system("pause");
 }
 
 void Biblioteca::mostrarPorGenero()
 {
     char genero[20];
 
+    admin.mostrarGenero();
+
     cin.ignore();
     cout<<"Introdusca El Genero"<<endl;
     cin.getline(genero,20,'\n');
 
+    admin.mostrarPorGenero(genero);
 
+    system("pause");
+}
+
+void Biblioteca::mostrarInvertida()
+{
+    cout<<"Lista Invertida"<<endl;
+    admin.mostrarListaInvertida();
+    system("pause");
 }

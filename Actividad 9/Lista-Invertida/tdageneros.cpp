@@ -20,7 +20,7 @@ int TdaGeneros::getPos()
     return pos;
 }
 
-void TdaGeneros::setPos(int)
+void TdaGeneros::setPos(int pos)
 {
     this->pos=pos;
 }
