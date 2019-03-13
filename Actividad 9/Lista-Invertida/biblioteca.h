@@ -27,6 +27,7 @@ public:
     void mostrar();
     void mostrarPorGenero();
     void mostrarInvertida();
+    void modificar();
 };
 
 #endif // BIBLIOTECA_H

@@ -61,6 +61,25 @@ void Administrador::mostrarGenero()
         cout<<tdaGenero[i].getGenero()<<" "<<tdaGenero[i].getPos()<<endl;
 }
 
+void Administrador::mostarPosicion(long long direccion)
+{
+    Libro libro;
+    ifstream leer("archivo.dat",ios::in|ios::binary);
+        leer.seekg(direccion);
+        leer.read(reinterpret_cast<char*>(&libro),sizeof (Libro));
+        cout<<libro<<endl;
+        leer.close();
+}
+
+void Administrador::keyToPos(int key)
+{
+    //regresar La Posicion y llamar mostrarPosicion
+    for(int i=0;i<contadorIndice;i++){
+        if(tdaIndice[i].getKey()==key)
+            return mostarPosicion(tdaIndice[i].getPos());
+    }
+}
+
 void Administrador::mostrarPorGenero(char genero[TAMCHAR])
 {
     int pos=0;
@@ -81,10 +100,33 @@ void Administrador::mostrarPorGenero(char genero[TAMCHAR])
         imprimir=true;
         if(tdaInvertida[pos].getPos()==-1)
             imprimir=false;
-        cout<<tdaInvertida[pos].getKey()<<endl;
+        keyToPos(tdaInvertida[pos].getKey());
         pos=tdaInvertida[pos].getPos();
     }while(imprimir);
     return;
+}
+
+void Administrador::modificar(int id,Libro libro)
+{
+    if(!validarId(id)){
+        cout<<"Id No Valido"<<endl;
+        return;
+    }
+
+    for(int i=0;i<contadorIndice;i++){
+        if(tdaIndice[i].getKey()==id)
+            return sobrescribir(tdaIndice[i].getPos(),libro);
+    }
+}
+
+void Administrador::sobrescribir(long long pos,Libro libro)
+{
+    fstream salida("archivo.dat",ios::in|ios::out|ios::binary);
+        salida.clear();
+        salida.seekp(pos);
+        cout<<salida.tellp()<<endl;
+        salida.write(reinterpret_cast<char *>(&libro),sizeof (Libro));
+    salida.close();
 }
 
 void Administrador::mostrarListaInvertida()

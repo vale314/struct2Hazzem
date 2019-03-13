@@ -28,7 +28,12 @@ public:
     void mostrar();
 
     void mostrarGenero();
+    void mostarPosicion(long long);
+    void keyToPos(int);
     void mostrarPorGenero(char[TAMCHAR]);
+
+    void modificar(int,Libro);
+    void sobrescribir(long long,Libro);
 
     void mostrarListaInvertida();
 

@@ -34,6 +34,7 @@ void Biblioteca::menu()
                 mostrarInvertida();
             break;
             case menuModificar:
+                modificar();
             break;
             case menuSalir:
             break;
@@ -99,5 +100,45 @@ void Biblioteca::mostrarInvertida()
 {
     cout<<"Lista Invertida"<<endl;
     admin.mostrarListaInvertida();
+    system("pause");
+}
+
+void Biblioteca::modificar()
+{
+    int id;
+    cout<<"Ingrese el id"<<endl;
+    cin>>id;
+
+    if(!admin.validarId(id)){
+        cout<<"Id Inesistente"<<endl;
+        system("pause");
+        return;
+    }
+
+    char nombre[20];
+    char autor[20];
+    char genero[20];
+
+    Libro libro;
+
+    cin.ignore();
+    cout<<"Ingrese El Libro"<<endl;
+    cin.getline(nombre,20,'\n');
+
+
+    cout<<"Ingrese el autor"<<endl;
+    cin.getline(autor,20,'\n');
+
+
+    cout<<"Ingrese el genero"<<endl;
+    cin.getline(genero,20,'\n');
+
+    libro.setCodigo(id);
+    libro.setNombre(nombre);
+    libro.setAutor(autor);
+    libro.setGenero(genero);
+
+    admin.modificar(id,libro);
+
     system("pause");
 }
