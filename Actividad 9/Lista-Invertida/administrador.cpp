@@ -128,7 +128,7 @@ void Administrador::modificar(int id,Libro libro)
 
     for(int i=0;i<contadorIndice;i++){
         if(tdaIndice[i].getKey()==id)
-            return sobrescribir(tdaIndice[i].getPos(),libro);
+            sobrescribir(tdaIndice[i].getPos(),libro);
     }
 }
 
@@ -259,6 +259,12 @@ void Administrador::actualizarGeneroInvertida(int pos)
                 tdaGenero[i].setPos(tdaInvertida[pos].getPos());
 
             return;
+        }
+        for(int i=0;i<contadorInvertida;i++){
+            if(tdaInvertida[i].getPos()==pos){
+                tdaInvertida[i].setPos(tdaInvertida[pos].getPos());
+                return;
+            }
         }
     }
 }
