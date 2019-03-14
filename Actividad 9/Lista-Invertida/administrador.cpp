@@ -116,6 +116,14 @@ void Administrador::modificar(int id,Libro libro)
     if(!validarGenero(libro.getGenero())){
         actualizarGeneroInvertida(posicionInvertidaArray(libro.getCodigo()));
         nuevoGenero(libro.getGenero(),posicionInvertidaArray(libro.getCodigo()));
+
+        int pos=posicionInvertidaArray(libro.getCodigo());
+        tdaInvertida[pos].setPos(-1);
+    }else{
+        actualizarGeneroInvertida(posicionInvertidaArray(libro.getCodigo()));
+        int pos=posicionGenero(libro.getGenero());
+        pos=posicionInvertida(pos);
+        tdaInvertida[pos].setPos(posicionInvertidaArray(libro.getCodigo()));
     }
 
     for(int i=0;i<contadorIndice;i++){
@@ -177,6 +185,14 @@ bool Administrador::validarGenero(char nombreGenero[TAMCHAR])
         if(!strcmp(tdaGenero[i].getGenero(),nombreGenero))
             return true;
     return false;
+}
+
+int Administrador::posicionGenero(int pos)
+{
+    for(int i=0;i<contadorGenero;i++)
+        if(tdaGenero[i].getPos()==pos)
+            return i;
+    return -1;
 }
 
 int Administrador::posicionGenero(char nombreGenero[TAMCHAR])

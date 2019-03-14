@@ -46,6 +46,7 @@ public:
 
     //tdaGeneros
     bool validarGenero(char[TAMCHAR]);
+    int posicionGenero(int);
     int posicionGenero(char[TAMCHAR]);
     void nuevoGenero(char[TAMCHAR],int);
 
