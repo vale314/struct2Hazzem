@@ -16,6 +16,7 @@ private:
         menuMostrarPorGenero,
         menuMostrariInvertida,
         menuModificar,
+        menuEliminar,
         menuSalir
     };
     Administrador admin;
@@ -28,6 +29,7 @@ public:
     void mostrarPorGenero();
     void mostrarInvertida();
     void modificar();
+    void eliminar();
 };
 
 #endif // BIBLIOTECA_H

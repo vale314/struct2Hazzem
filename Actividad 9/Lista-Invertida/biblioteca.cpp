@@ -18,6 +18,7 @@ void Biblioteca::menu()
             <<menuMostrarPorGenero<<" Menu Mostrar Por Genero"<<endl
             <<menuMostrariInvertida<<" Menu Mostrar Invertida"<<endl
             <<menuModificar<<" Menu Modificar"<<endl
+            <<menuEliminar<<" Menu Eliminar"<<endl
             <<menuSalir<<" Menu Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -35,6 +36,9 @@ void Biblioteca::menu()
             break;
             case menuModificar:
                 modificar();
+            break;
+            case menuEliminar:
+                eliminar();
             break;
             case menuSalir:
             break;
@@ -141,4 +145,13 @@ void Biblioteca::modificar()
     admin.modificar(id,libro);
 
     system("pause");
+}
+
+void Biblioteca::eliminar()
+{
+    int id;
+    cout<<"Ingrese El Id"<<endl;
+    cin>>id;
+
+    admin.eliminar(id);
 }

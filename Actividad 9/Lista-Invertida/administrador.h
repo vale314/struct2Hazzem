@@ -35,12 +35,14 @@ public:
     void modificar(int,Libro);
     void sobrescribir(long long,Libro);
 
+
     void mostrarListaInvertida();
 
     //tdaIndice
     bool validarId(int);
     long long posicionId(int);
     void nuevoIndice(int,long long);
+    void reset();
 
     //tdaGeneros
     bool validarGenero(char[TAMCHAR]);
@@ -48,10 +50,19 @@ public:
     void nuevoGenero(char[TAMCHAR],int);
 
     //tdaListaInvertida
+    void eliminar(int);
+    void desasociarGeneroInvertida(int);
+    void actualizarGeneroInvertida(int);
+    void quitarDeLaListaGenero(int);
+    void quitarDeLaLista(int);
+    void reposisionar(int);
     int posicionInvertida(int);
+    int posicionInvertidaArray(int);
     void nuevoDato(int key,int pos);
 
     //archivo
+    void eliminarFisico(int);
+    void reposicionarPunturos();
     long long escribirArchivo(Libro);
     void escribirIndice();
     void escribirGenero();

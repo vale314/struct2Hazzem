@@ -113,6 +113,11 @@ void Administrador::modificar(int id,Libro libro)
         return;
     }
 
+    if(!validarGenero(libro.getGenero())){
+        actualizarGeneroInvertida(posicionInvertidaArray(libro.getCodigo()));
+        nuevoGenero(libro.getGenero(),posicionInvertidaArray(libro.getCodigo()));
+    }
+
     for(int i=0;i<contadorIndice;i++){
         if(tdaIndice[i].getKey()==id)
             return sobrescribir(tdaIndice[i].getPos(),libro);
@@ -161,6 +166,11 @@ void Administrador::nuevoIndice(int key,long long pos)
     contadorIndice++;
 }
 
+void Administrador::reset()
+{
+    contadorIndice=0;
+}
+
 bool Administrador::validarGenero(char nombreGenero[TAMCHAR])
 {
     for(int i=0;i<contadorGenero;i++)
@@ -188,12 +198,94 @@ void Administrador::nuevoGenero(char nuevo_genero[TAMCHAR],int pos)
     contadorGenero++;
 }
 
+void Administrador::eliminar(int id)
+{
+    int pos;
+    pos=posicionInvertidaArray(id);
+    eliminarFisico(pos);
+    desasociarGeneroInvertida(pos);
+}
+
+void Administrador::desasociarGeneroInvertida(int pos)
+{
+    //buscar el genero es el header
+    for(int i=0;i<contadorGenero;i++){
+        if(tdaGenero[i].getPos()==pos){
+            if(tdaInvertida[pos].getPos()==-1){
+                quitarDeLaListaGenero(i);
+            }
+            else
+                tdaGenero[i].setPos(tdaInvertida[pos].getPos());
+
+            reposisionar(pos);
+            quitarDeLaLista(pos);
+            return;
+        }
+    }
+    for(int i=0;i<contadorInvertida;i++){
+        if(tdaInvertida[i].getPos()==pos){
+            tdaInvertida[i].setPos(tdaInvertida[pos].getPos());
+            reposisionar(pos);
+            quitarDeLaLista(pos);
+            return;
+        }
+    }
+}
+
+void Administrador::actualizarGeneroInvertida(int pos)
+{
+    for(int i=0;i<contadorGenero;i++){
+        if(tdaGenero[i].getPos()==pos){
+            if(tdaInvertida[pos].getPos()==-1){
+                quitarDeLaListaGenero(i);
+            }
+            else
+                tdaGenero[i].setPos(tdaInvertida[pos].getPos());
+
+            return;
+        }
+    }
+}
+
+void Administrador::quitarDeLaListaGenero(int pos)
+{
+    cout<<"Quitar Lista Genero"<<endl;
+    for(int i=pos;i<contadorGenero-1;i++){
+        tdaGenero[i]=tdaGenero[i+1];
+    }
+    contadorGenero--;
+}
+
+void Administrador::quitarDeLaLista(int pos)
+{
+    for(int i=pos;i<contadorInvertida-1;i++){
+        tdaInvertida[i]=tdaInvertida[i+1];
+    }
+    contadorInvertida--;
+}
+
+void Administrador::reposisionar(int pos)
+{
+    for(int i=pos;i<contadorInvertida;i++){
+        if((tdaInvertida[i].getPos()>pos)&&(tdaInvertida[i].getPos()!=-1))
+            tdaInvertida[i].setPos(tdaInvertida[i].getPos()-1);
+    }
+}
+
 int Administrador::posicionInvertida(int pos)
 {
     int i=pos;
     while(tdaInvertida[i].getPos()!=-1)
         i=tdaInvertida[i].getPos();
     return i;
+}
+
+int Administrador::posicionInvertidaArray(int key)
+{
+    for(int i=0;i<contadorIndice;i++)
+        if(tdaInvertida[i].getKey()==key)
+            return i;
+    return -1;
 }
 
 void Administrador::nuevoDato(int key , int pos)
@@ -208,11 +300,68 @@ void Administrador::nuevoDato(int key , int pos)
 
 }
 
+void Administrador::eliminarFisico(int pos)
+{
+
+    pos++;
+    Libro libro;
+    ofstream nuevo;
+    long long posicion;
+    nuevo.open("newA.dat",ios::out|ios::app|ios::binary);
+    cout<<"pos: "<<pos<<endl;
+    posicion=pos*sizeof (Libro);
+    cout<<posicion<<endl;
+    ifstream leer("archivo.dat",ios::in|ios::binary);
+    for(int i=0;i<contadorIndice;i++){
+        leer.seekg(tdaIndice[i].getPos());
+        leer.read(reinterpret_cast<char*>(&libro),sizeof (Libro));
+        if(leer.tellg()!=posicion)
+            nuevo.write(reinterpret_cast<char *>(&libro),sizeof (Libro));
+    }
+    leer.close();
+    nuevo.close();
+    remove("archivo.dat");
+    rename("newA.dat","archivo.dat");
+    remove("newA.dat");
+    reposicionarPunturos();
+
+
+}
+
+void Administrador::reposicionarPunturos()
+{
+    reset();
+    long long posicion;
+    Libro libro;
+    TdaIndice indice;
+    int i;
+    ifstream entrada;
+    i=0;
+
+    entrada.open("archivo.dat",ios::in|ios::binary);
+    entrada.clear();
+    entrada.seekg(0);
+    while (!entrada.eof()) {
+        posicion=entrada.tellg();
+
+        entrada.read(reinterpret_cast<char *>(&libro),sizeof (Libro));
+        if(entrada.eof())
+            break;
+        cout<<libro<<endl;
+        indice.setKey(libro.getCodigo());
+        indice.setPos(posicion);
+        tdaIndice[i]=indice;
+        contadorIndice++;
+        i++;
+    }
+    entrada.close();
+    system("pause");
+}
+
 long long Administrador::escribirArchivo(Libro libro)
 {
     fstream salida;
     salida.open("archivo.dat",ios::out|ios::app|ios::binary);
-    system("pause");
     long long pos=0;
     salida.clear();
     salida.seekp(contadorIndice*sizeof (Libro));
@@ -225,7 +374,7 @@ long long Administrador::escribirArchivo(Libro libro)
 void Administrador::escribirIndice()
 {
     int i=0;
-    ofstream salida("indice.txt",ios::app|ios::binary);
+    ofstream salida("indice.txt",ios::trunc|ios::binary);
     while(i<contadorIndice){
         salida.write(reinterpret_cast<char *>(&tdaIndice[i]),sizeof (TdaIndice));
         i++;
@@ -236,7 +385,7 @@ void Administrador::escribirIndice()
 void Administrador::escribirGenero()
 {
     int i=0;
-    ofstream salida("genero.txt",ios::app|ios::binary);
+    ofstream salida("genero.txt",ios::trunc|ios::binary);
     while(i<contadorGenero){
         salida.write(reinterpret_cast<char *>(&tdaGenero[i]),sizeof (TdaGeneros));
         i++;
@@ -247,7 +396,7 @@ void Administrador::escribirGenero()
 void Administrador::escribirInvertida()
 {
     int i=0;
-    ofstream salida("invertida.txt",ios::app|ios::binary);
+    ofstream salida("invertida.txt",ios::trunc|ios::binary);
     while(i<contadorInvertida){
         salida.write(reinterpret_cast<const char *>(&tdaInvertida[i]),sizeof (TdaListaInvertida));
         i++;
