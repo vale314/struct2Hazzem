@@ -30,15 +30,22 @@ public:
     Categoria *retornarCategoria(char nombre[TAMCHAR]);
     int posCategoria(Categoria*);
     Lista_Invertida *retornarOrigen(char[TAMCHAR]);
+    void insertarCargaCategoria(char[TAMCHAR]);
+    Categoria * retornarCategoria(int);
+    void insertarConexionCategoria(int,int);
 
     //Lista
     bool validaId(int);
     void insertarLibro(Libro);
     int posLista(Lista_Invertida*);
     void imprimirLista();
+    void insertarCarga(int);
+    void insertarConexionLista(int,int);
+    Lista_Invertida *retornarElmento(int);
 
     //Direccion
     long long obtenerPos(int);
+    void insertarCargarDireccion(int, long long);
 
     //Arhivo
     void mostrar();
@@ -53,6 +60,11 @@ public:
     void guardarCategoria();
     void guardarDireccion();
     void guardarBook(Libro);
+
+    void cargar();
+    void cargarListaInvertida();
+    void cargarCategoria();
+    void cargarDireccion();
 };
 
 #endif // BIBLIOTECA_H
