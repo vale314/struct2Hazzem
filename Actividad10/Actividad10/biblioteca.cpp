@@ -120,16 +120,12 @@ void Biblioteca::insertarConexionCategoria(int origen, int destino)
     Lista_Invertida *auxL;
 
 
-    cout<<origen<<endl<<destino<<endl;
-    system("pause");
+
     auxC=retornarCategoria(origen);
-//    cout<<auxC->getNombre()<<endl;
     auxL=retornarElmento(destino);
-//    cout<<auxL->getId()<<endl;
 
     auxC->origen=auxL;
-//    cout<<auxC->origen->getId()<<endl;
-//    system("pause");
+
 }
 
 
@@ -277,12 +273,10 @@ void Biblioteca::insertarConexionLista(int origen, int destino)
 
     auxL=retornarElmento(origen);
     auxL1=retornarElmento(destino);
-    cout<<"lista: "<<auxL->getId()<<endl;
-    cout<<"lista: "<<auxL1->getId()<<endl;
+
     auxL->nextCategoria=auxL1;
 
-    cout<<auxL->nextCategoria->getId()<<endl;
-    system("pause");
+
 }
 
 Lista_Invertida *Biblioteca::retornarElmento(int origen)
@@ -371,8 +365,6 @@ void Biblioteca::mostrarPorGenero(char genero [TAMCHAR])
     long long id=0;
     while(auxL!=NULL){
         id=obtenerPos(auxL->getId());
-        cout<<auxL->getId()<<endl;
-        system("pause");
         mostrarPorPos(id);
         auxL=auxL->nextCategoria;
     }
@@ -535,8 +527,7 @@ void Biblioteca::cargarListaInvertida()
         while(!entradaAux.eof()){
             entradaAux.read(reinterpret_cast<char* >(&i),sizeof (int));
             entradaAux.read(reinterpret_cast<char *>(&pos),sizeof (int));
-            cout<<"IN: "<<i<<endl<<"IN: "<<pos<<endl;
-            system("pause");
+
             if(entradaAux.eof())
                 break;
             insertarConexionLista(i,pos);
