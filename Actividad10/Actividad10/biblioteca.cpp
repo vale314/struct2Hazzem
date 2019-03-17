@@ -119,12 +119,17 @@ void Biblioteca::insertarConexionCategoria(int origen, int destino)
     Categoria *auxC;
     Lista_Invertida *auxL;
 
+
+    cout<<origen<<endl<<destino<<endl;
+    system("pause");
     auxC=retornarCategoria(origen);
+//    cout<<auxC->getNombre()<<endl;
     auxL=retornarElmento(destino);
-    cout<<auxC<<endl;
-    cout<<auxL<<endl;
+//    cout<<auxL->getId()<<endl;
 
     auxC->origen=auxL;
+//    cout<<auxC->origen->getId()<<endl;
+//    system("pause");
 }
 
 
@@ -272,8 +277,12 @@ void Biblioteca::insertarConexionLista(int origen, int destino)
 
     auxL=retornarElmento(origen);
     auxL1=retornarElmento(destino);
-
+    cout<<"lista: "<<auxL->getId()<<endl;
+    cout<<"lista: "<<auxL1->getId()<<endl;
     auxL->nextCategoria=auxL1;
+
+    cout<<auxL->nextCategoria->getId()<<endl;
+    system("pause");
 }
 
 Lista_Invertida *Biblioteca::retornarElmento(int origen)
@@ -315,7 +324,8 @@ void Biblioteca::insertarCargarDireccion(int id, long long pos)
 
     cantidadDireccion++;
     if(auxD==NULL){
-        auxD=direcNew;
+        direccion=direcNew;
+        return;
     }
 
     while (auxD->siguiente!=NULL)
@@ -361,6 +371,8 @@ void Biblioteca::mostrarPorGenero(char genero [TAMCHAR])
     long long id=0;
     while(auxL!=NULL){
         id=obtenerPos(auxL->getId());
+        cout<<auxL->getId()<<endl;
+        system("pause");
         mostrarPorPos(id);
         auxL=auxL->nextCategoria;
     }
@@ -378,9 +390,8 @@ void Biblioteca::mostrarPorPos(long long pos)
 
 void Biblioteca::guardar()
 {
-
+    guardarDireccion();
     guardarListaInvertida();
-    guardarCategoria();
     guardarCategoria();
 }
 
@@ -421,7 +432,7 @@ void Biblioteca::guardarCategoria()
 
     ofstream salida("categoria.dat",ios::out|ios::trunc);
         while(auxC!=NULL){
-            salida.write(reinterpret_cast<char *>(auxC->getNombre()),sizeof (TAMCHAR));
+            salida.write(reinterpret_cast<char *>(auxC->getNombre()),TAMCHAR);
             //no escribe completo el nombre en el archivo
             auxC=auxC->siguiente;
         }
@@ -449,7 +460,7 @@ void Biblioteca::guardarDireccion()
     Direccion *auxD;
     auxD=direccion;
     int id=0;
-    int pos=0;
+    long long pos=0;
     ofstream salida("direccion.dat",ios::out|ios::trunc);
         while(auxD!=NULL){
             id=auxD->getId();
@@ -516,13 +527,16 @@ void Biblioteca::cargarListaInvertida()
             insertarCarga(id);
         }
     entrada.close();
-
     int i=0;
     int pos;
     ifstream entradaAux("listaConection.dat",ios::in);
-        while(!entrada.eof()){
+
+
+        while(!entradaAux.eof()){
             entradaAux.read(reinterpret_cast<char* >(&i),sizeof (int));
             entradaAux.read(reinterpret_cast<char *>(&pos),sizeof (int));
+            cout<<"IN: "<<i<<endl<<"IN: "<<pos<<endl;
+            system("pause");
             if(entradaAux.eof())
                 break;
             insertarConexionLista(i,pos);
@@ -539,25 +553,25 @@ void Biblioteca::cargarCategoria()
         return;
     }
         while(!entrada.eof()){
-            entrada.read(reinterpret_cast<char *>(&nombre),sizeof (TAMCHAR));
+            entrada.read(reinterpret_cast<char *>(&nombre),TAMCHAR);
             if(entrada.eof())
                 break;
             insertarCargaCategoria(nombre);
         }
     entrada.close();
 
-//    int i=0;
-//    int pos=0;
-//    ifstream salidaAux("categoriaConection.dat",ios::in);
-//        while(!salidaAux.eof()){
-//            salidaAux.read(reinterpret_cast<char *>(&i),sizeof (int));
-//            salidaAux.read(reinterpret_cast<char *>(&pos),sizeof (int));
+    int i=0;
+    int pos=0;
+    ifstream salidaAux("categoriaConection.dat",ios::in);
+        while(!salidaAux.eof()){
+            salidaAux.read(reinterpret_cast<char *>(&i),sizeof (int));
+            salidaAux.read(reinterpret_cast<char *>(&pos),sizeof (int));
 
-//            if(salidaAux.eof())
-//                break;
-//            insertarConexionCategoria(i,pos);
-//        }
-//        salidaAux.close();
+            if(salidaAux.eof())
+                break;
+            insertarConexionCategoria(i,pos);
+        }
+        salidaAux.close();
 }
 
 void Biblioteca::cargarDireccion()
