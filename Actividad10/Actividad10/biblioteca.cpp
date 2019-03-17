@@ -65,6 +65,19 @@ int Biblioteca::posCategoria(Categoria * actualC)
     return -1;
 }
 
+Lista_Invertida *Biblioteca::retornarOrigen(char nombre[TAMCHAR])
+{
+    Categoria *auxC;
+    auxC=categoria;
+
+    while(auxC!=NULL){
+        if(!strcmp(auxC->getNombre(),nombre))
+            return auxC->origen;
+        auxC=auxC->siguiente;
+    }
+    return NULL;
+}
+
 
 bool Biblioteca::validaId(int id)
 {
@@ -183,12 +196,78 @@ void Biblioteca::imprimirLista()
     }
 }
 
+long long Biblioteca::obtenerPos(int id)
+{
+    Direccion *auxD;
+    auxD=direccion;
+
+    while(auxD!=NULL){
+        if(auxD->getId()==id)
+            return auxD->getPos();
+        auxD=auxD->siguiente;
+    }
+    return -1;
+}
+
+void Biblioteca::mostrar()
+{
+    Libro libro;
+    ifstream entrada("book.dat",ios::in);
+    while(!entrada.eof()){
+        entrada.read(reinterpret_cast<char*>(&libro),sizeof (Libro));
+        if(entrada.eof())
+            break;
+        cout<<libro<<endl;
+    }
+    entrada.close();
+
+}
+
+void Biblioteca::mostrarGeneros()
+{
+    Categoria* auxC;
+    auxC=categoria;
+
+    while(auxC!=NULL){
+        cout<<auxC->getNombre()<<endl;
+        auxC=auxC->siguiente;
+    }
+
+}
+
+void Biblioteca::mostrarPorGenero(char genero [TAMCHAR])
+{
+    Lista_Invertida *auxL;
+    auxL=retornarOrigen(genero);
+
+    if(auxL==NULL){
+        cout<<"El Elmeneto Buscado No EXISTE"<<endl;
+        return;
+    }
+    long long id=0;
+    while(auxL!=NULL){
+        id=obtenerPos(auxL->getId());
+        mostrarPorPos(id);
+        auxL=auxL->nextCategoria;
+    }
+}
+
+void Biblioteca::mostrarPorPos(long long pos)
+{
+    Libro libro;
+    ifstream leer("book.dat",ios::in);
+        leer.seekg(pos);
+        leer.read(reinterpret_cast<char *>(&libro),sizeof(Libro));
+        cout<<libro<<endl;
+    leer.close();
+}
+
 void Biblioteca::guardar()
 {
 
     guardarListaInvertida();
-//    guardarCategoria();
-//    guardarCategoria();
+    guardarCategoria();
+    guardarCategoria();
 }
 
 void Biblioteca::guardarListaInvertida()
@@ -225,8 +304,9 @@ void Biblioteca::guardarCategoria()
 {
     Categoria *auxC;
     auxC=categoria;
+
     ofstream salida("categoria.dat",ios::out|ios::trunc);
-        while(auxC->siguiente!=NULL){
+        while(auxC!=NULL){
             salida.write(reinterpret_cast<char *>(auxC->getNombre()),sizeof (int));
             auxC=auxC->siguiente;
         }
@@ -234,11 +314,13 @@ void Biblioteca::guardarCategoria()
 
     auxC=categoria;
     int i=0;
+    int pos=0;
     ofstream salidaAux("categoriaConection.dat",ios::out|ios::trunc);
-        while(auxC->siguiente!=NULL){
+        while(auxC!=NULL){
             if(auxC->origen!=NULL){
                 salidaAux.write(reinterpret_cast<char *>(&i),sizeof (int));
-                salidaAux.write(reinterpret_cast<char *>(posLista(auxC->origen)),sizeof (int));
+                pos=posLista(auxC->origen);
+                salidaAux.write(reinterpret_cast<char *>(&pos),sizeof (int));
             }
             auxC=auxC->siguiente;
             i++;
@@ -251,10 +333,14 @@ void Biblioteca::guardarDireccion()
 
     Direccion *auxD;
     auxD=direccion;
+    int id=0;
+    int pos=0;
     ofstream salida("direccion.dat",ios::out|ios::trunc);
-        while(auxD->siguiente!=NULL){
-            salida.write(reinterpret_cast<char *>(auxD->getId()),sizeof (int));
-            salida.write(reinterpret_cast<char *>(auxD->getPos()),sizeof (long long));
+        while(auxD!=NULL){
+            id=auxD->getId();
+            pos=auxD->getPos();
+            salida.write(reinterpret_cast<char *>(&id),sizeof (int));
+            salida.write(reinterpret_cast<char *>(&pos),sizeof (long long));
             auxD=auxD->siguiente;
         }
         salida.close();

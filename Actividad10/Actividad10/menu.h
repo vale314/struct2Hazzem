@@ -27,7 +27,10 @@ public:
 
     void menu();
 
-    void imprimir();
-};
+    void imprimirLista();
 
+    void imprimirTodo();
+
+    void imprimirCategoria();
+};
 #endif // MENU_H

@@ -53,13 +53,15 @@ void Menu::menu(){
             break;
 
             case menuMostrarLibros:
+                imprimirTodo();
             break;
 
             case menuMostrarPorGenero:
+                imprimirCategoria();
             break;
 
             case menuInvertida:
-                imprimir();
+                imprimirLista();
             break;
 
             case menuSalir:
@@ -69,8 +71,28 @@ void Menu::menu(){
     }while(opc != menuSalir);
 }
 
-void Menu::imprimir()
+void Menu::imprimirLista()
 {
     biblioteca.imprimirLista();
+    system("pause");
+}
+
+void Menu::imprimirTodo()
+{
+    biblioteca.mostrar();
+    system("pause");
+}
+
+void Menu::imprimirCategoria()
+{
+    char genero[TAMCHAR];
+
+    biblioteca.mostrarGeneros();
+
+    cout<<"Genero A Buscar"<<endl;
+    cin.ignore();
+    cin.getline(genero,TAMCHAR,'\n');
+
+    biblioteca.mostrarPorGenero(genero);
     system("pause");
 }

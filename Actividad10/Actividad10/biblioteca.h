@@ -29,6 +29,7 @@ public:
     bool buscarCategoria(char nombre[TAMCHAR]);
     Categoria *retornarCategoria(char nombre[TAMCHAR]);
     int posCategoria(Categoria*);
+    Lista_Invertida *retornarOrigen(char[TAMCHAR]);
 
     //Lista
     bool validaId(int);
@@ -36,7 +37,17 @@ public:
     int posLista(Lista_Invertida*);
     void imprimirLista();
 
+    //Direccion
+    long long obtenerPos(int);
+
     //Arhivo
+    void mostrar();
+
+    void mostrarGeneros();
+    void mostrarPorGenero(char genero[TAMCHAR]);
+
+    void mostrarPorPos(long long);
+
     void guardar();
     void guardarListaInvertida();
     void guardarCategoria();
