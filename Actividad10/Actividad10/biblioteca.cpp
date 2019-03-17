@@ -31,12 +31,12 @@ bool Biblioteca::buscarCategoria(char nombre[TAMCHAR])
 {
     Categoria *auxC=categoria;
 
-    while(auxC->siguiente!=NULL){
+    while(auxC!=NULL){
         if(!strcmp(auxC->getNombre(),nombre))
             return true;
         auxC=auxC->siguiente;
     }
-    return  false;
+    return false;
 
 }
 
@@ -44,7 +44,7 @@ Categoria *Biblioteca::retornarCategoria(char nombre[TAMCHAR])
 {
     Categoria *auxC=categoria;
 
-    while (auxC->siguiente != NULL) {
+    while (auxC!= NULL) {
         if(!strcmp(auxC->getNombre(),nombre))
             return auxC;
         auxC=auxC->siguiente;
@@ -141,7 +141,7 @@ bool Biblioteca::validaId(int id)
     if(emptyCategoria())
         return false;
 
-    while(auxL->siguiente != NULL){
+    while(auxL!= NULL){
         if(auxL->getId()==id)
             return true;
         auxL=auxL->siguiente;
