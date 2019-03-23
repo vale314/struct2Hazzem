@@ -33,6 +33,9 @@ public:
     void insertarCargaCategoria(char[TAMCHAR]);
     Categoria * retornarCategoria(int);
     void insertarConexionCategoria(int,int);
+    bool verificarPrimero(Lista_Invertida*);
+    Categoria *retornarCategoria(Lista_Invertida*);
+    void eliminarCategoria(Categoria*);
 
     //Lista
     bool validaId(int);
@@ -42,6 +45,8 @@ public:
     void insertarCarga(int);
     void insertarConexionLista(int,int);
     Lista_Invertida *retornarElmento(int);
+    Lista_Invertida *buscarElemento(int);
+    void eliminarLista(int);
 
     //Direccion
     long long obtenerPos(int);

@@ -13,6 +13,7 @@ enum{
     menuMostrarLibros,
     menuMostrarPorGenero,
     menuInvertida,
+    menuEliminar,
     menuSalir,
 };
 
@@ -32,5 +33,7 @@ public:
     void imprimirTodo();
 
     void imprimirCategoria();
+
+    void eliminar();
 };
 #endif // MENU_H

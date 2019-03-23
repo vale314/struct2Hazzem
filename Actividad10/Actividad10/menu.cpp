@@ -45,6 +45,7 @@ void Menu::menu(){
             <<menuMostrarLibros<<" Mostrar Todos Los Libros"<<endl
             <<menuMostrarPorGenero<<" Mostrar Por Genero"<<endl
             <<menuInvertida<<" Mostrar Lista Invertida"<<endl
+            <<menuEliminar<<" Eliminar Libro"<<endl
             <<menuSalir<<" Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -62,6 +63,9 @@ void Menu::menu(){
 
             case menuInvertida:
                 imprimirLista();
+            break;
+            case menuEliminar:
+                eliminar();
             break;
 
             case menuSalir:
@@ -94,5 +98,15 @@ void Menu::imprimirCategoria()
     cin.getline(genero,TAMCHAR,'\n');
 
     biblioteca.mostrarPorGenero(genero);
+    system("pause");
+}
+
+void Menu::eliminar()
+{
+    int id;
+    cout<<"Id Libro Eliminar"<<endl;
+    cin>>id;
+
+    biblioteca.eliminarLista(id);
     system("pause");
 }

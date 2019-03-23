@@ -128,6 +128,50 @@ void Biblioteca::insertarConexionCategoria(int origen, int destino)
 
 }
 
+bool Biblioteca::verificarPrimero(Lista_Invertida *origen)
+{
+    Categoria* auxC;
+    auxC=categoria;
+    while(auxC!=NULL){
+        if(auxC->origen==origen)
+            return true;
+        auxC=auxC->siguiente;
+    }
+    return false;
+}
+
+Categoria *Biblioteca::retornarCategoria(Lista_Invertida * origen)
+{
+    Categoria* auxC;
+    auxC=categoria;
+    while(auxC!=NULL){
+        if(auxC->origen==origen)
+            return auxC;
+        auxC=auxC->siguiente;
+    }
+    return NULL;
+}
+
+void Biblioteca::eliminarCategoria(Categoria *origen)
+{
+    Categoria* auxC;
+
+    if(categoria==origen){
+        if(categoria->siguiente==NULL){
+            categoria=NULL;
+            return;
+        }
+        categoria=categoria->siguiente;
+        return;
+    }
+
+    auxC=categoria;
+    cout<<origen->getNombre()<<endl;
+    while (auxC->siguiente!=origen&&auxC!=NULL)
+        auxC=auxC->siguiente;
+    auxC->siguiente=origen->siguiente;
+}
+
 
 bool Biblioteca::validaId(int id)
 {
@@ -241,7 +285,9 @@ void Biblioteca::imprimirLista()
     while (auxL!=NULL) {
         cout<<"Origen: "<<auxL<<endl;
         cout<<"Id: "<<auxL->getId()<<endl;
+        cout<<"Next: "<<auxL->nextCategoria<<endl;
         cout<<"Destino: "<<auxL->siguiente<<endl;
+        cout<<endl;
         auxL=auxL->siguiente;
     }
 }
@@ -291,6 +337,62 @@ Lista_Invertida *Biblioteca::retornarElmento(int origen)
         auxL=auxL->siguiente;
     }
     return NULL;
+}
+
+Lista_Invertida *Biblioteca::buscarElemento(int id)
+{
+    Lista_Invertida * auxL;
+    auxL=listaInvertida;
+    while (auxL!=NULL) {
+        if(auxL->getId()==id)
+            return auxL;
+        auxL=auxL->siguiente;
+    }
+    return NULL;
+}
+
+void Biblioteca::eliminarLista(int origen)
+{
+    Lista_Invertida* auxL= buscarElemento(origen);
+    Lista_Invertida *auxL1;
+    if(auxL==NULL){
+        cout<<"Elemento No Encontrado"<<endl;
+        return;
+    }
+    //verificarSi Existe
+    Categoria *elimC=retornarCategoria(auxL); /*Retorna si es origen de una categoria si no NULL*/
+    if(elimC==NULL){
+            auxL1=listaInvertida;
+            while(auxL1->nextCategoria!=auxL&&auxL1!=NULL)
+                auxL1=auxL1->siguiente;
+            auxL1->nextCategoria=auxL->nextCategoria;
+
+            if(auxL==listaInvertida)
+                    listaInvertida=listaInvertida->siguiente;
+            else{
+                auxL1=listaInvertida;
+                while(auxL1->siguiente!=auxL&&auxL1!=NULL)
+                    auxL1=auxL1->siguiente;
+                auxL1->siguiente=auxL->siguiente;
+            }
+            return;
+
+    }
+    if(auxL==listaInvertida)
+        listaInvertida=listaInvertida->siguiente;
+     else{
+        auxL1=listaInvertida;
+        while(auxL1->siguiente!=auxL&&auxL1!=NULL)
+            auxL1=auxL1->siguiente;
+        auxL1->siguiente=auxL->siguiente;
+        }
+
+
+    if(auxL->nextCategoria==NULL)
+        eliminarCategoria(elimC);
+    else
+        elimC->origen=auxL->nextCategoria;
+
 }
 
 long long Biblioteca::obtenerPos(int id)
