@@ -46,6 +46,7 @@ void Menu::menu(){
             <<menuMostrarPorGenero<<" Mostrar Por Genero"<<endl
             <<menuInvertida<<" Mostrar Lista Invertida"<<endl
             <<menuEliminar<<" Eliminar Libro"<<endl
+            <<menuModificar<<" Modificar Libro"<<endl
             <<menuSalir<<" Salir"<<endl;
         cin>>opc;
         switch (opc) {
@@ -66,6 +67,9 @@ void Menu::menu(){
             break;
             case menuEliminar:
                 eliminar();
+            break;
+            case menuModificar:
+                modificar();
             break;
 
             case menuSalir:
@@ -109,4 +113,41 @@ void Menu::eliminar()
 
     biblioteca.eliminarLista(id);
     system("pause");
+}
+
+void Menu::modificar()
+{
+    int id;
+    cout<<"Id Libro A Modificar"<<endl;
+    cin>>id;
+
+    if(!biblioteca.validaId(id)){
+        cout<<"No Se Encontro"<<endl;
+        system("pause");
+        return;
+    }
+
+    Libro libro;
+
+    char nombre[TAMCHAR];
+    char author[TAMCHAR];
+    char genero[TAMCHAR];
+
+    cout<<"Ingrese el nombre"<<endl;
+    cin.ignore();
+    cin.getline(nombre,TAMCHAR,'\n');
+
+    cout<<"Ingrese el author"<<endl;
+    cin.getline(author,TAMCHAR,'\n');
+
+    cout<<"Ingrese el genero"<<endl;
+    cin.getline(genero,TAMCHAR,'\n');
+
+    libro.setNombre(nombre);
+    libro.setId(id);
+    libro.setGenero(genero);
+    libro.setAuthor(author);
+
+    biblioteca.modificar(id,libro);
+
 }

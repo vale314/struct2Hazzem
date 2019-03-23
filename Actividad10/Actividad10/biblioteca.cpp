@@ -359,6 +359,7 @@ void Biblioteca::eliminarLista(int origen)
         cout<<"Elemento No Encontrado"<<endl;
         return;
     }
+    eliminarDireccion(origen);
     //verificarSi Existe
     Categoria *elimC=retornarCategoria(auxL); /*Retorna si es origen de una categoria si no NULL*/
     if(elimC==NULL){
@@ -395,6 +396,12 @@ void Biblioteca::eliminarLista(int origen)
 
 }
 
+void Biblioteca::modificar(int id,Libro libro)
+{
+    eliminarLista(id);
+    insertarLibro(libro);
+}
+
 long long Biblioteca::obtenerPos(int id)
 {
     Direccion *auxD;
@@ -429,6 +436,45 @@ void Biblioteca::insertarCargarDireccion(int id, long long pos)
     auxD->siguiente=direcNew;
 }
 
+void Biblioteca::eliminarDireccion(int id)
+{
+    long long pos = obtenerPos(id);
+    if(pos==-1)
+        return;
+
+    eliminarArchivo(pos);
+}
+
+void Biblioteca::resetDireccion()
+{
+    direccion=NULL;
+    cantidadDireccion=0;
+}
+
+
+void Biblioteca::reposicionarDireccion()
+{
+    resetDireccion();
+
+    Direccion *auxD;
+    auxD=direccion;
+    long long pos=0;
+
+    Libro libro;
+    ifstream entrada("book.dat",ios::in);
+    if(!entrada.good()){
+        cout<<"Error al abrir el archivo"<<endl;
+        return;
+    }
+    while(!entrada.eof()){
+        pos=entrada.tellg();
+        entrada.read(reinterpret_cast<char*>(&libro),sizeof(Libro));
+        if(entrada.eof())
+            break;
+        insertarCargarDireccion(libro.getId(),pos);
+    }
+    entrada.close();
+}
 void Biblioteca::mostrar()
 {
     Libro libro;
@@ -441,6 +487,32 @@ void Biblioteca::mostrar()
     }
     entrada.close();
 
+}
+
+void Biblioteca::eliminarArchivo(long long pos)
+{
+    Libro libro;
+
+    ofstream salida("bookAux.dat",ios::out|ios::app);
+    ifstream entrada("book.dat",ios::in);
+    if(!entrada.good()||!salida.good()){
+        cout<<"Error en Archivo"<<endl;
+        return;
+    }
+    while(!entrada.eof()){
+        if(entrada.tellg()!=pos){
+            entrada.read(reinterpret_cast<char*>(&libro),sizeof (Libro));
+            if(entrada.eof())
+                    break;
+            salida.write(reinterpret_cast<char*>(&libro),sizeof (Libro));
+        }else
+            entrada.read(reinterpret_cast<char*>(&libro),sizeof (Libro));
+    }
+    entrada.close();
+    salida.close();
+    remove("book.dat");
+    rename("bookAux.dat","book.dat");
+    reposicionarDireccion();
 }
 
 void Biblioteca::mostrarGeneros()
@@ -576,7 +648,7 @@ void Biblioteca::guardarBook(Libro libro)
     salida.close();
 
     pos=(cantidadDireccion-1)*sizeof (Libro);
-
+    cout<<cantidadDireccion-1<<endl;
     cout<<pos<<endl;
 
 
@@ -597,6 +669,8 @@ void Biblioteca::guardarBook(Libro libro)
 
     auxD->siguiente=direcNew;
 }
+
+
 
 void Biblioteca::cargar()
 {

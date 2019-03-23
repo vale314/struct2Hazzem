@@ -47,13 +47,19 @@ public:
     Lista_Invertida *retornarElmento(int);
     Lista_Invertida *buscarElemento(int);
     void eliminarLista(int);
+    void modificar(int,Libro);
 
     //Direccion
     long long obtenerPos(int);
     void insertarCargarDireccion(int, long long);
+    void eliminarDireccion(int);
+    void resetDireccion();
+    void reposicionarDireccion();
 
     //Arhivo
     void mostrar();
+
+    void eliminarArchivo(long long);
 
     void mostrarGeneros();
     void mostrarPorGenero(char genero[TAMCHAR]);
@@ -65,6 +71,7 @@ public:
     void guardarCategoria();
     void guardarDireccion();
     void guardarBook(Libro);
+
 
     void cargar();
     void cargarListaInvertida();

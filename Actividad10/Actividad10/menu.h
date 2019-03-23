@@ -14,6 +14,7 @@ enum{
     menuMostrarPorGenero,
     menuInvertida,
     menuEliminar,
+    menuModificar,
     menuSalir,
 };
 
@@ -35,5 +36,7 @@ public:
     void imprimirCategoria();
 
     void eliminar();
+
+    void modificar();
 };
 #endif // MENU_H
