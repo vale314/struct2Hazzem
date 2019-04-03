@@ -30,6 +30,7 @@ public:
 
     void crearArchivo();
     bool validarArchivo();
+    void insertarEnArchivo(Persona,long long);
 };
 
 #endif // ADMINISTRACION_H

@@ -37,6 +37,7 @@ void Administracion::insertar()
     char RFC[7];
     char domicilio[50];
     char telefono[30];
+    long long pos=0;
 
     Persona persona;
 
@@ -62,8 +63,10 @@ void Administracion::insertar()
     persona.setDomicilio(domicilio);
     persona.setTelefono(telefono);
 
-    cout<<persona.getNombre()<<" "<<persona.getRFC()<<" "<<persona.getDomicilio()<<" "<<persona.getTelefono()<<endl;
-    system("pause");
+    pos=persona.posicion();
+
+    insertarEnArchivo(persona,pos);
+
 }
 
 void Administracion::crearArchivo()
@@ -86,4 +89,13 @@ bool Administracion::validarArchivo()
             salida.close();
             return true;
         }
+}
+
+void Administracion::insertarEnArchivo(Persona persona, long long pos)
+{
+    cout<<pos<<endl;
+    fstream salida("Persona.txt",ios::out|ios::in);
+        salida.seekp(pos);
+        salida.write(reinterpret_cast<char*>(&persona),sizeof(Persona));
+    salida.close();
 }

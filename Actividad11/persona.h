@@ -31,6 +31,9 @@ public:
     char* getTelefono();
     void setTelefono(const char [30]);
 
+    int generateAscii();
+    long long posicion();
+
     friend ostream& operator<<(ostream& os,Persona& p);
 };
 
