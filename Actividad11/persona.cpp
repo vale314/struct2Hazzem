@@ -2,7 +2,10 @@
 
 Persona::Persona()
 {
-
+    strcpy(nombre,"null");
+    strcpy(domicilio,"null");
+    strcpy(RFC,"0000000");
+    strcpy(telefono,"000");
 }
 
 void Persona::setDomicilio(const char domicilio[50])
@@ -47,9 +50,10 @@ void Persona::setTelefono(const char telefono[30])
 
 int Persona::generateAscii()
 {
-    int suma=0;
-    for(int i=0;i<7;i++)
-        suma=suma+static_cast<int>(RFC[i]);
+    unsigned long long int suma=1;
+    int num;
+    for(int i=0;i<6;i++)
+        suma=suma*static_cast<int>(RFC[i]);
 
     return (suma%100);
 }
@@ -63,6 +67,18 @@ long long Persona::posicion()
 
     return suma;
 }
+
+bool Persona::compareRFC(const char RFCAUX[7])
+{
+    return !strcmp(RFC,RFCAUX);
+}
+
+bool Persona::vacio()
+{
+    return !strcmp(nombre,"null");
+}
+
+
 
 ostream& operator<<(ostream& os,Persona& p)
 {

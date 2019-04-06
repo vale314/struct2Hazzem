@@ -12,7 +12,7 @@ using namespace std;
 class Persona
 {
 private:
-    char RFC[7];
+    char RFC[7]="";
     char nombre[50];
     char domicilio[50];
     char telefono[30];
@@ -33,6 +33,10 @@ public:
 
     int generateAscii();
     long long posicion();
+
+    bool compareRFC(const char[7]);
+
+    bool vacio();
 
     friend ostream& operator<<(ostream& os,Persona& p);
 };
