@@ -18,11 +18,13 @@ private:
     enum{
         menuInsertar=1,
         menuMostrar,
+        menuMostrarTodos,
         menuActualizar,
         menuEliminar,
         menuSalir,
     };
     long long endPos;
+    long long sizeOfPersona;
 public:
     Administracion();
     void menu();
@@ -34,10 +36,13 @@ public:
     bool validarArchivo();
     void insertarEnArchivo(Persona,long long);
 
-    bool validarPersona(long long,char[7]);
-
     void mostrar();
     void imprimirArchivo(long long ,char[7]);
+
+    void mostrarTodos();
+
+    void eliminar();
+    void eliminarDeArchivo(char[7],long long);
 };
 
 #endif // ADMINISTRACION_H

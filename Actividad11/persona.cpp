@@ -4,7 +4,7 @@ Persona::Persona()
 {
     strcpy(nombre,"null");
     strcpy(domicilio,"null");
-    strcpy(RFC,"0000000");
+    strcpy(RFC,"000");
     strcpy(telefono,"000");
 }
 
