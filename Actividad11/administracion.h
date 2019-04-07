@@ -30,6 +30,7 @@ public:
     void menu();
 
     void insertar();
+
     long long regresarPosicion(long long,char[7]);
 
     void crearArchivo();
@@ -37,12 +38,17 @@ public:
     void insertarEnArchivo(Persona,long long);
 
     void mostrar();
-    void imprimirArchivo(long long ,char[7]);
+    long long imprimirArchivo(long long ,char[7]);
 
     void mostrarTodos();
 
     void eliminar();
     void eliminarDeArchivo(char[7],long long);
+
+    void actualizar();
+    void acualizarEnArchivo();
+
+    Persona crearPersona();
 };
 
 #endif // ADMINISTRACION_H

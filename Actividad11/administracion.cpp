@@ -28,6 +28,7 @@ void Administracion::menu()
                 mostrarTodos();
             break;
             case menuActualizar:
+                actualizar();
             break;
             case menuEliminar:
                 eliminar();
@@ -119,10 +120,6 @@ long long Administracion::regresarPosicion(long long pos,char RFC[7])
 void Administracion::crearArchivo()
 {
     Persona persona;
-    persona.setRFC("000");
-    persona.setNombre("null");
-    persona.setDomicilio("null");
-    persona.setTelefono("000");
     ofstream salida("Persona.txt",ios::out);
     for(int i=0;i<TAM;i++)
         salida.write(reinterpret_cast<char*>(&persona),sizeof (Persona));
@@ -167,7 +164,7 @@ void Administracion::mostrar()
     imprimirArchivo(pos,RFCAux);
 }
 
-void Administracion::imprimirArchivo(long long pos,char RFCAux[7])
+long long Administracion::imprimirArchivo(long long pos,char RFCAux[7])
 {
     Persona personaAux;
     bool end=false;
@@ -177,7 +174,7 @@ void Administracion::imprimirArchivo(long long pos,char RFCAux[7])
     ifstream entrada("Persona.txt",ios::in);
         if(!entrada.good()){
             cout<<"Error"<<endl;
-            return;
+            return false;
         }
 
         entrada.seekg(pos);
@@ -186,7 +183,7 @@ void Administracion::imprimirArchivo(long long pos,char RFCAux[7])
             entrada.close();
             cout<<"Posicion: "<<pos<<endl;
             cout<<personaAux<<endl;
-            return;
+            return pos;
         }
 
         do{
@@ -204,10 +201,13 @@ void Administracion::imprimirArchivo(long long pos,char RFCAux[7])
         }while(!end&&entrada.tellg()!=pos);
     entrada.close();
 
-    if(encontrado)
+    if(encontrado){
         cout<<"Posicion: "<<posEncontrado<<endl<<personaAux<<endl;
+        return posEncontrado;
+    }
     else
         cout<<"No encontrado"<<endl;
+    return -1;
 }
 
 void Administracion::mostrarTodos()
@@ -237,6 +237,7 @@ void Administracion::eliminar()
     Persona personaAux;
     char RFC[7];
     long long pos=0;
+    bool opc=false;
 
     cout<<"Ingrese El RFC"<<endl;
     cin.ignore();
@@ -245,7 +246,12 @@ void Administracion::eliminar()
     personaAux.setRFC(RFC);
     pos=personaAux.posicion();
 
-    eliminarDeArchivo(RFC,pos);
+    if(imprimirArchivo(pos,RFC)>=0){
+        cout<<"Desea Borrar 1 Si  0 No"<<endl;
+        cin>>opc;
+        if(opc)
+            eliminarDeArchivo(RFC,pos);
+    }
 }
 
 void Administracion::eliminarDeArchivo(char RFC[7],long long pos)
@@ -295,3 +301,65 @@ void Administracion::eliminarDeArchivo(char RFC[7],long long pos)
     }
     salida.close();
 }
+
+void Administracion::actualizar()
+{
+    Persona personaAux;
+    Persona personaUpdate;
+
+    long long pos;
+    char RFC[7];
+    cin.ignore();
+    cout<<"Ingrese el RFC"<<endl;
+    cin.getline(RFC,7,'\n');
+
+    personaAux.setRFC(RFC);
+    pos=personaAux.posicion();
+
+    pos=imprimirArchivo(pos,RFC);
+    if(pos>=0){
+        int opc;
+        cout<<"Desea Acualizar 1 SI   0 NO"<<endl;
+        cin>>opc;
+        if(opc){
+            cout<<"Desea Actualizar El RFC"<<endl;
+            cin>>opc;
+            if(opc){
+                eliminarDeArchivo(RFC,pos);
+                insertar();
+            }else{
+                personaUpdate=crearPersona();
+                personaUpdate.setRFC(RFC);
+                insertarEnArchivo(personaUpdate,pos);
+            }
+        }
+    }
+}
+
+Persona Administracion::crearPersona()
+{
+    char nombre[50];
+    char domicilio[50];
+    char telefono[30];
+
+    Persona persona;
+
+    cin.ignore();
+
+    cout<<"Nombre: "<<endl;
+    cin.getline(nombre,50,'\n');
+
+    cout<<"Domicilio: "<<endl;
+    cin.getline(domicilio,50,'\n');
+
+    cout<<"Telefono: "<<endl;
+    cin.getline(telefono,30,'\n');
+
+    persona.setNombre(nombre);
+    persona.setDomicilio(domicilio);
+    persona.setTelefono(telefono);
+
+    return persona;
+}
+
+
