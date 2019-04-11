@@ -31,7 +31,7 @@ char *Persona::getRFC()
 void Persona::setNombre(const char nombre[50])
 {
     strcpy(this->nombre,nombre);
-    this->nombre[6]='\n';
+    //this->nombre[6]='\n';
 }
 
 char *Persona::getNombre()
@@ -64,7 +64,7 @@ long long Persona::posicion()
 {
     long long suma=0;
     suma=generateAscii();
-    suma=suma*sizeof(Persona);
+    suma=suma*((sizeof (Persona)* 4)+sizeof (int));
 
     return suma;
 }

@@ -16,27 +16,34 @@ private:
         menuInsertar=1,
         menuMostrar,
         menuMostrarTodos,
+        menuMostarTodosSeccion,
         menuActualizar,
         menuEliminar,
         menuSalir,
     };
+    char RFCR[7];
 public:
     Administracion();
 
     void menu();
 
     void insertar();
+    void insertarPersonaEnArchivo(long long,Persona);
     Persona crearPersona();
     void inicia();
     bool validateFile();
 
-    void mostrar();
+    long long mostrar();
+
+    void mostrarTodosSeccion();
 
     void mostrarTodos();
 
     void actualizar();
 
-    void eliminar();
+    int eliminar(bool);
+
+    bool validateRFC(char[7]);
 
 };
 
