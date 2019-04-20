@@ -56,6 +56,7 @@ void Administracion::insertar()
     cout<<personaAux<<endl;
 
     long long pos=personaAux.posicion();
+    cout<<"Pos: "<<pos<<endl;
     insertarPersonaEnArchivo(pos,personaAux);
 }
 
@@ -66,6 +67,7 @@ void Administracion::insertarPersonaEnArchivo(long long pos,Persona personaAux)
     fstream salida("dispersa.txt",ios::in|ios::out|ios::binary);
         salida.seekg(pos);
         salida.seekp(pos);
+        cout<<salida.tellg()<<endl;
 
         salida.read(reinterpret_cast<char*>(&cantidad),sizeof (int));
         cout<<"Cantidad: "<<cantidad<<endl;
@@ -99,14 +101,14 @@ Persona Administracion::crearPersona()
 
     cin.ignore();
     bool cont=0;
-    do{
+    //do{
         if(cont)
             cout<<"Codigo Repetido O Invalido"<<endl<<"Ingrese El RFC"<<endl;
         else
             cout<<"Ingrese el RFC"<<endl;
         cin.getline(RFC,7,'\n');
         cont++;
-    }while(strlen(RFC)<6||!validateRFC(RFC));
+    //}while(strlen(RFC)<6/*||!validateRFC(RFC)*/);
     cout<<"Nombre: "<<endl;
     cin.getline(nombre,50,'\n');
 
@@ -132,7 +134,7 @@ void Administracion::inicia(){
 
     if(validateFile())
         return;
-    ofstream salida("dispersa.txt",ios::app);
+    ofstream salida("dispersa.txt",ios::app|ios::binary);
     for(size_t i=0;i<TAM;i++){
         salida.write(reinterpret_cast<char*>(&cont),sizeof(int));
         for(size_t j=0;j<4;j++)
@@ -169,7 +171,7 @@ long long Administracion::mostrar()
     pos=personaAux.posicion();
 
 
-    ifstream salida("dispersa.txt",ios::in);
+    ifstream salida("dispersa.txt",ios::in|ios::binary);
         if(!salida.good()){
             salida.close();
             return -1;
@@ -239,7 +241,7 @@ void Administracion::mostrarTodos()
     int cantidad=0;
     long long posAux=0;
 
-    ifstream salida("dispersa.txt",ios::in);
+    ifstream salida("dispersa.txt",ios::in|ios::binary);
         if(!salida.good()){
             salida.close();
             return;
@@ -315,6 +317,16 @@ int Administracion::eliminar(bool borrar)
             }
         }
         Persona personaAux;
+        Persona personaValidate;
+        Persona personaNull;
+
+        salida.read(reinterpret_cast<char*>(&personaValidate),sizeof (Persona));
+        if(personaValidate.vacio()){
+            salida.seekp(posAux+sizeof (Persona));
+            salida.write(reinterpret_cast<char*>(&personaNull),sizeof (Persona));
+            salida.close();
+            return 0;
+        }
 
         for(int i=0;i<cantidad;i++){
             salida.seekp(posAux+sizeof (Persona));
@@ -323,7 +335,6 @@ int Administracion::eliminar(bool borrar)
             salida.write(reinterpret_cast<char*>(&personaAux),sizeof (Persona));
             posAux=posAux+sizeof (Persona);
         }
-        Persona personaNull;
         salida.write(reinterpret_cast<char*>(&personaNull),sizeof (Persona));
 
     salida.close();

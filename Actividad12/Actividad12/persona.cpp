@@ -66,6 +66,7 @@ long long Persona::posicion()
     suma=generateAscii();
     suma=suma*((sizeof (Persona)* 4)+sizeof (int));
 
+    cout<<suma<<endl;
     return suma;
 }
 
