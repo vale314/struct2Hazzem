@@ -33,6 +33,8 @@ public:
         bool empty() const;
         void push(const T &elem,const int,NodoHFF* izq=nullptr,NodoHFF* der=nullptr);
         void createTree();
+        void showTree();
+        void showTree(NodoHFF*,int);
         T& operator[](size_t idx) const;
         size_t  size()const;
 };
@@ -44,6 +46,28 @@ size_t LDL<T>::size() const
 {
     return listSize;
 }
+
+template<typename T>
+void LDL<T>::showTree()
+{
+    int contador=0;
+    if(listFront==nullptr)
+        return;
+    showTree(listFront,contador);
+}
+
+template<typename T>
+void LDL<T>::showTree(NodoHFF *localRoot, int contador)
+{
+    if(localRoot==nullptr)
+        return;
+    showTree(localRoot->der,contador+1);
+    for(int i=0;i<contador;i++)
+        cout<<"   ";
+    cout<<localRoot->dato<<endl;
+    showTree(localRoot->izq,contador+1);
+}
+
 
 template<typename T>
 void LDL<T>::clear()

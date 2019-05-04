@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string.h>
 #include <hofmann.h>
 #define SOH "\x01"
 
@@ -46,9 +47,11 @@ int main()
 
     cout<<"Size: "<<aux.size()<<endl;
 
-    for(size_t i=0;i<aux.size();i++){
-        cout<<aux[i]<<endl;
-    }
+
+    aux.showTree();
+
+
+
 
     return 0;
 }
