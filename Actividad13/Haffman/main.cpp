@@ -1,21 +1,31 @@
 #include <iostream>
 #include <hofmann.h>
+#define SOH "\x01"
+
 
 using namespace std;
 
 int main()
 {
+
     LDL<char> aux;
 
-    aux.push('a',30);
-    aux.push('b',20);
-    aux.push('s',35);
-    aux.push('c',10);
-    aux.push('d',40);
-    aux.push('f',35);
-    aux.push('g',45);
-    aux.push('i',1);
-    aux.push('e',35);
+    aux.push('L',1);
+    aux.push('a',6);
+    aux.push(' ',6);
+    aux.push('r',4);
+    aux.push('u',2);
+    aux.push('t',4);
+    aux.push('n',2);
+    aux.push('o',5);
+    aux.push('s',2);
+    aux.push('p',2);
+    aux.push('l',1);
+    aux.push('.',1);
+
+    /*
+    aux.push('\x01',10);
+    aux.push('\x01',10);*/
 
     cout<<"Size: "<<aux.size()<<endl;
 

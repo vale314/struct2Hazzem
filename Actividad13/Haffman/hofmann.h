@@ -60,6 +60,8 @@ bool LDL<T>::empty() const
 template<typename T>
 void LDL<T>::push(const T &elem,const int frec)
 {
+    int data=int(elem);
+
     if(empty())
     {
         listFront = new NodoHFF(elem,frec,nullptr,nullptr);
@@ -68,7 +70,7 @@ void LDL<T>::push(const T &elem,const int frec)
     else
     {
 
-        if((frec<listFront->frecuencia)||(frec==listFront->frecuencia&&elem<listFront->dato)){
+        if((frec<listFront->frecuencia)||(frec==listFront->frecuencia&&data<int(listFront->dato))){
             NodoHFF* nuevo =new NodoHFF(elem,frec,nullptr,listFront);
             listFront->anterior=nuevo;
             listFront=nuevo;
@@ -82,7 +84,7 @@ void LDL<T>::push(const T &elem,const int frec)
         while(aux->siguiente!=NULL){
             if(frec>aux->frecuencia)
                 aux=aux->siguiente;
-            else if(frec==aux->frecuencia&&elem>aux->dato){
+            else if(frec==aux->frecuencia&&data>=int(aux->dato)){
                 aux=aux->siguiente;
             }
             else
@@ -90,13 +92,13 @@ void LDL<T>::push(const T &elem,const int frec)
         }
 
         if(aux->siguiente==NULL){
-            if(frec>aux->frecuencia||(frec==aux->frecuencia&&elem>aux->dato)){
+            if(frec>aux->frecuencia||(frec==aux->frecuencia&&data>=int(aux->dato))){
                 NodoHFF* nuevo =new NodoHFF(elem,frec,aux,nullptr);
                 aux->siguiente=nuevo;
             }
         }
 
-        if((frec<aux->frecuencia)||(frec==aux->frecuencia&&elem<aux->dato)){
+        if((frec<aux->frecuencia)||(frec==aux->frecuencia&&data<=int(aux->dato))){
             NodoHFF* nuevo =new NodoHFF(elem,frec,aux->anterior,aux);
             nuevo->anterior->siguiente=nuevo;
             nuevo->siguiente->anterior=nuevo;
