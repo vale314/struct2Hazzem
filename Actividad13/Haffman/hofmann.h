@@ -68,7 +68,7 @@ void LDL<T>::push(const T &elem,const int frec)
     else
     {
 
-        if(frec<listFront->frecuencia){
+        if((frec<listFront->frecuencia)||(frec==listFront->frecuencia&&elem<listFront->dato)){
             NodoHFF* nuevo =new NodoHFF(elem,frec,nullptr,listFront);
             listFront->anterior=nuevo;
             listFront=nuevo;
@@ -80,20 +80,23 @@ void LDL<T>::push(const T &elem,const int frec)
         aux=listFront;
 
         while(aux->siguiente!=NULL){
-            if(frec>=aux->frecuencia)
+            if(frec>aux->frecuencia)
                 aux=aux->siguiente;
+            else if(frec==aux->frecuencia&&elem>aux->dato){
+                aux=aux->siguiente;
+            }
             else
                 break;
         }
 
         if(aux->siguiente==NULL){
-            if(frec>=aux->frecuencia){
+            if(frec>aux->frecuencia||(frec==aux->frecuencia&&elem>aux->dato)){
                 NodoHFF* nuevo =new NodoHFF(elem,frec,aux,nullptr);
                 aux->siguiente=nuevo;
             }
         }
 
-        if(frec<aux->frecuencia){
+        if((frec<aux->frecuencia)||(frec==aux->frecuencia&&elem<aux->dato)){
             NodoHFF* nuevo =new NodoHFF(elem,frec,aux->anterior,aux);
             nuevo->anterior->siguiente=nuevo;
             nuevo->siguiente->anterior=nuevo;

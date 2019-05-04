@@ -9,7 +9,13 @@ int main()
 
     aux.push('a',30);
     aux.push('b',20);
+    aux.push('s',35);
     aux.push('c',10);
+    aux.push('d',40);
+    aux.push('f',35);
+    aux.push('g',45);
+    aux.push('i',1);
+    aux.push('e',35);
 
     cout<<"Size: "<<aux.size()<<endl;
 
