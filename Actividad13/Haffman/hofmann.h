@@ -32,9 +32,22 @@ public:
         void clear();
         bool empty() const;
         void push(const T &elem,const int);
+        T& operator[](size_t idx) const;
+        size_t  size()const;
 };
 
 #endif // HOFMANN_H
+
+template<typename T>
+size_t LDL<T>::size() const
+{
+    return listSize;
+}
+
+template<typename T>
+void LDL<T>::clear()
+{
+}
 
 
 template <typename T>
@@ -49,17 +62,55 @@ void LDL<T>::push(const T &elem,const int frec)
 {
     if(empty())
     {
-        listFront = new NodoHFF(elem);
+        listFront = new NodoHFF(elem,frec,nullptr,nullptr);
         listBack = listFront;
     }
     else
     {
-        //buscar la posicion de nuevo elemento toando en cuenta su frecuencia y su ascii y mandarle en ates y el despues
-        NodoHFF* nuevo =new NodoHFF(elem,frec,listBack);
 
-        //solo si el elemento es posicionado al fin de la lista hacer esta linea de codigo
-        listBack->siguiente = nuevo;
-        listBack=nuevo;
+        if(frec<listFront->frecuencia){
+            NodoHFF* nuevo =new NodoHFF(elem,frec,nullptr,listFront);
+            listFront->anterior=nuevo;
+            listFront=nuevo;
+            listSize++;
+            return;
+        }
+
+        NodoHFF* aux;
+        aux=listFront;
+
+        while(aux->siguiente!=NULL){
+            if(frec>=aux->frecuencia)
+                aux=aux->siguiente;
+            else
+                break;
+        }
+
+        if(aux->siguiente==NULL){
+            if(frec>=aux->frecuencia){
+                NodoHFF* nuevo =new NodoHFF(elem,frec,aux,nullptr);
+                aux->siguiente=nuevo;
+            }
+        }
+
+        if(frec<aux->frecuencia){
+            NodoHFF* nuevo =new NodoHFF(elem,frec,aux->anterior,aux);
+            nuevo->anterior->siguiente=nuevo;
+            nuevo->siguiente->anterior=nuevo;
+        }
     }
     listSize++;
+}
+
+template<typename T>
+T &LDL<T>::operator[](size_t idx) const
+{
+    if(empty())
+         throw invalid_argument("operator() on empty list");
+    else if(idx >= listSize)
+        throw invalid_argument("index out of range");
+    NodoHFF* temp = listFront;
+    for(size_t i=0; i< idx; i++)
+        temp = temp->siguiente;
+    return temp->dato;
 }
