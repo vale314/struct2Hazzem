@@ -5,3 +5,9 @@ CONFIG -= qt
 
 SOURCES += \
         main.cpp
+
+HEADERS += \
+    hofmann.h \
+    ldl.h \
+    nodo.h \
+    nodoldl.h
