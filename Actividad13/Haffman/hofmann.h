@@ -1,7 +1,10 @@
 #ifndef HOFMANN_H
 #define HOFMANN_H
 #include <iostream>
+#include <string.h>
 #include <stdexcept>
+#include "ldl.h"
+
 #include <conio.h>
 
 using namespace std;
@@ -9,7 +12,7 @@ using namespace std;
 template <typename T>
 
 
-class LDL
+class HFF
 {
 
 private:
@@ -19,13 +22,13 @@ private:
         NodoHFF* listBack;
 
 public:
-        LDL()
+        HFF()
         {
             listSize=0;
             listFront= nullptr;
             listBack= nullptr;
         }
-        ~LDL(){
+        ~HFF(){
             clear();
         }
 
@@ -35,6 +38,10 @@ public:
         void createTree();
         void showTree();
         void showTree(NodoHFF*,int);
+        void add(string);
+        void codigo01();
+        void inOrder();
+        void inOrder(NodoHFF*);
         T& operator[](size_t idx) const;
         size_t  size()const;
 };
@@ -42,13 +49,13 @@ public:
 #endif // HOFMANN_H
 
 template<typename T>
-size_t LDL<T>::size() const
+size_t HFF<T>::size() const
 {
     return listSize;
 }
 
 template<typename T>
-void LDL<T>::showTree()
+void HFF<T>::showTree()
 {
     int contador=0;
     if(listFront==nullptr)
@@ -57,7 +64,7 @@ void LDL<T>::showTree()
 }
 
 template<typename T>
-void LDL<T>::showTree(NodoHFF *localRoot, int contador)
+void HFF<T>::showTree(NodoHFF *localRoot, int contador)
 {
     if(localRoot==nullptr)
         return;
@@ -68,22 +75,89 @@ void LDL<T>::showTree(NodoHFF *localRoot, int contador)
     showTree(localRoot->izq,contador+1);
 }
 
+template<typename T>
+void HFF<T>::add(string var)
+{
+    struct a{
+        char caracter;
+        int num;
+    }structChar;
+
+    Ldl<char> caracteres;
+
+    char auxC[var.size()];
+    strcpy(auxC,var.c_str());
+
+    for(size_t i=0;i<var.size();i++)
+        caracteres.push_back(auxC[i]);
+
+    Ldl<char> old;
+    Ldl<a> elem;
+
+    for(size_t i=0;i<caracteres.size();i++){
+        if(!old.find(caracteres[i])){
+            size_t find=caracteres.find(caracteres[i]);
+            old.push_back(caracteres[i]);
+            structChar.caracter=caracteres[i];
+            structChar.num=find;
+            elem.push_back(structChar);
+        }
+    }
+
+    for(size_t i = 0;i<elem.size();i++)
+        push(elem[i].caracter,elem[i].num);
+}
+
+/*
+template<typename T>
+void HFF<T>::inOrder()
+{
+    inOrder(listFront);
+}
 
 template<typename T>
-void LDL<T>::clear()
+void HFF<T>::inOrder(NodoHFF *localRoot)
+{
+    if (localRoot == nullptr)
+        return;
+    cout<< localRoot->dato;
+    cout<<"0"<<endl;
+    inOrder(localRoot->izq);
+    cout<<"1"<<endl;
+    inOrder(localRoot->der);
+}
+
+template<typename T>
+void HFF<T>::codigo01()
+{
+    struct structDiccionario{
+        char caracter;
+        int num;
+    }d;
+
+    Ldl<structDiccionario> diccionario;
+
+    NodoHFF* aux=listFront;
+
+    inOrder();
+}
+*/
+
+template<typename T>
+void HFF<T>::clear()
 {
 }
 
 
 template <typename T>
-bool LDL<T>::empty() const
+bool HFF<T>::empty() const
 {
     return  listSize == 0;
 }
 
 
 template<typename T>
-void LDL<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der)
+void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der)
 {
     //pasamos los caracteres a int
     int data=int(elem);
@@ -154,7 +228,7 @@ void LDL<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der)
 }
 
 template<typename T>
-void LDL<T>::createTree()
+void HFF<T>::createTree()
 {
     if(empty()){
         cout<<"No Se Encuentran Elementos"<<endl;
@@ -191,7 +265,7 @@ void LDL<T>::createTree()
 }
 
 template<typename T>
-T &LDL<T>::operator[](size_t idx) const
+T &HFF<T>::operator[](size_t idx) const
 {
     if(empty())
          throw invalid_argument("operator() on empty list");

@@ -8,4 +8,6 @@ SOURCES += \
 
 HEADERS += \
     nodo.h \
-    hofmann.h
+    hofmann.h \
+    ldl.h
+

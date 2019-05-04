@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string.h>
 #include <hofmann.h>
 #define SOH "\x01"
 
@@ -9,8 +8,7 @@ using namespace std;
 int main()
 {
 
-    LDL<char> aux;
-
+    HFF<char> aux;
 //    aux.push('L',1);
 //    aux.push('a',6);
 //    aux.push(' ',6);
@@ -25,15 +23,17 @@ int main()
 //    aux.push('.',1);
 //    aux.push('\xF3',1);
 
-    aux.push('V',1);
-    aux.push('I',2);
-    aux.push('L',2);
-    aux.push('N',2);
-    aux.push(' ',3);
-    aux.push('A',6);
-    aux.push('T',2);
-    aux.push('.',1);
+//    aux.push('V',1);
+//    aux.push('I',2);
+//    aux.push('L',2);
+//    aux.push('N',2);
+//    aux.push(' ',3);
+//    aux.push('A',6);
+//    aux.push('T',2);
+//    aux.push('.',1);
 
+    string var="ANITA LAVA LA TINA.";
+    aux.add(var);
 
     cout<<"Size: "<<aux.size()<<endl;
 
@@ -49,7 +49,6 @@ int main()
 
 
     aux.showTree();
-
 
 
 
