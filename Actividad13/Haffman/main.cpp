@@ -43,13 +43,14 @@ int main()
 
     cout<<endl<<endl<<endl;
 
-    aux.createTree();
+    aux.tree();
 
     cout<<"Size: "<<aux.size()<<endl;
 
 
     aux.showTree();
 
+    aux.inOrder();
 
 
     return 0;

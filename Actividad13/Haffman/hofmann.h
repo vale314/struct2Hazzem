@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string.h>
 #include <stdexcept>
+#include <bits/stdc++.h>
 #include "ldl.h"
 
 #include <conio.h>
@@ -20,13 +21,15 @@ private:
         size_t listSize;
         NodoHFF* listFront;
         NodoHFF* listBack;
-
+        NodoHFF* hijo;
+        Ldl<char> H;
 public:
         HFF()
         {
             listSize=0;
             listFront= nullptr;
             listBack= nullptr;
+            hijo=nullptr;
         }
         ~HFF(){
             clear();
@@ -34,14 +37,14 @@ public:
 
         void clear();
         bool empty() const;
-        void push(const T &elem,const int,NodoHFF* izq=nullptr,NodoHFF* der=nullptr);
+        void push(const T &elem,const int,NodoHFF* izq=nullptr,NodoHFF* der=nullptr,bool padre=false);
         void createTree();
+        void tree();
         void showTree();
         void showTree(NodoHFF*,int);
         void add(string);
-        void codigo01();
         void inOrder();
-        void inOrder(NodoHFF*);
+        void busqueda(NodoHFF *localRoot,char elemento);
         T& operator[](size_t idx) const;
         size_t  size()const;
 };
@@ -108,42 +111,57 @@ void HFF<T>::add(string var)
         push(elem[i].caracter,elem[i].num);
 }
 
-/*
+
 template<typename T>
 void HFF<T>::inOrder()
 {
-    inOrder(listFront);
-}
-
-template<typename T>
-void HFF<T>::inOrder(NodoHFF *localRoot)
-{
-    if (localRoot == nullptr)
-        return;
-    cout<< localRoot->dato;
-    cout<<"0"<<endl;
-    inOrder(localRoot->izq);
-    cout<<"1"<<endl;
-    inOrder(localRoot->der);
-}
-
-template<typename T>
-void HFF<T>::codigo01()
-{
     struct structDiccionario{
         char caracter;
-        int num;
+        string num;
     }d;
 
     Ldl<structDiccionario> diccionario;
 
     NodoHFF* aux=listFront;
 
-    inOrder();
+    while(H.empty()==false){
+        char actual=H.front();
+
+        H.pop_front();
+
+        busqueda(listFront,actual);
+
+        if(hijo!=nullptr){
+            d.caracter=hijo->dato;
+            while(hijo->padre!=NULL){
+                d.num+=hijo->tipo;
+                hijo=hijo->padre;
+            }
+            reverse(d.num.begin(),d.num.end());
+            diccionario.push_back(d);
+            d.num="";
+        }
+    }
+
+    for(size_t i=0; i<diccionario.size();i++)
+        cout<<diccionario[i].caracter<<endl<<diccionario[i].num<<endl;
+
 }
-*/
 
 template<typename T>
+void HFF<T>::busqueda(NodoHFF *localRoot,char elemento)
+{
+    if (localRoot == nullptr)
+        return;
+    if(localRoot->dato==elemento){
+        hijo=localRoot;
+        return;
+    }
+    busqueda(localRoot->izq,elemento);
+    busqueda(localRoot->der,elemento);
+}
+
+template <typename T>
 void HFF<T>::clear()
 {
 }
@@ -157,7 +175,7 @@ bool HFF<T>::empty() const
 
 
 template<typename T>
-void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der)
+void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der,bool padre)
 {
     //pasamos los caracteres a int
     int data=int(elem);
@@ -165,8 +183,16 @@ void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der)
     //si esta vacio solo agregamos
     if(empty())
     {
-        listFront = new NodoHFF(elem,frec,nullptr,nullptr,izq,der);
+        NodoHFF* nuevo = new NodoHFF(elem,frec,nullptr,nullptr,izq,der,nullptr);
+        listFront = nuevo;
+
         listBack = listFront;
+        if(padre){
+            izq->padre=nuevo;
+            der->padre=nuevo;
+            izq->tipo="0";
+            der->tipo="1";
+        }
     }
     else
     {
@@ -175,6 +201,12 @@ void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der)
         */
         if((frec<listFront->frecuencia)||(frec==listFront->frecuencia&&data<int(listFront->dato))){
             NodoHFF* nuevo =new NodoHFF(elem,frec,nullptr,listFront,izq,der);
+            if(padre){
+                izq->padre=nuevo;
+                der->padre=nuevo;
+                izq->tipo="0";
+                der->tipo="1";
+            }
             listFront->anterior=nuevo;
             listFront=nuevo;
             listSize++;
@@ -210,6 +242,12 @@ void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der)
             if(frec>aux->frecuencia||(frec==aux->frecuencia&&data>=int(aux->dato))){
                 NodoHFF* nuevo =new NodoHFF(elem,frec,aux,nullptr,izq,der);
                 aux->siguiente=nuevo;
+                if(padre){
+                    izq->padre=nuevo;
+                    der->padre=nuevo;
+                    izq->tipo="0";
+                    der->tipo="1";
+                }
             }
         }
         /*
@@ -222,6 +260,12 @@ void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der)
             NodoHFF* nuevo =new NodoHFF(elem,frec,aux->anterior,aux,izq,der);
             nuevo->anterior->siguiente=nuevo;
             nuevo->siguiente->anterior=nuevo;
+            if(padre){
+                izq->padre=nuevo;
+                der->padre=nuevo;
+                izq->tipo="0";
+                der->tipo="1";
+            }
         }
     }
     listSize++;
@@ -257,10 +301,30 @@ void HFF<T>::createTree()
 
     listSize=listSize-2;
 
-    push('\x01',frecuencia,izq,der);
+    push('\x01',frecuencia,izq,der,true);
 
     if(listFront->siguiente!=NULL)
         createTree();
+
+}
+
+template<typename T>
+void HFF<T>::tree()
+{
+    H.clear();
+
+    NodoHFF* aux=listFront;
+
+    while(aux!=NULL){
+        H.push_back(aux->dato);
+        aux=aux->siguiente;
+    }
+
+    for(size_t i=0;i<H.size();i++)
+        cout<<H[i]<<" ";
+    cout<<endl;
+
+    createTree();
 
 }
 
