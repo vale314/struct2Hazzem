@@ -202,6 +202,20 @@ void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der)
             else
                 break;
         }
+        /*
+         * MENOR
+            si el elemento no fue el ultimo elemento
+            validamos que sea menor a el actual  y lo ingresaremos en la parte de la izquierda
+            configuramos los nodos
+        */
+
+        if((frec<aux->frecuencia)||(frec==aux->frecuencia&&data<=int(aux->dato))){
+            NodoHFF* nuevo =new NodoHFF(elem,frec,aux->anterior,aux,izq,der);
+            nuevo->anterior->siguiente=nuevo;
+            nuevo->siguiente->anterior=nuevo;
+            listSize++;
+            return;
+        }
 
         /*
          * MAYOR
@@ -214,17 +228,6 @@ void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der)
                 NodoHFF* nuevo =new NodoHFF(elem,frec,aux,nullptr,izq,der);
                 aux->siguiente=nuevo;
             }
-        }
-        /*
-         * MENOR
-            si el elemento no fue el ultimo elemento
-            validamos que sea menor a el actual  y lo ingresaremos en la parte de la izquierda
-            configuramos los nodos
-        */
-        if((frec<aux->frecuencia)||(frec==aux->frecuencia&&data<=int(aux->dato))){
-            NodoHFF* nuevo =new NodoHFF(elem,frec,aux->anterior,aux,izq,der);
-            nuevo->anterior->siguiente=nuevo;
-            nuevo->siguiente->anterior=nuevo;
         }
     }
     listSize++;
