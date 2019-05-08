@@ -71,7 +71,10 @@ void HFF<T>::showTree(NodoHFF *localRoot, int contador)
     showTree(localRoot->der,contador+1);
     for(int i=0;i<contador;i++)
         cout<<"   ";
-    cout<<localRoot->dato<<endl;
+    if(localRoot->dato!='\x01')
+        cout<<localRoot->dato<<"-"<<localRoot->frecuencia<<endl;
+    else
+        cout<<localRoot->frecuencia<<endl;
     showTree(localRoot->izq,contador+1);
 }
 

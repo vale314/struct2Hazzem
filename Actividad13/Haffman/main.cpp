@@ -32,25 +32,23 @@ int main()
 //    aux.push('T',2);
 //    aux.push('.',1);
 
-    string var="ANITA LAVA LA TINA.";
+    // Agrega El Dato
+    string var="papas#a la francesa#13.00#0#1;hamburguesa#con tocino#37.00#1#1;";
     aux.add(var);
 
     cout<<"Size: "<<aux.size()<<endl;
 
-    for(size_t i=0;i<aux.size();i++){
-        cout<<aux[i]<<endl;
-    }
-
     cout<<endl<<endl<<endl;
 
+    //crea el arbol
     aux.tree();
 
     cout<<"Size: "<<aux.size()<<endl;
 
-
+    //muestra el arbol
     aux.showTree();
 
-    aux.inOrder();
+    aux.createBinary();
 
 
     return 0;
