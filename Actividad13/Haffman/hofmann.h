@@ -28,6 +28,7 @@ private:
         NodoHFF* listFront;
         NodoHFF* listBack;
         NodoHFF* hijo;
+        int tamArchivoOriginal;
         Ldl<char> H;
         Ldl<structDiccionario> diccionario;
         string textoOriginal;
@@ -53,7 +54,8 @@ public:
         void showTree();
         void showTree(NodoHFF*,int);
         void add(string);
-        void inOrder();
+        void llenarDiccionario();
+        int binarioToDecimal(string n);
         void createBinary();
         string findInDictionary(char);
         void busqueda(NodoHFF *localRoot,char elemento);
@@ -130,7 +132,7 @@ void HFF<T>::add(string var)
 
 
 template<typename T>
-void HFF<T>::inOrder()
+void HFF<T>::llenarDiccionario()
 {
     diccionario.clear();
 
@@ -155,14 +157,57 @@ void HFF<T>::inOrder()
         }
     }
 
-    for(size_t i=0; i<diccionario.size();i++)
-            cout<<diccionario[i].caracter<<endl<<diccionario[i].num<<endl;
+//    for(size_t i=0; i<diccionario.size();i++)
+    //            cout<<diccionario[i].caracter<<endl<<diccionario[i].num<<endl;
+}
+
+template<typename T>
+int HFF<T>::binarioToDecimal(string s)
+{
+        int value = 0;
+        int indexCounter = 0;
+        for(int i = s.length()-1; i >= 0; i--)
+        {
+
+          if(s[i] == '1')
+            {
+            value += pow(2, indexCounter);
+            }
+        indexCounter++;
+        }
+        return value;
 }
 
 template<typename T>
 void HFF<T>::createBinary()
 {
-    inOrder();
+    string newText="";
+    tamArchivoOriginal=textoOriginal.size();
+
+    llenarDiccionario();
+
+    for(size_t i=0;i<textoOriginal.size();i++)
+        newText=newText+findInDictionary(textoOriginal[i]);
+
+    cout<<textoOriginal<<endl;
+
+    cout<<newText<<endl;
+
+    while(newText.size()%8!=0)
+            newText=newText+'0';
+
+    cout<<newText<<endl<<endl;
+
+    string cifrado="";
+    string tempTA="";
+    while(newText.size()>0){
+        tempTA=newText.substr(0,8);
+        newText=newText.substr(8,newText.size());
+        cout<<tempTA<<"---"<<binarioToDecimal(tempTA)<<"---"<<string(1, char(binarioToDecimal(tempTA)))<<endl;
+        cifrado=cifrado+string(1, char(binarioToDecimal(tempTA)));
+    }
+
+    cout<<cifrado<<endl;
 }
 
 template<typename T>
@@ -281,7 +326,6 @@ void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der,bool pa
                 izq->tipo="0";
                 der->tipo="1";
             }
-            cout<<"listSize: "<<listSize<<"__"<<"Abajo"<<endl;
             listSize++;
             return;
         }
@@ -296,7 +340,6 @@ void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der,bool pa
                     der->tipo="1";
                 }
             }
-            cout<<"listSize: "<<listSize<<"__"<<"Arriba"<<endl;
         }
 
     }
