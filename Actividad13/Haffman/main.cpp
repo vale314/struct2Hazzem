@@ -50,6 +50,7 @@ int main()
 
     aux.createBinary();
 
+    aux.descryptText("Mandamos el texto");
 
     return 0;
 }

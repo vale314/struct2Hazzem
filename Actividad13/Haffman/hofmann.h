@@ -5,6 +5,9 @@
 #include <stdexcept>
 #include <bits/stdc++.h>
 #include <string>
+#include <stdlib.h>
+#include <stdio.h>
+#include <wchar.h>
 #include "ldl.h"
 
 #include <conio.h>
@@ -32,6 +35,8 @@ private:
         Ldl<char> H;
         Ldl<structDiccionario> diccionario;
         string textoOriginal;
+        string textoCifrado;
+        string textoDesifrado;
 
 public:
         HFF()
@@ -57,7 +62,9 @@ public:
         void llenarDiccionario();
         int binarioToDecimal(string n);
         void createBinary();
-        string findInDictionary(char);
+        string findInDictionaryChar(char);
+        char* findInDictionaryBinary(string);
+        string descryptText(string n);
         void busqueda(NodoHFF *localRoot,char elemento);
         T& operator[](size_t idx) const;
         size_t  size()const;
@@ -99,6 +106,13 @@ template<typename T>
 void HFF<T>::add(string var)
 {
     textoOriginal=var;
+    tamArchivoOriginal=textoOriginal.size();
+
+    cout<<"Texto Original -----------------------"<<endl;
+    cout<<textoOriginal<<endl<<endl<<endl;;
+
+    cout<<"Tamaño De Texto Original: "<<tamArchivoOriginal<<endl;
+    cout<<endl<<endl<<endl;
 
     struct a{
         char caracter;
@@ -181,42 +195,93 @@ int HFF<T>::binarioToDecimal(string s)
 template<typename T>
 void HFF<T>::createBinary()
 {
-    string newText="";
-    tamArchivoOriginal=textoOriginal.size();
+    string binaryText="";
 
     llenarDiccionario();
 
     for(size_t i=0;i<textoOriginal.size();i++)
-        newText=newText+findInDictionary(textoOriginal[i]);
+        binaryText=binaryText+findInDictionaryChar(textoOriginal[i]);
 
-    cout<<textoOriginal<<endl;
+    cout<<"Texto Binario Original ____________-"<<endl;
+    cout<<binaryText<<endl<<endl<<endl;
 
-    cout<<newText<<endl;
+    while(binaryText.size()%8!=0)
+            binaryText=binaryText+'0';
 
-    while(newText.size()%8!=0)
-            newText=newText+'0';
-
-    cout<<newText<<endl<<endl;
+    cout<<"Texto Binario Llenado"<<endl;
+    cout<<binaryText<<endl<<endl<<endl;
 
     string cifrado="";
     string tempTA="";
-    while(newText.size()>0){
-        tempTA=newText.substr(0,8);
-        newText=newText.substr(8,newText.size());
+    while(binaryText.size()>0){
+        tempTA=binaryText.substr(0,8);
+        binaryText=binaryText.substr(8,binaryText.size());
         cout<<tempTA<<"---"<<binarioToDecimal(tempTA)<<"---"<<string(1, char(binarioToDecimal(tempTA)))<<endl;
         cifrado=cifrado+string(1, char(binarioToDecimal(tempTA)));
     }
 
-    cout<<cifrado<<endl;
+    textoCifrado=cifrado;
+
+    cout<<endl;
+    cout<<"Texto Cifrado --------"<<endl;
+    cout<<textoCifrado<<endl<<endl;
+
 }
 
 template<typename T>
-string HFF<T>::findInDictionary(char elem)
+string HFF<T>::findInDictionaryChar(char elem)
 {
     for(size_t i=0;i<diccionario.size();i++)
         if(diccionario[i].caracter==elem)
             return(diccionario[i].num);
     return ("");
+}
+
+template<typename T>
+char* HFF<T>::findInDictionaryBinary(string elem)
+{
+    for(size_t i=0;i<diccionario.size();i++)
+        if(diccionario[i].num.compare(elem)==0){
+            cout<<diccionario[i].caracter<<endl;
+            textoDesifrado=textoDesifrado+diccionario[i].caracter;
+            return(&diccionario[i].caracter);
+
+        }
+    return ("No Encontrado");
+}
+
+template<typename T>
+string HFF<T>::descryptText(string n)
+{
+    string binaryText="";
+    n=textoCifrado;
+
+    binaryText="";
+
+    cout<<"Desencriptando"<<endl<<endl;
+
+    for(size_t i=0;i<n.size();i++){
+        const char unsigned caracter = n[i];
+        cout<<caracter<<"-----"<<int(caracter)<<"-----"<<bitset<8>(int(caracter))<<endl;
+        binaryText=binaryText+bitset<8>(int(caracter)).to_string();
+    }
+    cout<<endl;
+    cout<<"Texto Binario -------------"<<endl;
+    cout<<binaryText<<endl<<endl;
+
+    string descifrado="";
+    string tempTA="";
+    while(binaryText.size()>0){
+        tempTA=tempTA+binaryText.substr(0,1);
+        binaryText=binaryText.substr(1,binaryText.size());
+        if(strcmp(findInDictionaryBinary(tempTA),"No Encontrado"))
+            tempTA="";
+
+    }
+
+    cout<<endl;
+    cout<<"Texto Desencriptado ------------"<<endl;
+    cout<<textoDesifrado<<endl<<endl;
 }
 
 template<typename T>
