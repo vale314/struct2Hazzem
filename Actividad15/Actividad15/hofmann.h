@@ -3,6 +3,12 @@
 #include <iostream>
 #include <string.h>
 #include <stdexcept>
+#include <fstream>
+#include <bits/stdc++.h>
+#include <string>
+#include <stdlib.h>
+#include <stdio.h>
+#include <wchar.h>
 #include "ldl.h"
 
 #include <conio.h>
@@ -16,10 +22,23 @@ class HFF
 {
 
 private:
+        struct structDiccionario{
+            char caracter;
+            string num;
+            string car;
+        }d;
+
         #include <nodo.h>
         size_t listSize;
         NodoHFF* listFront;
         NodoHFF* listBack;
+        NodoHFF* hijo;
+        int tamArchivoOriginal;
+        Ldl<char> H;
+        Ldl<structDiccionario> diccionario;
+        string textoOriginal;
+        string textoCifrado;
+        string textoDesifrado;
 
 public:
         HFF()
@@ -27,6 +46,8 @@ public:
             listSize=0;
             listFront= nullptr;
             listBack= nullptr;
+            hijo=nullptr;
+            textoOriginal="";
         }
         ~HFF(){
             clear();
@@ -34,14 +55,22 @@ public:
 
         void clear();
         bool empty() const;
-        void push(const T &elem,const int,NodoHFF* izq=nullptr,NodoHFF* der=nullptr);
+        void push(const T &elem,const int,NodoHFF* izq=nullptr,NodoHFF* der=nullptr,bool padre=false);
         void createTree();
+        void tree();
         void showTree();
         void showTree(NodoHFF*,int);
         void add(string);
-        void codigo01();
-        void inOrder();
-        void inOrder(NodoHFF*);
+        string encrypt(string);
+        void saveDictionaryAndTam();
+        void llenarDiccionario();
+        int binarioToDecimal(string n);
+        void createBinary();
+        string findInDictionaryChar(char);
+        string findInDictionaryBinary(string);
+        string descryptText(string n);
+        void getDictionaryAndTam();
+        void busqueda(NodoHFF *localRoot,char elemento);
         T& operator[](size_t idx) const;
         size_t  size()const;
 };
@@ -81,6 +110,15 @@ void HFF<T>::showTree(NodoHFF *localRoot, int contador)
 template<typename T>
 void HFF<T>::add(string var)
 {
+    textoOriginal=var;
+    tamArchivoOriginal=textoOriginal.size();
+
+    cout<<"Texto Original -----------------------"<<endl;
+    cout<<textoOriginal<<endl<<endl<<endl;;
+
+    cout<<"Tamaño De Texto Original: "<<tamArchivoOriginal<<endl;
+    cout<<endl<<endl<<endl;
+
     struct a{
         char caracter;
         int num;
@@ -111,44 +149,232 @@ void HFF<T>::add(string var)
         push(elem[i].caracter,elem[i].num);
 }
 
-/*
 template<typename T>
-void HFF<T>::inOrder()
+string HFF<T>::encrypt(string text)
 {
-    inOrder(listFront);
+    add(text);
+    tree();
+    showTree();
+    createBinary();
+    saveDictionaryAndTam();
+    return (textoCifrado);
 }
 
 template<typename T>
-void HFF<T>::inOrder(NodoHFF *localRoot)
+void HFF<T>::saveDictionaryAndTam()
 {
-    if (localRoot == nullptr)
-        return;
-    cout<< localRoot->dato;
-    cout<<"0"<<endl;
-    inOrder(localRoot->izq);
-    cout<<"1"<<endl;
-    inOrder(localRoot->der);
+    ofstream salida("dictAndTam.txt",ios::out);
+        salida.write(reinterpret_cast<char*>(&tamArchivoOriginal),sizeof(int));
+        for(size_t i=0;i<diccionario.size();i++)
+            salida<<diccionario[i].caracter<<'\x01'<<diccionario[i].num<<'\x01';
+    salida.close();
 }
 
-template<typename T>
-void HFF<T>::codigo01()
-{
-    struct structDiccionario{
-        char caracter;
-        int num;
-    }d;
 
-    Ldl<structDiccionario> diccionario;
+template<typename T>
+void HFF<T>::llenarDiccionario()
+{
+    diccionario.clear();
 
     NodoHFF* aux=listFront;
 
-    inOrder();
+    while(H.empty()==false){
+        char actual=H.front();
+
+        H.pop_front();
+
+        busqueda(listFront,actual);
+
+        if(hijo!=nullptr){
+            d.caracter=hijo->dato;
+            while(hijo->padre!=NULL){
+                d.num+=hijo->tipo;
+                hijo=hijo->padre;
+            }
+            reverse(d.num.begin(),d.num.end());
+            diccionario.push_back(d);
+            d.num="";
+        }
+    }
+
+//    for(size_t i=0; i<diccionario.size();i++)
+    //            cout<<diccionario[i].caracter<<endl<<diccionario[i].num<<endl;
 }
-*/
 
 template<typename T>
+int HFF<T>::binarioToDecimal(string s)
+{
+        int value = 0;
+        int indexCounter = 0;
+        for(int i = s.length()-1; i >= 0; i--)
+        {
+
+          if(s[i] == '1')
+            {
+            value += pow(2, indexCounter);
+            }
+        indexCounter++;
+        }
+        return value;
+}
+
+template<typename T>
+void HFF<T>::createBinary()
+{
+    string binaryText="";
+
+    llenarDiccionario();
+
+    for(size_t i=0;i<textoOriginal.size();i++)
+        binaryText=binaryText+findInDictionaryChar(textoOriginal[i]);
+
+    cout<<"Texto Binario Original ----------------------"<<endl;
+    cout<<binaryText<<endl<<endl<<endl;
+
+    while(binaryText.size()%8!=0)
+            binaryText=binaryText+'0';
+
+    cout<<"Texto Binario Llenado -----------------------"<<endl;
+    cout<<binaryText<<endl<<endl<<endl;
+
+    cout<<"Conversion ---------------------------------"<<endl<<endl;
+    string cifrado="";
+    string tempTA="";
+    while(binaryText.size()>0){
+        tempTA=binaryText.substr(0,8);
+        binaryText=binaryText.substr(8,binaryText.size());
+        cout<<tempTA<<"---"<<binarioToDecimal(tempTA)<<"---"<<string(1, char(binarioToDecimal(tempTA)))<<endl;
+        cifrado=cifrado+string(1, char(binarioToDecimal(tempTA)));
+    }
+
+    textoCifrado=cifrado;
+
+
+    cout<<"DICTIONARY ------------"<<endl;
+    for(size_t i =0;i<diccionario.size();i++)
+        cout<<diccionario[i].caracter<<"---- "<<diccionario[i].num<<endl;
+
+
+    cout<<"Longitud De Diccionario"<<endl;
+    cout<<diccionario.size()<<endl;
+
+    cout<<endl;
+    cout<<"Texto Cifrado --------------------------------"<<endl;
+    cout<<textoCifrado<<endl<<endl;
+}
+
+template<typename T>
+string HFF<T>::findInDictionaryChar(char elem)
+{
+    for(size_t i=0;i<diccionario.size();i++)
+        if(diccionario[i].caracter==elem)
+            return(diccionario[i].num);
+    return ("");
+}
+
+template<typename T>
+string HFF<T>::findInDictionaryBinary(string elem)
+{
+    for(size_t i=0;i<diccionario.size();i++)
+        if(diccionario[i].num.compare(elem)==0){
+            textoDesifrado=textoDesifrado+diccionario[i].car;
+            return(diccionario[i].car);
+        }
+    return ("No Encontrado");
+}
+
+template<typename T>
+string HFF<T>::descryptText(string n)
+{
+    getDictionaryAndTam();
+
+    string binaryText="";
+    textoDesifrado="";
+
+    cout<<"Datos Originales -----"<<endl;
+    cout<<n<<endl<<endl;
+
+    cout<<"Cantidad De Caracteres "<<endl;
+    cout<<tamArchivoOriginal<<endl<<endl;
+
+
+    cout<<"Desencriptando"<<endl<<endl;
+
+    cout<<"Conversion ---------"<<endl<<endl;
+    for(size_t i=0;i<n.size();i++){
+        const char unsigned caracter = n[i];
+        cout<<caracter<<"-----"<<int(caracter)<<"-----"<<bitset<8>(int(caracter))<<endl;
+        binaryText=binaryText+bitset<8>(int(caracter)).to_string();
+    }
+    cout<<endl;
+    cout<<"Texto Binario -------------"<<endl;
+    cout<<binaryText<<endl<<endl;
+
+    string descifrado="";
+    string tempTA="";
+    int cont=0;
+    while(binaryText.size()>0&&cont<tamArchivoOriginal){
+        tempTA=tempTA+binaryText.substr(0,1);
+        binaryText=binaryText.substr(1,binaryText.size());
+        if(findInDictionaryBinary(tempTA).compare("No Encontrado")){
+            cont++;
+            tempTA="";
+        }
+    }
+
+    cout<<endl;
+    cout<<"Texto Desencriptado ------------"<<endl;
+    cout<<textoDesifrado<<endl<<endl;
+
+    return textoDesifrado;
+}
+
+template<typename T>
+void HFF<T>::getDictionaryAndTam()
+{
+    ifstream entrada("dictAndTam.txt",ios::in);
+    entrada.read(reinterpret_cast<char*>(&tamArchivoOriginal),sizeof(int));
+        while(!entrada.eof()){
+            getline(entrada,d.car,'\x01');
+            getline(entrada,d.num,'\x01');
+//            if(entrada.eof())
+//                break;
+            diccionario.push_back(d);
+        }
+    entrada.close();
+
+    cout<<"DICTIONARY ------------"<<endl;
+
+    for(size_t i =0;i<diccionario.size();i++)
+        cout<<diccionario[i].car<<"---- "<<diccionario[i].num<<endl;
+}
+
+template<typename T>
+void HFF<T>::busqueda(NodoHFF *localRoot,char elemento)
+{
+    if (localRoot == nullptr)
+        return;
+    if(localRoot->dato==elemento){
+        hijo=localRoot;
+        return;
+    }
+    busqueda(localRoot->izq,elemento);
+    busqueda(localRoot->der,elemento);
+}
+
+template <typename T>
 void HFF<T>::clear()
 {
+//    listSize=0;
+//    listFront=nullptr;
+//    listBack=nullptr;
+//    hijo=nullptr;
+//    tamArchivoOriginal=0;
+//    H.clear();
+//    diccionario.clear();
+//    textoOriginal="";
+//    textoCifrado="";
+//    textoDesifrado="";
 }
 
 
@@ -160,7 +386,7 @@ bool HFF<T>::empty() const
 
 
 template<typename T>
-void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der)
+void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der,bool padre)
 {
     //pasamos los caracteres a int
     int data=int(elem);
@@ -168,8 +394,16 @@ void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der)
     //si esta vacio solo agregamos
     if(empty())
     {
-        listFront = new NodoHFF(elem,frec,nullptr,nullptr,izq,der);
+        NodoHFF* nuevo = new NodoHFF(elem,frec,nullptr,nullptr,izq,der,nullptr);
+        listFront = nuevo;
+
         listBack = listFront;
+        if(padre){
+            izq->padre=nuevo;
+            der->padre=nuevo;
+            izq->tipo="0";
+            der->tipo="1";
+        }
     }
     else
     {
@@ -178,6 +412,12 @@ void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der)
         */
         if((frec<listFront->frecuencia)||(frec==listFront->frecuencia&&data<int(listFront->dato))){
             NodoHFF* nuevo =new NodoHFF(elem,frec,nullptr,listFront,izq,der);
+            if(padre){
+                izq->padre=nuevo;
+                der->padre=nuevo;
+                izq->tipo="0";
+                der->tipo="1";
+            }
             listFront->anterior=nuevo;
             listFront=nuevo;
             listSize++;
@@ -202,20 +442,6 @@ void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der)
             else
                 break;
         }
-        /*
-         * MENOR
-            si el elemento no fue el ultimo elemento
-            validamos que sea menor a el actual  y lo ingresaremos en la parte de la izquierda
-            configuramos los nodos
-        */
-
-        if((frec<aux->frecuencia)||(frec==aux->frecuencia&&data<=int(aux->dato))){
-            NodoHFF* nuevo =new NodoHFF(elem,frec,aux->anterior,aux,izq,der);
-            nuevo->anterior->siguiente=nuevo;
-            nuevo->siguiente->anterior=nuevo;
-            listSize++;
-            return;
-        }
 
         /*
          * MAYOR
@@ -223,12 +449,39 @@ void HFF<T>::push(const T &elem,const int frec,NodoHFF* izq,NodoHFF* der)
                 que sea mayor a ese elemento o menor|| ya sea su frecuencia o su data
            si es mayor entramos
         */
+
+        /*
+         * MENOR
+            si el elemento no fue el ultimo elemento
+            validamos que sea menor a el actual  y lo ingresaremos en la parte de la izquierda
+            configuramos los nodos
+        */
+        if((frec<aux->frecuencia)||(frec==aux->frecuencia&&data<=int(aux->dato))){
+            NodoHFF* nuevo =new NodoHFF(elem,frec,aux->anterior,aux,izq,der);
+            nuevo->anterior->siguiente=nuevo;
+            nuevo->siguiente->anterior=nuevo;
+            if(padre){
+                izq->padre=nuevo;
+                der->padre=nuevo;
+                izq->tipo="0";
+                der->tipo="1";
+            }
+            listSize++;
+            return;
+        }
         if(aux->siguiente==NULL){
             if(frec>aux->frecuencia||(frec==aux->frecuencia&&data>=int(aux->dato))){
                 NodoHFF* nuevo =new NodoHFF(elem,frec,aux,nullptr,izq,der);
                 aux->siguiente=nuevo;
+                if(padre){
+                    izq->padre=nuevo;
+                    der->padre=nuevo;
+                    izq->tipo="0";
+                    der->tipo="1";
+                }
             }
         }
+
     }
     listSize++;
 }
@@ -258,15 +511,34 @@ void HFF<T>::createTree()
     der->anterior=nullptr;
     der->siguiente=nullptr;
 
-    if(listFront!=NULL)
-        listFront->anterior=nullptr;
-
     listSize=listSize-2;
 
-    push('\x01',frecuencia,izq,der);
+    push('\x01',frecuencia,izq,der,true);
 
-    if(listFront->siguiente!=NULL)
+    if(listFront->siguiente!=nullptr)
         createTree();
+
+}
+
+template<typename T>
+void HFF<T>::tree()
+{
+    H.clear();
+
+    NodoHFF* aux=listFront;
+
+    while(aux!=NULL){
+        H.push_back(aux->dato);
+        aux=aux->siguiente;
+    }
+
+    cout<<"Todos Los Elementos De La Lista"<<endl;
+
+    for(size_t i=0;i<H.size();i++)
+        cout<<H[i]<<" ";
+    cout<<endl<<endl;
+
+    createTree();
 
 }
 
@@ -280,5 +552,6 @@ T &HFF<T>::operator[](size_t idx) const
     NodoHFF* temp = listFront;
     for(size_t i=0; i< idx; i++)
         temp = temp->siguiente;
+    cout<<temp->dato<<" "<<temp->frecuencia<<endl;
     return temp->dato;
 }

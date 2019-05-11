@@ -8,6 +8,8 @@
 
 using namespace std;
 
+bool estaEncriptado=false;
+
 enum{
     menuPlatillo=1,
     menuVer,
@@ -18,6 +20,7 @@ enum{
     menuEliminarLogica,
     menuActivarLogica,
     menuEncriptacion,
+    menuDesEncriptar,
     menuSalir
 };
 
@@ -330,6 +333,40 @@ int modificar(ifstream &leer,ofstream &escribir){
 
 
 void encriptar(){
+
+    if(estaEncriptado){
+     cout<<"Ya Esta Encriptado"<<endl;
+     return;
+    }
+
+    string textEncrypt;
+    string aux;
+
+    HFF<char> hff;
+
+    ifstream entrada("Platillos.txt",ios::in);
+    while(getline(entrada,aux)) {
+        if(entrada.eof())
+            break;
+        aux += aux;
+    }
+    entrada.close();
+    textEncrypt=hff.encrypt(aux);
+
+    ofstream salida("Platillos.txt",ios::out);
+        salida<<textEncrypt;
+    salida.close();
+
+    estaEncriptado=true;
+}
+
+void desEncriptar(){
+
+    if(!estaEncriptado){
+     cout<<"No Esta Encriptado"<<endl;
+     return;
+    }
+
     HFF<char> hff;
 
     string aux;
@@ -341,24 +378,23 @@ void encriptar(){
     }
     entrada.close();
 
-    hff.add(aux);
+    ofstream salida("Platillos.txt",ios::out);
+        salida<<hff.descryptText(aux);
+    salida.close();
 
-    cout<<"Size: "<<hff.size()<<endl;
+    estaEncriptado=false;
+}
 
-    for(size_t i=0;i<hff.size();i++){
-        cout<<hff[i]<<endl;
-    }
+void save(){
+    ofstream salida("extra.txt",ios::out);
+        salida.write(reinterpret_cast<char*>(&estaEncriptado),sizeof (bool));
+    salida.close();
+}
 
-    cout<<endl<<endl<<endl;
-
-    hff.createTree();
-
-    cout<<"Size: "<<hff.size()<<endl;
-
-
-    hff.showTree();
-
-    system("pause");
+void load(){
+    ifstream entrada("extra.txt",ios::in);
+        entrada.read(reinterpret_cast<char*>(&estaEncriptado),sizeof (bool));
+    entrada.close();
 }
 
 int main()
@@ -367,8 +403,10 @@ int main()
     opc=0;
     estrPlatillo newPlatillo;
 
+    load();
     cout <<"Restaurante"<<endl;
     do{
+        system("cls");
         //app no permite mover el puntero con seekp pero los otros modos de apertura dañan el archivo
         //posible solucion crear un metodo que cargue los archivos guardados con app a archivos
         //out e in
@@ -385,24 +423,29 @@ int main()
             <<menuEliminarLogica<<"- Eliminar Logicamente"<<endl
             <<menuActivarLogica<<"- Activar Logica"<<endl
             <<menuEncriptacion<<"- Encriptar"<<endl
+            <<menuDesEncriptar<<"- DesEncriptar"<<endl
             <<menuSalir<<"- Salir"<<endl;
             cin>>opc;
         switch (opc) {
 
             case menuPlatillo:
                 escribirFunc(registrarFunc(),escribir1,leer);
+                getch();
             break;
             case menuVer:
                 imprimirFunc(leer,true);
+                getch();
             break;
             case menuVerBorrados:
                 imprimirFunc(leer,false);
+                getch();
             break;
             case menuBuscar:
                 if(buscarFunc(&newPlatillo,leer))
                     imprimirPlatillo(newPlatillo);
                 else
                     cout<<"El Platillo No Se Encontro"<<endl<<endl;
+                getch();
                 break;
             case menuEliminar:
                 escribir1.close();
@@ -410,6 +453,7 @@ int main()
                     cout<<"Eliminado"<<endl<<endl;
                 else
                     cout<<"No Se Encuentra"<<endl<<endl;
+                getch();
             break;
             case menuModificar:
                 escribir1.close();
@@ -417,21 +461,28 @@ int main()
                     cout<<"Modificado"<<endl<<endl;
                 else
                     cout<<"No Se Encuentra"<<endl<<endl;
-
+                getch();
             break;
             case menuEliminarLogica:
                 cambiarLogicamente(leer,escribir,true);
+                getch();
             break;
             case menuActivarLogica:
                 cambiarLogicamente(leer,escribir,false);
+                getch();
             break;
             case menuEncriptacion:
                 encriptar();
+                getch();
+            break;
+            case menuDesEncriptar:
+                desEncriptar();
+                getch();
             break;
             case menuSalir:
             break;
 
         }
     }while (opc != menuSalir);
-
+    save();
 }

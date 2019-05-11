@@ -9,5 +9,4 @@ SOURCES += \
 HEADERS += \
     hofmann.h \
     ldl.h \
-    nodo.h \
-    nodoldl.h
+    nodo.h

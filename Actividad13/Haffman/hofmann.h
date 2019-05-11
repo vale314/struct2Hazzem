@@ -59,6 +59,7 @@ public:
         void showTree();
         void showTree(NodoHFF*,int);
         void add(string);
+        void encrypt(string);
         void llenarDiccionario();
         int binarioToDecimal(string n);
         void createBinary();
@@ -144,6 +145,15 @@ void HFF<T>::add(string var)
         push(elem[i].caracter,elem[i].num);
 }
 
+template<typename T>
+void HFF<T>::encrypt(string text)
+{
+    add(text);
+    tree();
+    showTree();
+    createBinary();
+}
+
 
 template<typename T>
 void HFF<T>::llenarDiccionario()
@@ -202,15 +212,16 @@ void HFF<T>::createBinary()
     for(size_t i=0;i<textoOriginal.size();i++)
         binaryText=binaryText+findInDictionaryChar(textoOriginal[i]);
 
-    cout<<"Texto Binario Original ____________-"<<endl;
+    cout<<"Texto Binario Original ----------------------"<<endl;
     cout<<binaryText<<endl<<endl<<endl;
 
     while(binaryText.size()%8!=0)
             binaryText=binaryText+'0';
 
-    cout<<"Texto Binario Llenado"<<endl;
+    cout<<"Texto Binario Llenado -----------------------"<<endl;
     cout<<binaryText<<endl<<endl<<endl;
 
+    cout<<"Diccionario ---------------------------------"<<endl<<endl;
     string cifrado="";
     string tempTA="";
     while(binaryText.size()>0){
@@ -223,7 +234,7 @@ void HFF<T>::createBinary()
     textoCifrado=cifrado;
 
     cout<<endl;
-    cout<<"Texto Cifrado --------"<<endl;
+    cout<<"Texto Cifrado --------------------------------"<<endl;
     cout<<textoCifrado<<endl<<endl;
 
 }
@@ -242,7 +253,6 @@ char* HFF<T>::findInDictionaryBinary(string elem)
 {
     for(size_t i=0;i<diccionario.size();i++)
         if(diccionario[i].num.compare(elem)==0){
-            cout<<diccionario[i].caracter<<endl;
             textoDesifrado=textoDesifrado+diccionario[i].caracter;
             return(&diccionario[i].caracter);
 
@@ -260,6 +270,7 @@ string HFF<T>::descryptText(string n)
 
     cout<<"Desencriptando"<<endl<<endl;
 
+    cout<<"Diccionario ---------"<<endl<<endl;
     for(size_t i=0;i<n.size();i++){
         const char unsigned caracter = n[i];
         cout<<caracter<<"-----"<<int(caracter)<<"-----"<<bitset<8>(int(caracter))<<endl;
@@ -282,6 +293,8 @@ string HFF<T>::descryptText(string n)
     cout<<endl;
     cout<<"Texto Desencriptado ------------"<<endl;
     cout<<textoDesifrado<<endl<<endl;
+
+    return textoDesifrado;
 }
 
 template<typename T>
@@ -457,9 +470,11 @@ void HFF<T>::tree()
         aux=aux->siguiente;
     }
 
+    cout<<"Todos Los Elementos De La Lista"<<endl;
+
     for(size_t i=0;i<H.size();i++)
         cout<<H[i]<<" ";
-    cout<<endl;
+    cout<<endl<<endl;
 
     createTree();
 
