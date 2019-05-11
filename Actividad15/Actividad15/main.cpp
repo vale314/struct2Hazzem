@@ -334,10 +334,10 @@ int modificar(ifstream &leer,ofstream &escribir){
 
 void encriptar(){
 
-    if(estaEncriptado){
-     cout<<"Ya Esta Encriptado"<<endl;
-     return;
-    }
+//    if(estaEncriptado){
+//     cout<<"Ya Esta Encriptado"<<endl;
+//     return;
+//    }
 
     string textEncrypt;
     string aux;
@@ -362,10 +362,10 @@ void encriptar(){
 
 void desEncriptar(){
 
-    if(!estaEncriptado){
-     cout<<"No Esta Encriptado"<<endl;
-     return;
-    }
+//    if(!estaEncriptado){
+//     cout<<"No Esta Encriptado"<<endl;
+//     return;
+//    }
 
     HFF<char> hff;
 
