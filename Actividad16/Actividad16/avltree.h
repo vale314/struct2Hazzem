@@ -185,6 +185,7 @@ int AVLtree<T>::cantidad()
 template<class T>
 Ldl<T> AVLtree<T>::getAllItems()
 {
+    allItems.clear();
     getAllItems(root);
     return allItems;
 }

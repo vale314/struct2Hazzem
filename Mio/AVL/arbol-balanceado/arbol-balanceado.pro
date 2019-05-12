@@ -8,4 +8,6 @@ SOURCES += \
 
 HEADERS += \
     avltree.h \
-    nodoavl.h
+    nodoavl.h \
+    ldl.h \
+    nodo.h
