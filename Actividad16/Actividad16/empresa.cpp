@@ -165,10 +165,10 @@ void Empresa::guardarArbolArchivo()
     }
     salida.close();
 
-    for(size_t i=0;i<elem.size();i++)
-        cout<<elem[i].getId()<<" "<<elem[i].getPos()<<endl;
+//    for(size_t i=0;i<elem.size();i++)
+//        cout<<elem[i].getId()<<" "<<elem[i].getPos()<<endl<<""<<elem[i].getContador();
+//    getch();
 
-    getch();
 }
 
 bool Empresa::comprobar20()
@@ -267,12 +267,7 @@ void Empresa::guardarVector()
 
 void Empresa::consultar()
 {
-    if(indicesVector.empty()){
-        cout<<"Se Encuentra Vacio"<<endl;
-        getch();
-        return;
-    }
-
+    Indice indice,indiceAux;
     char curp[5];
     size_t i;
     int encontrado=0;
@@ -280,35 +275,136 @@ void Empresa::consultar()
     cin.ignore();
     cin.getline(curp,10,'\n');
 
-    for(i=0;i<indicesVector.size()-1;i++){
-        if(!strncmp(curp,indicesVector[i].getId(),5)){
-            encontrado=1;
-            break;
-        }
+    indiceAux.setId(curp);
+
+    //buscamos el nodo el arbol si lo encuntra aumntamos el contador
+    if(indicesAVLTree.find(indiceAux)!=nullptr){
+        indice.setId(indicesAVLTree.find(indiceAux)->getId());
+        indice.setPos(indicesAVLTree.find(indiceAux)->getPos());
+        indice.setContador(indicesAVLTree.find(indiceAux)->getContador());
+        indice.setContador(indice.getContador()+1);
+
+        indicesAVLTree.deleteKey(indiceAux);
+        indicesAVLTree.insert(indice);
+        encontrado=1;
     }
 
     Aspirantes aspirante;
-    leerAspirante.open("aspirantes.txt",ios::binary);
     if(encontrado){
-        long long pos= indicesVector[i].getPos();
-        leerAspirante.clear();
-        leerAspirante.seekg(pos);
-        getline(leerAspirante,aspiranteStruct.nombre,'#');
-        getline(leerAspirante,aspiranteStruct.curpS,'#');
-        getline(leerAspirante,aspiranteStruct.edad,'#');
-        getline(leerAspirante,aspiranteStruct.puesto,'#');
-        getline(leerAspirante,aspiranteStruct.bandera,';');
-        if(aspiranteStruct.bandera=="1")
-            imprimirStruct();
-        else
-            cout<<"No Se Encuentra"<<endl;
+        //si encontro el nodo en el arbol muestra
+        leerAspirante.open("aspirantes.txt",ios::binary);
+
+            long long pos= indice.getPos();
+            leerAspirante.clear();
+            leerAspirante.seekg(pos);
+            getline(leerAspirante,aspiranteStruct.nombre,'#');
+            getline(leerAspirante,aspiranteStruct.curpS,'#');
+            getline(leerAspirante,aspiranteStruct.edad,'#');
+            getline(leerAspirante,aspiranteStruct.puesto,'#');
+            getline(leerAspirante,aspiranteStruct.bandera,';');
+            if(aspiranteStruct.bandera=="1")
+                imprimirStruct();
+            else
+                cout<<"No Se Encuentra"<<endl;
+        leerAspirante.seekg(0);
+        leerIndice.close();
     }else{
-        cout<<"No Se Encuentra"<<endl;
+        //busca el nodo el archivo indices
+        bool find=false;
+        leerIndice.open("indices.txt",ios::binary|ios::in);
+        if(!leerIndice.good()){
+            cerr<<"Error Al leer"<<endl;
+            exit(1);
+        }
+        while(!leerIndice.eof()){
+            leerIndice.read(reinterpret_cast<char*>(&indiceAux),sizeof(indiceAux));
+            if(leerIndice.eof())
+                break;
+            if(!strcmp(indiceAux.getId(),curp)){
+                cout<<indiceAux<<endl;
+                find=true;
+                break;
+            }
+
+        }
+       leerIndice.close();
+       if(find){
+           //si lo encontro en el archivo de indices muestra
+           leerAspirante.open("aspirantes.txt",ios::binary);
+
+               long long pos= indiceAux.getPos();
+               leerAspirante.clear();
+               leerAspirante.seekg(pos);
+               getline(leerAspirante,aspiranteStruct.nombre,'#');
+               getline(leerAspirante,aspiranteStruct.curpS,'#');
+               getline(leerAspirante,aspiranteStruct.edad,'#');
+               getline(leerAspirante,aspiranteStruct.puesto,'#');
+               getline(leerAspirante,aspiranteStruct.bandera,';');
+               if(aspiranteStruct.bandera=="1")
+                   imprimirStruct();
+               else
+                   cout<<"No Se Encuentra"<<endl;
+           leerAspirante.seekg(0);
+           leerIndice.close();
+           //buscar el el arbol el nodo mas pequeño en cuanto el contador Y ELIMINARLO
+           //DESPUES agregar este nuevo
+           //indice nuevo = indiceAux.getId(), indiceAux.getPos(), indiceAux.getContador()+1 //por la nueva busqueda
+       }else{
+           cout<<"Nodo No Encontrado"<<endl;
+       }
     }
-    leerAspirante.seekg(0);
-    leerIndice.close();
     getch();
 }
+
+void Empresa::nuevoNodoArbol(Indice)
+{
+
+}
+
+//void Empresa::consultar()
+//{
+//    if(indicesVector.empty()){
+//        cout<<"Se Encuentra Vacio"<<endl;
+//        getch();
+//        return;
+//    }
+
+//    char curp[5];
+//    size_t i;
+//    int encontrado=0;
+//    cout<<"Ingrese el id a buscar"<<endl;
+//    cin.ignore();
+//    cin.getline(curp,10,'\n');
+
+//    for(i=0;i<indicesVector.size()-1;i++){
+//        if(!strncmp(curp,indicesVector[i].getId(),5)){
+//            encontrado=1;
+//            break;
+//        }
+//    }
+
+//    Aspirantes aspirante;
+//    leerAspirante.open("aspirantes.txt",ios::binary);
+//    if(encontrado){
+//        long long pos= indicesVector[i].getPos();
+//        leerAspirante.clear();
+//        leerAspirante.seekg(pos);
+//        getline(leerAspirante,aspiranteStruct.nombre,'#');
+//        getline(leerAspirante,aspiranteStruct.curpS,'#');
+//        getline(leerAspirante,aspiranteStruct.edad,'#');
+//        getline(leerAspirante,aspiranteStruct.puesto,'#');
+//        getline(leerAspirante,aspiranteStruct.bandera,';');
+//        if(aspiranteStruct.bandera=="1")
+//            imprimirStruct();
+//        else
+//            cout<<"No Se Encuentra"<<endl;
+//    }else{
+//        cout<<"No Se Encuentra"<<endl;
+//    }
+//    leerAspirante.seekg(0);
+//    leerIndice.close();
+//    getch();
+//}
 
 void Empresa::imprimirStruct()
 {

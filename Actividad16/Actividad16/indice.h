@@ -19,14 +19,19 @@ public:
     const char* getId() const;
     void setId(const char value[5]);
 
-
-    bool operator <(const Indice& d) {
-             if(strcmp(id,d.id)==-1&&strcmp(d.id,"-1")!=0)
+    friend bool operator >=(const Indice& a,const Indice& d) {
+             if((strcmp(a.id,d.id)==1)||!(strcmp(a.getId(),d.getId())))
                 return true;
              return false;
           }
-    bool operator >(const Indice& d) {
-             if((strcmp(id,d.id)==1))
+
+    friend bool operator <(const Indice& a,const Indice& d) {
+             if(strcmp(a.id,d.id)==-1&&strcmp(d.id,"-1")!=0)
+                return true;
+             return false;
+          }
+    friend bool operator >(const Indice& a,const Indice& d) {
+             if((strcmp(a.id,d.id)==1))
                 return true;
              return false;
           }
@@ -36,9 +41,11 @@ public:
     }
 
     friend ostream& operator<<(std::ostream& os, const Indice& indice) {
-              os<<indice.getId()<<"   "<<indice.getPos()<<endl;
+              os<<indice.getId()<<"   "<<indice.getContador()<<endl;
               return os;
     }
+    int getContador() const;
+    void setContador(int value);
 };
 
 #endif // INDICE_H

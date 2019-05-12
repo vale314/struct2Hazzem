@@ -2,6 +2,16 @@
 
 
 
+int Indice::getContador() const
+{
+    return contador;
+}
+
+void Indice::setContador(int value)
+{
+    contador = value;
+}
+
 Indice::Indice()
 {
     contador=0;

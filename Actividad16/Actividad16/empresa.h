@@ -73,6 +73,8 @@ public:
     void guardarVector();
     void consultar();
 
+    void nuevoNodoArbol(Indice);
+
     void imprimirStruct();
     void imprimirCabeceras();
 
