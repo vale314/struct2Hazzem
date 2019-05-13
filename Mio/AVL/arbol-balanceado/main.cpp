@@ -36,5 +36,11 @@ int main()
     for(size_t i=0;i<tree.size();i++)
         cout<<"Elemento: "<<tree[i]<<endl;
 
+    cout<<endl<<endl;
+
+    cout<<"Menor: "<<*arbol.findMinor()<<endl;
+
+
+
     return 0;
 }

@@ -18,6 +18,7 @@ public:
     void mostrar();
     void inOrder();
     int cantidad();
+    T* findMinor();
     Ldl<T> getAllItems();
     const T* find(const T& elem) const;
 
@@ -38,8 +39,10 @@ private:
     void mostrar                    (AVLnode<T>* localRoot,int contador);
     const T* find                   (AVLnode<T>* ,const T& elem) const;
     void inOrder                    (AVLnode<T> *localRoot);
+    void findMinor                  (AVLnode<T> *localRoot);
     int cant=0;
     Ldl<T> allItems;
+    T minor;
 
 };
 
@@ -340,5 +343,26 @@ void AVLtree<T>::inOrder(AVLnode<T> *localRoot)
     inOrder(localRoot->right);
 }
 
+
+template<typename T>
+T* AVLtree<T>::findMinor()
+{
+    if(root==nullptr)
+        return nullptr;
+    findMinor(root);
+    return &minor;
+}
+
+
+template<typename T>
+void AVLtree<T>::findMinor(AVLnode<T> *localRoot)
+{
+    if (localRoot == nullptr)
+        return;
+    findMinor(localRoot->left);
+    if(minor>localRoot->key)
+        minor=localRoot->key;
+    findMinor(localRoot->right);
+}
 
 #endif // AVLTREE_H

@@ -157,17 +157,18 @@ void Empresa::cargarArbolArchivo()
 
 void Empresa::guardarArbolArchivo()
 {
-    Ldl <Indice> elem(indicesAVLTree.getAllItems());
+    Ldl <Indice> elemtento(indicesAVLTree.getAllItems());
+
 
     ofstream salida("ArbolAVL.txt",ios::out);
-    for(size_t i=0;i<elem.size();i++){
-        salida.write(reinterpret_cast<const char*>(&elem[i]), sizeof (Indice));
+    for(size_t i=0;i<elemtento.size();i++){
+        salida.write(reinterpret_cast<const char*>(&elemtento[i]), sizeof (Indice));
     }
     salida.close();
 
-//    for(size_t i=0;i<elem.size();i++)
-//        cout<<elem[i].getId()<<" "<<elem[i].getPos()<<endl<<""<<elem[i].getContador();
-//    getch();
+    for(size_t i=0;i<elemtento.size();i++)
+        cout<<elemtento[i].getId()<<" "<<elemtento[i].getPos()<<endl<<""<<elemtento[i].getContador();
+    getch();
 
 }
 
@@ -223,6 +224,7 @@ void Empresa::mostrarArbol()
     cout<<"InOrder"<<endl;
     indicesAVLTree.inOrder();
 
+    elem.clear();
     getch();
 }
 
@@ -346,6 +348,8 @@ void Empresa::consultar()
                    cout<<"No Se Encuentra"<<endl;
            leerAspirante.seekg(0);
            leerIndice.close();
+
+           cout<<"El Indice Menor es: "<<*indicesAVLTree.findMinor()<<endl;
            //buscar el el arbol el nodo mas pequeño en cuanto el contador Y ELIMINARLO
            //DESPUES agregar este nuevo
            //indice nuevo = indiceAux.getId(), indiceAux.getPos(), indiceAux.getContador()+1 //por la nueva busqueda

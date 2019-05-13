@@ -13,6 +13,7 @@ private:
     int contador;
 public:
     Indice();
+    Indice(const char[5],long long pos ,int contador);
 
     long long getPos() const;
     void setPos(long long value);
@@ -26,7 +27,8 @@ public:
           }
 
     friend bool operator <(const Indice& a,const Indice& d) {
-             if(strcmp(a.id,d.id)==-1&&strcmp(d.id,"-1")!=0)
+//             if(strcmp(a.id,d.id)==-1&&strcmp(d.id,"-1")!=0)
+                if(strcmp(a.getId(),d.getId())<0)
                 return true;
              return false;
           }

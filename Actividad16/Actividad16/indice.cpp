@@ -17,6 +17,13 @@ Indice::Indice()
     contador=0;
 }
 
+Indice::Indice(const char id[5] ,long long pos, int contador)
+{
+    strcpy(this->id,id);
+    this->pos=pos;
+    this->contador=contador;
+}
+
 long long Indice::getPos() const
 {
     return pos;
