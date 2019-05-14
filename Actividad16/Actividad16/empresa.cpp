@@ -432,57 +432,12 @@ void Empresa::imprimirCabeceras()
     cout<<setw(15)<<"Nombre"<<setw(15)<<"Curp"<<setw(15)<<"Edad"<<setw(15)<<"Puesto"<<setw(15)<<endl<<endl<<endl;
 }
 
-//void Empresa::imprimir(size_t i,int bandera)
-//{
-//    Aspirantes aspirante;
-//    leerAspirante.open("aspirantes.txt",ios::binary);
-
-//        long long pos= indicesVectorAux[i].getPos();
-//        leerAspirante.clear();
-//        leerAspirante.seekg(pos);
-//        getline(leerAspirante,aspiranteStruct.nombre,'#');
-//        getline(leerAspirante,aspiranteStruct.curpS,'#');
-//        getline(leerAspirante,aspiranteStruct.edad,'#');
-//        getline(leerAspirante,aspiranteStruct.puesto,'#');
-//        getline(leerAspirante,aspiranteStruct.bandera,';');
-//        if((aspiranteStruct.bandera=="1"&&bandera)||(aspiranteStruct.bandera=="0"&&!bandera))
-//            imprimirStruct();
-
-//    leerAspirante.seekg(0);
-//    leerIndice.close();
-//}
-
-//void Empresa::imprimirAll(int bandera)
-//{
-//    if(indicesVector.empty()){
-//        cout<<"El Index Se Encuentra Solo"<<endl;
-//        getch();
-//        return;
-//    }
-//    for(size_t i=0;i<=indicesVector.size()-1;i++)
-//           indicesVectorAux.push_back(indicesVector[i]);
-
-////    for(size_t i=0;i<=indicesVectorAux.size()-1;i++)
-////        cout<<indicesVectorAux[i]<<endl;
-
-//    cout<<"--------------ALL--------------------"<<endl<<endl;
-
-//    indicesVectorAux.bubbleSort();
-
-//    for(size_t i=0;i<=indicesVectorAux.size()-2;i++)
-//        imprimir(i,bandera);
-
-
-//    indicesVectorAux.clear();
-
-//    getch();
-//}
-
-void Empresa::imprimir(long long pos,int bandera)
+void Empresa::imprimir(size_t i,int bandera)
 {
     Aspirantes aspirante;
     leerAspirante.open("aspirantes.txt",ios::binary);
 
+        long long pos= indicesVectorAux[i].getPos();
         leerAspirante.clear();
         leerAspirante.seekg(pos);
         getline(leerAspirante,aspiranteStruct.nombre,'#');
@@ -494,30 +449,75 @@ void Empresa::imprimir(long long pos,int bandera)
             imprimirStruct();
 
     leerAspirante.seekg(0);
-    leerAspirante.close();
+    leerIndice.close();
 }
 
 void Empresa::imprimirAll(int bandera)
 {
+    if(indicesVector.empty()){
+        cout<<"El Index Se Encuentra Solo"<<endl;
+        getch();
+        return;
+    }
+    for(size_t i=0;i<=indicesVector.size()-1;i++)
+           indicesVectorAux.push_back(indicesVector[i]);
+
+//    for(size_t i=0;i<=indicesVectorAux.size()-1;i++)
+//        cout<<indicesVectorAux[i]<<endl;
 
     cout<<"--------------ALL--------------------"<<endl<<endl;
-    imprimirCabeceras();
-    Indice indiceAux;
-    leerIndice.open("indices.txt",ios::binary|ios::in);
-    if(!leerIndice.good()){
-        cerr<<"Error Al leer"<<endl;
-        exit(1);
-    }
-    while(!leerIndice.eof()){
-        leerIndice.read(reinterpret_cast<char*>(&indiceAux),sizeof(indiceAux));
-        if(leerIndice.eof()){
-            break;
-        }else
-            imprimir(indiceAux.getPos(),bandera);
-    }
-   leerIndice.close();
-   getch();
+
+    indicesVectorAux.bubbleSort();
+
+    for(size_t i=0;i<=indicesVectorAux.size()-2;i++)
+        imprimir(i,bandera);
+
+
+    indicesVectorAux.clear();
+
+    getch();
 }
+
+//void Empresa::imprimir(long long pos,int bandera)
+//{
+//    Aspirantes aspirante;
+//    leerAspirante.open("aspirantes.txt",ios::binary);
+
+//        leerAspirante.clear();
+//        leerAspirante.seekg(pos);
+//        getline(leerAspirante,aspiranteStruct.nombre,'#');
+//        getline(leerAspirante,aspiranteStruct.curpS,'#');
+//        getline(leerAspirante,aspiranteStruct.edad,'#');
+//        getline(leerAspirante,aspiranteStruct.puesto,'#');
+//        getline(leerAspirante,aspiranteStruct.bandera,';');
+//        if((aspiranteStruct.bandera=="1"&&bandera)||(aspiranteStruct.bandera=="0"&&!bandera))
+//            imprimirStruct();
+
+//    leerAspirante.seekg(0);
+//    leerAspirante.close();
+//}
+
+//void Empresa::imprimirAll(int bandera)
+//{
+
+//    cout<<"--------------ALL--------------------"<<endl<<endl;
+//    imprimirCabeceras();
+//    Indice indiceAux;
+//    leerIndice.open("indices.txt",ios::binary|ios::in);
+//    if(!leerIndice.good()){
+//        cerr<<"Error Al leer"<<endl;
+//        exit(1);
+//    }
+//    while(!leerIndice.eof()){
+//        leerIndice.read(reinterpret_cast<char*>(&indiceAux),sizeof(indiceAux));
+//        if(leerIndice.eof()){
+//            break;
+//        }else
+//            imprimir(indiceAux.getPos(),bandera);
+//    }
+//   leerIndice.close();
+//   getch();
+//}
 
 
 int Empresa::validateCurp(const char curp[5])
@@ -623,10 +623,19 @@ void Empresa::eliminarFisico()
     }
     size_t i;
     int encontrado = 0;
-    for(i=0;i<indicesVector.size()-1;i++){
-        if(!strncmp(curp,indicesVector[i].getId(),5)){
-            encontrado=1;
-            break;
+    Indice buscado,find;
+    buscado.setId(curp);
+
+    if(indicesAVLTree.find(buscado)!=nullptr){
+        find.setId(indicesAVLTree.find(buscado)->getId());
+        find.setContador(indicesAVLTree.find(buscado)->getContador());
+        find.setPos(indicesAVLTree.find(buscado)->getPos());
+    }else{
+        for(i=0;i<indicesVector.size()-1;i++){
+            if(!strncmp(curp,indicesVector[i].getId(),5)){
+                encontrado=1;
+                break;
+            }
         }
     }
 
