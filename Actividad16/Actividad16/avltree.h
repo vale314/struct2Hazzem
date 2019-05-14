@@ -266,8 +266,9 @@ void AVLtree<T>::deleteKey(const T delKey) {
         parent = n;
         n = child;
         child = delKey >= n->key ? n->right : n->left;
-        if (delKey == n->key)
+        if (delKey == n->key){
             delNode = n;
+        }
     }
 
     if (delNode != NULL) {

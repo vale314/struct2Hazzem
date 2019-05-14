@@ -78,7 +78,8 @@ public:
     void imprimirStruct();
     void imprimirCabeceras();
 
-    void imprimir(size_t,int);
+//    void imprimir(size_t,int);
+    void imprimir(long long,int);
     void imprimirAll(int);
 
     int validateCurp(const char[5]);

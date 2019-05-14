@@ -21,7 +21,7 @@ public:
     void setId(const char value[5]);
 
     friend bool operator >=(const Indice& a,const Indice& d) {
-             if((strcmp(a.id,d.id)==1)||!(strcmp(a.getId(),d.getId())))
+             if((strcmp(a.id,d.id)>0)||!(strcmp(a.getId(),d.getId())))
                 return true;
              return false;
           }
@@ -33,7 +33,7 @@ public:
              return false;
           }
     friend bool operator >(const Indice& a,const Indice& d) {
-             if((strcmp(a.id,d.id)==1))
+             if((strcmp(a.id,d.id)>0))
                 return true;
              return false;
           }

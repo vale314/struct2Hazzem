@@ -21,9 +21,17 @@ int main()
 
     arbol.mostrar();
 
-    arbol.deleteKey(16);
+    arbol.deleteKey(10);
+    arbol.insert(10);
 
     cout<<endl<<endl;
+
+    arbol.mostrar();
+
+    cout<<endl<<endl;
+
+    arbol.deleteKey(13);
+    arbol.insert(13);
 
     arbol.mostrar();
 

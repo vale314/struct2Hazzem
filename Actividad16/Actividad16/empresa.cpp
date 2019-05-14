@@ -6,7 +6,6 @@ Empresa::Empresa()
     cargarVector();
     cargarArbolArchivo();
     cargarArbol20();
-    getch();
 }
 
 Empresa::~Empresa()
@@ -175,7 +174,6 @@ void Empresa::guardarArbolArchivo()
 bool Empresa::comprobar20()
 {
     cout<<"Cantidad: "<<indicesAVLTree.cantidad()<<"Porcentaje: "<<cant*0.2<<endl;
-    getch();
     if(indicesAVLTree.cantidad()+1<(cant*0.2))
         return true;
     return false;
@@ -214,6 +212,9 @@ void Empresa::mostrarArbol()
 {
     Ldl<Indice> elem(indicesAVLTree.getAllItems());
     cout<<"Tam De Arbol: "<<indicesAVLTree.cantidad()<<endl;
+
+    cout<<endl;
+    cout<<"Elementos Del Arbol ------------"<<endl;
 
     for(size_t i=0;i<elem.size();i++)
         cout<<"Indice: "<<elem[i].getId()<<" Pos:"<<elem[i].getPos()<<endl;
@@ -287,6 +288,8 @@ void Empresa::consultar()
         indice.setContador(indice.getContador()+1);
 
         indicesAVLTree.deleteKey(indiceAux);
+        indicesAVLTree.deleteKey(indiceAux);
+
         indicesAVLTree.insert(indice);
         encontrado=1;
     }
@@ -323,7 +326,6 @@ void Empresa::consultar()
             if(leerIndice.eof())
                 break;
             if(!strcmp(indiceAux.getId(),curp)){
-                cout<<indiceAux<<endl;
                 find=true;
                 break;
             }
@@ -349,10 +351,16 @@ void Empresa::consultar()
            leerAspirante.seekg(0);
            leerIndice.close();
 
-           cout<<"El Indice Menor es: "<<*indicesAVLTree.findMinor()<<endl;
-           //buscar el el arbol el nodo mas pequeño en cuanto el contador Y ELIMINARLO
-           //DESPUES agregar este nuevo
-           //indice nuevo = indiceAux.getId(), indiceAux.getPos(), indiceAux.getContador()+1 //por la nueva busqueda
+           Indice indiceOld;
+
+           indiceOld.setId(indicesAVLTree.findMinor()->getId());
+
+           cout<<"El Indice Menor es: "<<indicesAVLTree.findMinor()->getId()<<endl;
+           indicesAVLTree.deleteKey(indiceOld);
+           indicesAVLTree.deleteKey(indiceOld);
+
+           indiceAux.setContador(indiceAux.getContador()+1);
+           indicesAVLTree.insert(indiceAux);
        }else{
            cout<<"Nodo No Encontrado"<<endl;
        }
@@ -424,12 +432,57 @@ void Empresa::imprimirCabeceras()
     cout<<setw(15)<<"Nombre"<<setw(15)<<"Curp"<<setw(15)<<"Edad"<<setw(15)<<"Puesto"<<setw(15)<<endl<<endl<<endl;
 }
 
-void Empresa::imprimir(size_t i,int bandera)
+//void Empresa::imprimir(size_t i,int bandera)
+//{
+//    Aspirantes aspirante;
+//    leerAspirante.open("aspirantes.txt",ios::binary);
+
+//        long long pos= indicesVectorAux[i].getPos();
+//        leerAspirante.clear();
+//        leerAspirante.seekg(pos);
+//        getline(leerAspirante,aspiranteStruct.nombre,'#');
+//        getline(leerAspirante,aspiranteStruct.curpS,'#');
+//        getline(leerAspirante,aspiranteStruct.edad,'#');
+//        getline(leerAspirante,aspiranteStruct.puesto,'#');
+//        getline(leerAspirante,aspiranteStruct.bandera,';');
+//        if((aspiranteStruct.bandera=="1"&&bandera)||(aspiranteStruct.bandera=="0"&&!bandera))
+//            imprimirStruct();
+
+//    leerAspirante.seekg(0);
+//    leerIndice.close();
+//}
+
+//void Empresa::imprimirAll(int bandera)
+//{
+//    if(indicesVector.empty()){
+//        cout<<"El Index Se Encuentra Solo"<<endl;
+//        getch();
+//        return;
+//    }
+//    for(size_t i=0;i<=indicesVector.size()-1;i++)
+//           indicesVectorAux.push_back(indicesVector[i]);
+
+////    for(size_t i=0;i<=indicesVectorAux.size()-1;i++)
+////        cout<<indicesVectorAux[i]<<endl;
+
+//    cout<<"--------------ALL--------------------"<<endl<<endl;
+
+//    indicesVectorAux.bubbleSort();
+
+//    for(size_t i=0;i<=indicesVectorAux.size()-2;i++)
+//        imprimir(i,bandera);
+
+
+//    indicesVectorAux.clear();
+
+//    getch();
+//}
+
+void Empresa::imprimir(long long pos,int bandera)
 {
     Aspirantes aspirante;
     leerAspirante.open("aspirantes.txt",ios::binary);
 
-        long long pos= indicesVectorAux[i].getPos();
         leerAspirante.clear();
         leerAspirante.seekg(pos);
         getline(leerAspirante,aspiranteStruct.nombre,'#');
@@ -441,34 +494,31 @@ void Empresa::imprimir(size_t i,int bandera)
             imprimirStruct();
 
     leerAspirante.seekg(0);
-    leerIndice.close();
+    leerAspirante.close();
 }
 
 void Empresa::imprimirAll(int bandera)
 {
-    if(indicesVector.empty()){
-        cout<<"El Index Se Encuentra Solo"<<endl;
-        getch();
-        return;
+
+    cout<<"--------------ALL--------------------"<<endl<<endl;
+    imprimirCabeceras();
+    Indice indiceAux;
+    leerIndice.open("indices.txt",ios::binary|ios::in);
+    if(!leerIndice.good()){
+        cerr<<"Error Al leer"<<endl;
+        exit(1);
     }
-    for(size_t i=0;i<=indicesVector.size()-1;i++)
-           indicesVectorAux.push_back(indicesVector[i]);
-
-    for(size_t i=0;i<=indicesVectorAux.size()-1;i++)
-        cout<<indicesVectorAux[i]<<endl;
-
-    cout<<"--------------LDL--------------------"<<endl<<endl;
-
-    indicesVectorAux.bubbleSort();
-
-    for(size_t i=0;i<=indicesVectorAux.size()-2;i++)
-        imprimir(i,bandera);
-
-
-    indicesVectorAux.clear();
-
-    getch();
+    while(!leerIndice.eof()){
+        leerIndice.read(reinterpret_cast<char*>(&indiceAux),sizeof(indiceAux));
+        if(leerIndice.eof()){
+            break;
+        }else
+            imprimir(indiceAux.getPos(),bandera);
+    }
+   leerIndice.close();
+   getch();
 }
+
 
 int Empresa::validateCurp(const char curp[5])
 {
