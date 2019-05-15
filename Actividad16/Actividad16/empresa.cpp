@@ -268,11 +268,12 @@ void Empresa::guardarVector()
     salida.close();
 }
 
-void Empresa::consultar()
+bool Empresa::consultar()
 {
     Indice indice,indiceAux;
     char curp[5];
     size_t i;
+
     int encontrado=0;
     cout<<"Ingrese el id a buscar"<<endl;
     cin.ignore();
@@ -307,65 +308,75 @@ void Empresa::consultar()
             getline(leerAspirante,aspiranteStruct.edad,'#');
             getline(leerAspirante,aspiranteStruct.puesto,'#');
             getline(leerAspirante,aspiranteStruct.bandera,';');
-            if(aspiranteStruct.bandera=="1")
+            if(aspiranteStruct.bandera=="1"){
                 imprimirStruct();
-            else
+                getch();
+            }
+            else{
                 cout<<"No Se Encuentra"<<endl;
+                leerAspirante.close();
+                return false;
+            }
         leerAspirante.seekg(0);
         leerIndice.close();
     }else{
-        //busca el nodo el archivo indices
-        bool find=false;
-        leerIndice.open("indices.txt",ios::binary|ios::in);
-        if(!leerIndice.good()){
-            cerr<<"Error Al leer"<<endl;
-            exit(1);
-        }
-        while(!leerIndice.eof()){
-            leerIndice.read(reinterpret_cast<char*>(&indiceAux),sizeof(indiceAux));
-            if(leerIndice.eof())
-                break;
-            if(!strcmp(indiceAux.getId(),curp)){
-                find=true;
-                break;
+            encontrado=0;
+            for(i=0;i<indicesVector.size();i++){
+                if(!strncmp(curp,indicesVector[i].getId(),5)){
+                    encontrado=1;
+                    break;
+                }
             }
 
-        }
-       leerIndice.close();
-       if(find){
-           //si lo encontro en el archivo de indices muestra
-           leerAspirante.open("aspirantes.txt",ios::binary);
+            if(encontrado){
+            Aspirantes aspirante;
+            leerAspirante.open("aspirantes.txt",ios::binary);
+                long long pos= indicesVector[i].getPos();
+                leerAspirante.clear();
+                leerAspirante.seekg(pos);
+                getline(leerAspirante,aspiranteStruct.nombre,'#');
+                getline(leerAspirante,aspiranteStruct.curpS,'#');
+                getline(leerAspirante,aspiranteStruct.edad,'#');
+                getline(leerAspirante,aspiranteStruct.puesto,'#');
+                getline(leerAspirante,aspiranteStruct.bandera,';');
+                if(aspiranteStruct.bandera=="1"){
+                    imprimirStruct();
+                    getch();
+                }
+                else{
+                    cout<<"No Se Encuentra"<<endl;
+                    leerAspirante.close();
+                    return false;
+                }
+            leerAspirante.close();
+            }else{
+                cout<<"No Se Encuentra"<<endl;
+                return false;
+            }
 
-               long long pos= indiceAux.getPos();
-               leerAspirante.clear();
-               leerAspirante.seekg(pos);
-               getline(leerAspirante,aspiranteStruct.nombre,'#');
-               getline(leerAspirante,aspiranteStruct.curpS,'#');
-               getline(leerAspirante,aspiranteStruct.edad,'#');
-               getline(leerAspirante,aspiranteStruct.puesto,'#');
-               getline(leerAspirante,aspiranteStruct.bandera,';');
-               if(aspiranteStruct.bandera=="1")
-                   imprimirStruct();
-               else
-                   cout<<"No Se Encuentra"<<endl;
-           leerAspirante.seekg(0);
-           leerIndice.close();
-
-           Indice indiceOld;
+        if(encontrado){
+           Indice indiceOld,indiceAuxq;
 
            indiceOld.setId(indicesAVLTree.findMinor()->getId());
 
-           cout<<"El Indice Menor es: "<<indicesAVLTree.findMinor()->getId()<<endl;
-           indicesAVLTree.deleteKey(indiceOld);
            indicesAVLTree.deleteKey(indiceOld);
 
-           indiceAux.setContador(indiceAux.getContador()+1);
-           indicesAVLTree.insert(indiceAux);
+//           mostrarArbol();
+//           cout<<"indicesVector: "<<indicesVector[i]<<endl;
+//           getch();
+//           indiceAux.setContador(indicesVector[i].getContador()+1);
+           indiceAuxq.setId(indicesVector[i].getId());
+           indiceAuxq.setContador(indicesVector[i].getContador()+1);
+           indiceAuxq.setPos(indicesVector[i].getPos());
+           indicesAVLTree.insert(indiceAuxq);
+//           mostrarArbol();
+//           getch();
        }else{
            cout<<"Nodo No Encontrado"<<endl;
+           return false;
        }
     }
-    getch();
+    return true;
 }
 
 void Empresa::nuevoNodoArbol(Indice)
@@ -437,7 +448,7 @@ void Empresa::imprimir(size_t i,int bandera)
     Aspirantes aspirante;
     leerAspirante.open("aspirantes.txt",ios::binary);
 
-        long long pos= indicesVectorAux[i].getPos();
+        long long pos= indicesVector[i].getPos();
         leerAspirante.clear();
         leerAspirante.seekg(pos);
         getline(leerAspirante,aspiranteStruct.nombre,'#');
@@ -459,21 +470,12 @@ void Empresa::imprimirAll(int bandera)
         getch();
         return;
     }
-    for(size_t i=0;i<=indicesVector.size()-1;i++)
-           indicesVectorAux.push_back(indicesVector[i]);
-
-//    for(size_t i=0;i<=indicesVectorAux.size()-1;i++)
-//        cout<<indicesVectorAux[i]<<endl;
 
     cout<<"--------------ALL--------------------"<<endl<<endl;
+    cout<<"Cantidad: "<<indicesVector.size()-1<<endl<<endl;
 
-    indicesVectorAux.bubbleSort();
-
-    for(size_t i=0;i<=indicesVectorAux.size()-2;i++)
+    for(size_t i=0;i<indicesVector.size()-1;i++)
         imprimir(i,bandera);
-
-
-    indicesVectorAux.clear();
 
     getch();
 }
@@ -630,6 +632,7 @@ void Empresa::eliminarFisico()
         find.setId(indicesAVLTree.find(buscado)->getId());
         find.setContador(indicesAVLTree.find(buscado)->getContador());
         find.setPos(indicesAVLTree.find(buscado)->getPos());
+        encontrado=1;
     }else{
         for(i=0;i<indicesVector.size()-1;i++){
             if(!strncmp(curp,indicesVector[i].getId(),5)){

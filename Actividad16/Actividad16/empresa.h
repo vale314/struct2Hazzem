@@ -71,7 +71,7 @@ public:
 
     void cargarVector();
     void guardarVector();
-    void consultar();
+    bool consultar();
 
     void nuevoNodoArbol(Indice);
 
